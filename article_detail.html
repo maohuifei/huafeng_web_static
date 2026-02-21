@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章详情 - 我的个人网页</title>
+    <meta name="description" content="阅读精彩的技术文章和学习笔记，获取实用的编程知识和经验">
+    <meta name="keywords" content="文章详情，技术文章，编程教程，学习笔记">
+    <meta name="author" content="画风">
+    <!-- Open Graph -->
+    <meta property="og:title" content="文章详情 - 我的个人网页">
+    <meta property="og:description" content="阅读精彩的技术文章和学习笔记">
+    <meta property="og:type" content="article">
+    <!-- 本地 Iconfont 图标库 -->
+    <link rel="preload" href="./assets/css/style.css" as="style">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/iconfont.css">
+    <link rel="stylesheet" href="./assets/css/article_detail.css">
+    <!-- 引入 marked.js 解析 Markdown -->
+    <script src="./assets/js/marked.min.js" defer></script>
+</head>
+
+<body>
+    <script type="module">
+        import { renderHeader, renderFooter } from './assets/js/common.js';
+        renderHeader();
+        renderFooter();
+    </script>
+
+    <!-- 详情页布局：左侧目录 + 右侧内容 -->
+    <div class="detail-container">
+        <!-- 返回列表按钮（左上角） -->
+        <a href="articles.html" class="btn-back-fixed" aria-label="返回文章列表">
+            <span class="icon" aria-hidden="true">←</span>
+            <span>返回列表</span>
+        </a>
+
+        <!-- 左侧目录（新增滚动） -->
+        <div class="sidebar">
+            <div class="sidebar-title">文章目录</div>
+            <div class="toc" id="toc">
+                <div class="loading">加载目录中...</div>
+            </div>
+        </div>
+
+        <!-- 右侧文章内容 -->
+        <div class="article-content">
+            <div class="loading" id="contentLoading">加载文章中...</div>
+            <div class="article-detail" id="articleDetail"></div>
+        </div>
+
+        <!-- 返回顶部按钮（右下角） -->
+        <button class="btn-back-top-fixed" id="backToTop" title="返回顶部" aria-label="返回顶部">
+            <span aria-hidden="true">↑</span>
+        </button>
+    </div>
+
+    <script type="module" src="./assets/js/article_detail.js"></script>
+</body>
+
+</html>

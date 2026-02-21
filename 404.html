@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - 页面未找到 | 我的个人网页</title>
+    <meta name="description" content="抱歉，您访问的页面不存在或已被移除">
+    <meta name="robots" content="noindex, nofollow">
+    <!-- 本地 Iconfont 图标库 -->
+    <link rel="stylesheet" href="./assets/css/iconfont.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/404.css">
+    <link rel="preload" href="./assets/css/style.css" as="style">
+</head>
+
+<body>
+    <script type="module">
+        import { renderHeader, renderFooter } from './assets/js/common.js';
+        renderHeader();
+        renderFooter();
+    </script>
+
+    <div class="container">
+        <div class="error-page">
+            <div class="error-content">
+                <div class="error-code" aria-label="错误代码 404">
+                    <span class="num num-1" aria-hidden="true">4</span>
+                    <span class="num num-2" aria-hidden="true">0</span>
+                    <span class="num num-3" aria-hidden="true">4</span>
+                </div>
+                <h1>页面走丢了</h1>
+                <p>抱歉，您访问的页面不存在或已被移除</p>
+                <div class="error-actions">
+                    <a href="index.html" class="btn btn-primary" aria-label="返回首页">
+                        <span aria-hidden="true">🏠</span>
+                        <span>返回首页</span>
+                    </a>
+                    <a href="articles.html" class="btn btn-secondary" aria-label="浏览文章">
+                        <span aria-hidden="true">📚</span>
+                        <span>浏览文章</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

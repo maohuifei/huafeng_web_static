@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免责声明 - 我的个人网页</title>
+    <meta name="description" content="网站免责声明，使用说明和注意事项">
+    <meta name="keywords" content="免责声明，使用说明，注意事项">
+    <meta name="author" content="画风">
+    <!-- Open Graph -->
+    <meta property="og:title" content="免责声明 - 我的个人网页">
+    <meta property="og:description" content="网站免责声明，使用说明和注意事项">
+    <meta property="og:type" content="website">
+    <!-- 本地 Iconfont 图标库 -->
+    <link rel="preload" href="./assets/css/style.css" as="style">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/iconfont.css">
+    <link rel="stylesheet" href="./assets/css/declaration.css">
+    <script src="./assets/js/marked.min.js" defer></script>
+</head>
+
+<body>
+    <script type="module">
+        import { renderHeader, renderFooter } from './assets/js/common.js';
+        renderHeader();
+        renderFooter();
+    </script>
+
+    <div class="container">
+        <div class="content-card">
+            <div id="declarationContent" class="loading">加载声明内容中...</div>
+        </div>
+    </div>
+
+    <script type="module" src="./assets/js/declaration.js"></script>
+</body>
+
+</html>

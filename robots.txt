@@ -1,0 +1,27 @@
+# robots.txt for 我的个人网页
+# https://jzwbuer.rth1.xyz/
+
+User-agent: *
+Allow: /
+
+# 允许所有搜索引擎抓取
+Allow: /index.html
+Allow: /articles.html
+Allow: /article_detail.html
+Allow: /archive.html
+Allow: /about.html
+Allow: /declaration.html
+
+
+# 站点地图位置
+Sitemap: https://jzwbuer.rth1.xyz/sitemap.xml
+
+# 常见搜索引擎特定规则
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /

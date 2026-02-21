@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章列表 - 我的个人网页</title>
+    <meta name="description" content="浏览所有技术文章和学习笔记，涵盖前端开发、编程技巧等内容">
+    <meta name="keywords" content="文章列表，技术文章，编程笔记，前端开发">
+    <meta name="author" content="画风">
+    <!-- Open Graph -->
+    <meta property="og:title" content="文章列表 - 我的个人网页">
+    <meta property="og:description" content="浏览所有技术文章和学习笔记">
+    <meta property="og:type" content="website">
+    <!-- 本地 Iconfont 图标库 -->
+    <link rel="preload" href="./assets/css/style.css" as="style">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/iconfont.css">
+    <link rel="stylesheet" href="./assets/css/articles.css">
+    <script src="./assets/js/marked.min.js" defer></script>
+</head>
+
+<body>
+    <script type="module">
+        import { renderHeader, renderFooter } from './assets/js/common.js';
+        renderHeader();
+        renderFooter();
+    </script>
+
+    <div class="container">
+        <h1>文章列表</h1>
+        <div class="article-list" id="articleList">
+            <div class="loading">加载文章列表中...</div>
+        </div>
+        <!-- 新增分页容器 -->
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <script type="module" src="./assets/js/articles.js"></script>
+</body>
+
+</html>

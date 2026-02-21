@@ -1,0 +1,298 @@
+/* ========== 首页分屏布局 ========== */
+
+/* 隐藏默认容器样式 */
+body > .container {
+    display: none;
+}
+
+/* 全屏区域 */
+.home-section {
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 0 4rem;
+    overflow: hidden;
+}
+
+.section-content {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.content-wrapper {
+    text-align: center;
+}
+
+/* ========== 第一屏：欢迎区域 ========== */
+.section-welcome {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.section-welcome h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 2rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.section-welcome p {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    word-break: break-word;
+}
+
+.section-welcome p.highlight {
+    font-size: clamp(0.95rem, 2.3vw, 1.15rem);
+    color: var(--text-primary);
+    font-weight: 500;
+    margin-top: 1.5rem;
+}
+
+/* 滚动提示 */
+.scroll-indicator {
+    position: absolute;
+    bottom: 3rem;
+    left: 2rem;
+    right: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    animation: bounce 2s infinite;
+}
+
+.scroll-arrow {
+    width: 24px;
+    height: 24px;
+    border-right: 2px solid var(--text-muted);
+    border-bottom: 2px solid var(--text-muted);
+    transform: rotate(45deg);
+    animation: scrollDown 1.5s infinite;
+}
+
+/* ========== 第二屏：理念与技术区域 ========== */
+.section-philosophy {
+    background: var(--bg-secondary);
+}
+
+.section-philosophy h2 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    line-height: 1.4;
+}
+
+.section-philosophy .highlight {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 800;
+}
+
+.section-philosophy p {
+    font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+    line-height: 1.9;
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    word-break: break-word;
+}
+
+.section-philosophy p.tech-note {
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ========== 技术栈区域 ========== */
+.tech-stack-section {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 2px solid var(--border-color);
+}
+
+.tech-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    position: relative;
+    display: inline-block;
+}
+
+.tech-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--primary-gradient);
+    border-radius: 2px;
+}
+
+.tech-stack {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.tech-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-primary);
+    padding: 1.5rem 1.25rem;
+    min-width: 100px;
+    border-radius: var(--radius-xl);
+    transition: all var(--transition-slow);
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.tech-item:hover {
+    transform: translateY(-8px);
+    background: var(--bg-primary);
+    box-shadow: var(--shadow-xl);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.tech-item .iconfont {
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+    transition: all var(--transition-base);
+    color: var(--primary-color);
+}
+
+.tech-item:hover .iconfont {
+    transform: scale(1.15);
+}
+
+.tech-title-small {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color var(--transition-base);
+}
+
+.tech-item:hover .tech-title-small {
+    color: var(--primary-color);
+}
+
+/* ========== 滚动动画 ========== */
+.animate-text {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.animate-text.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.animate-text.delay-1 {
+    transition-delay: 0.2s;
+}
+
+.animate-text.delay-2 {
+    transition-delay: 0.4s;
+}
+
+.animate-text.delay-3 {
+    transition-delay: 0.6s;
+}
+
+.animate-text.delay-4 {
+    transition-delay: 0.8s;
+}
+
+/* ========== 响应式设计 ========== */
+@media (max-width: 768px) {
+    .home-section {
+        padding: 5rem 1.5rem 3rem;
+        min-height: auto;
+        padding-bottom: 4rem;
+    }
+
+    .section-welcome h1 {
+        font-size: 2rem;
+    }
+
+    .section-welcome p {
+        font-size: 1rem;
+    }
+
+    .scroll-indicator {
+        bottom: 2rem;
+        font-size: 0.85rem;
+    }
+
+    .scroll-arrow {
+        width: 20px;
+        height: 20px;
+    }
+
+    .section-philosophy h2 {
+        font-size: 1.75rem;
+    }
+
+    .section-philosophy p {
+        font-size: 1rem;
+    }
+
+    .tech-stack {
+        gap: 1rem;
+    }
+
+    .tech-item {
+        min-width: 80px;
+        padding: 1rem;
+    }
+
+    .tech-item .iconfont {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-section {
+        padding: 4rem 1rem 2rem;
+    }
+
+    .section-welcome h1 {
+        font-size: 1.75rem;
+    }
+
+    .tech-stack {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

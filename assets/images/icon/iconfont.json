@@ -1,0 +1,128 @@
+{
+  "id": "5127856",
+  "name": "buerWeb",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1706361",
+      "name": "青岛标志",
+      "font_class": "May_th_icon",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "7389974",
+      "name": "不可移动文物",
+      "font_class": "ziyuan",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "8152679",
+      "name": "阿里巴巴",
+      "font_class": "alibaba",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "20417719",
+      "name": "公告",
+      "font_class": "gonggao",
+      "unicode": "f301",
+      "unicode_decimal": 62209
+    },
+    {
+      "icon_id": "21483282",
+      "name": "首页",
+      "font_class": "shouye",
+      "unicode": "e786",
+      "unicode_decimal": 59270
+    },
+    {
+      "icon_id": "23949513",
+      "name": "文章",
+      "font_class": "wenzhang",
+      "unicode": "ec64",
+      "unicode_decimal": 60516
+    },
+    {
+      "icon_id": "24111836",
+      "name": "关于我们",
+      "font_class": "guanyuwomen",
+      "unicode": "fbd2",
+      "unicode_decimal": 64466
+    },
+    {
+      "icon_id": "35108213",
+      "name": "归档查询_click",
+      "font_class": "guidangchaxun_click",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "3483765",
+      "name": "邮箱",
+      "font_class": "youxiang",
+      "unicode": "e672",
+      "unicode_decimal": 58994
+    },
+    {
+      "icon_id": "3970670",
+      "name": "JavaScript",
+      "font_class": "JavaScript",
+      "unicode": "e704",
+      "unicode_decimal": 59140
+    },
+    {
+      "icon_id": "5271617",
+      "name": "微信",
+      "font_class": "weixin",
+      "unicode": "e6ea",
+      "unicode_decimal": 59114
+    },
+    {
+      "icon_id": "5725552",
+      "name": "电报",
+      "font_class": "dianbao",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "12600657",
+      "name": "css",
+      "font_class": "css",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "12600727",
+      "name": "html",
+      "font_class": "html",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    },
+    {
+      "icon_id": "18986691",
+      "name": "GitHub",
+      "font_class": "GitHub",
+      "unicode": "e8c6",
+      "unicode_decimal": 59590
+    },
+    {
+      "icon_id": "26267546",
+      "name": "bilibili",
+      "font_class": "bilibili",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "42973536",
+      "name": "tuite-copy",
+      "font_class": "tuite",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    }
+  ]
+}

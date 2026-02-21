@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我 - 我的个人网页</title>
+    <meta name="description" content="了解站长画风，一个对编程和设计有热情的开发者，分享个人经历和联系方式">
+    <meta name="keywords" content="关于我，个人介绍，联系方式，站长信息">
+    <meta name="author" content="画风">
+    <!-- Open Graph -->
+    <meta property="og:title" content="关于我 - 我的个人网页">
+    <meta property="og:description" content="了解站长画风，一个对编程和设计有热情的开发者">
+    <meta property="og:type" content="website">
+    <!-- 本地 Iconfont 图标库 -->
+    <link rel="stylesheet" href="./assets/css/iconfont.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/about.css">
+    <link rel="preload" href="./assets/css/style.css" as="style">
+</head>
+
+<body>
+    <script type="module">
+        import { renderHeader, renderFooter } from './assets/js/common.js';
+        renderHeader();
+        renderFooter();
+    </script>
+
+    <div class="container">
+        <div class="about-box">
+            <h1 class="about-title">关于我</h1>
+            
+            <!-- 个人介绍 -->
+            <div class="content-section" id="introSection">
+                <h2 class="section-title">个人介绍</h2>
+                <p class="section-content">你好，我是画风（huafeng），一个普通人，对于编程和设计有一定涉猎</p>
+            </div>
+
+            <!-- 所在地 -->
+            <div class="content-section" id="locationSection">
+                <h2 class="section-title">当前所在地：烟台</h2>
+                <p class="section-content">烟台地处山东半岛东北部，是一座美丽的滨海城市，依山傍海，气候宜人</p>
+            </div>
+
+            <!-- 联系方式 -->
+            <div class="content-section" id="contactSection">
+                <h2 class="section-title">联系方式</h2>
+                <div class="loading">加载联系方式中...</div>
+            </div>
+
+            <!-- 参与的项目 -->
+            <div class="content-section" id="projectSection">
+                <h2 class="section-title">我参与的项目</h2>
+                <div class="loading">加载项目信息中...</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./assets/js/about.js"></script>
+</body>
+
+</html>
