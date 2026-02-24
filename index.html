@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,18 +7,10 @@
     <meta name="description" content="记录生活，分享思考，持续成长 - 个人学习、生活感悟及技术实践的记录空间">
     <meta name="keywords" content="个人博客，技术笔记，前端开发，学习笔记">
     <meta name="author" content="画风">
-    <!-- Open Graph -->
-    <meta property="og:title" content="我的个人网页 - 首页">
-    <meta property="og:description" content="记录生活，分享思考，持续成长">
-    <meta property="og:type" content="website">
-    <!-- Iconfont 图标库 -->
-    <link rel="preload" href="./assets/css/style.css" as="style">
-    <link rel="preload" href="./assets/css/iconfont.css" as="style">
-    <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="stylesheet" href="./assets/css/iconfont.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="stylesheet" href="./assets/css/home.css">
 </head>
-
 <body>
     <script type="module">
         import { renderHeader, renderFooter } from './assets/js/common.js';
@@ -27,7 +18,7 @@
         renderFooter();
     </script>
 
-    <!-- 第一屏：欢迎区域 -->
+    <!-- 欢迎区域 -->
     <section class="home-section section-welcome">
         <div class="section-content">
             <div class="scroll-indicator">
@@ -36,15 +27,14 @@
             </div>
             <div class="content-wrapper">
                 <h1 class="animate-text">欢迎来到我的在线笔记</h1>
-                <p class="animate-text delay-1 tech-note">一个纯静态的网站，仅使用原生的 HTML、CSS 和 JavaScript 构建，直接解析本地 Markdown 文件展示
-                </p>
+                <p class="animate-text delay-1 tech-note">一个纯静态网站，仅使用原生的 HTML、CSS 和 JavaScript 构建，直接解析本地 Markdown 文件展示</p>
                 <p class="animate-text delay-1">这里是我个人学习、生活感悟及技术实践的记录空间，并非公开宣传的站点</p>
                 <p class="animate-text delay-2">如果你偶然间访问到了这里，那或许就是一种奇妙的缘分</p>
             </div>
         </div>
     </section>
 
-    <!-- 第二屏：理念与技术区域 -->
+    <!-- 理念与技术区域 -->
     <section class="home-section section-philosophy">
         <div class="section-content">
             <div class="content-wrapper">
@@ -66,5 +56,4 @@
     <script type="module" src="./assets/js/index.js"></script>
     <script type="module" src="./assets/js/home-scroll.js"></script>
 </body>
-
 </html>

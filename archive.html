@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,18 +7,11 @@
     <meta name="description" content="按分类和时间浏览所有文章，查看完整的内容索引和统计信息">
     <meta name="keywords" content="文章归档，分类目录，时间线，内容索引">
     <meta name="author" content="画风">
-    <!-- Open Graph -->
-    <meta property="og:title" content="文章归档 - 我的个人网页">
-    <meta property="og:description" content="按分类和时间浏览所有文章">
-    <meta property="og:type" content="website">
-    <!-- 本地 Iconfont 图标库 -->
-    <link rel="preload" href="./assets/css/style.css" as="style">
-    <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="stylesheet" href="./assets/css/iconfont.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="stylesheet" href="./assets/css/archive.css">
     <script src="./assets/js/marked.min.js" defer></script>
 </head>
-
 <body>
     <script type="module">
         import { renderHeader, renderFooter } from './assets/js/common.js';
@@ -38,7 +30,7 @@
             <div class="loading">加载统计信息中...</div>
         </div>
 
-        <!-- 分类展示 -->
+        <!-- 分类目录 -->
         <div class="archive-section">
             <h2 class="section-title">
                 <span class="icon">📁</span>
@@ -49,7 +41,7 @@
             </div>
         </div>
 
-        <!-- 时间线展示 -->
+        <!-- 时间线 -->
         <div class="archive-section">
             <h2 class="section-title">
                 <span class="icon">⏰</span>
@@ -63,5 +55,4 @@
 
     <script type="module" src="./assets/js/archive.js"></script>
 </body>
-
 </html>

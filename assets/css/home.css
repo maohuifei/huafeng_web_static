@@ -1,7 +1,7 @@
 /* ========== 首页分屏布局 ========== */
 
 /* 隐藏默认容器样式 */
-body > .container {
+body>.container {
     display: none;
 }
 
@@ -120,7 +120,7 @@ body > .container {
     word-break: break-word;
 }
 
-.section-philosophy p.tech-note {
+.section-welcome p.tech-note {
     font-size: clamp(0.85rem, 2vw, 1rem);
     color: var(--text-muted);
     font-weight: 400;
