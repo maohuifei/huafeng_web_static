@@ -1,121 +1,22 @@
-import { articlesConfig } from '../config/articles.config.js';
 import { logError } from './utils.js';
-
-const mdFileNames = articlesConfig.articleList;
 
 // 存储所有文章数据
 let allArticles = [];
 
-// 解析 Markdown 元信息
-function parseMdMeta(mdContent) {
-    // 匹配所有 --- 分隔的 frontmatter 块
-    const metaRegex = /---\r?\n([\s\S]*?)---\r?\n/g;
-    const matches = [...mdContent.matchAll(metaRegex)];
-    
-    // 收集所有 frontmatter 块的元数据
-    const meta = {};
-    matches.forEach(match => {
-        const metaStr = match[1].trim();
-        if (!metaStr) return; // 跳过空的 frontmatter
-        
-        metaStr.split('\n').forEach(line => {
-            const cleanLine = line.trim();
-            if (!cleanLine) return;
-            const colonIndex = cleanLine.indexOf(':');
-            if (colonIndex === -1) return;
-
-            const key = cleanLine.substring(0, colonIndex).trim();
-            const value = cleanLine.substring(colonIndex + 1).trim();
-
-            if (key && value) {
-                meta[key] = key === "top" ? Number(value) || 0 : value;
-            }
-        });
-    });
-
-    return {
-        title: meta.title || "未知标题",
-        categories: meta.categories || "未分类",
-        createTime: meta.createTime || "未知时间",
-        updateTime: meta.updateTime || meta.createTime || "未知时间",
-        top: meta.top || 0
-    };
-}
-
-// 获取文章数据
-async function fetchMdFile(fileName) {
+// 从索引文件加载文章数据（优化：只需 1 次请求）
+async function loadArticlesIndex() {
     try {
-        const response = await fetch(`./articles/${fileName}`);
-        if (!response.ok) throw new Error(`文件${fileName}读取失败`);
-        
-        let mdContent = await response.text();
-        let isHtml = false;
-
-        // 如果是 HTML（热铁盒会渲染 Markdown），提取原始内容
-        if (mdContent.includes('<body>')) {
-            isHtml = true;
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(mdContent, 'text/html');
-            const markdownBody = doc.querySelector('.markdown-body');
-            if (markdownBody) {
-                // 尝试从第一个 h2 标签提取 frontmatter（HTML 格式）
-                const firstH2 = markdownBody.querySelector('h2');
-                if (firstH2) {
-                    const h2Text = firstH2.textContent || '';
-                    // 检查是否是 frontmatter 格式（包含 title: 等字段）
-                    if (h2Text.includes('title:')) {
-                        mdContent = h2Text + '\n\n' + markdownBody.innerHTML.replace(firstH2.outerHTML, '');
-                    } else {
-                        mdContent = markdownBody.innerText;
-                    }
-                } else {
-                    mdContent = markdownBody.innerText;
-                }
-            } else {
-                const body = doc.querySelector('body');
-                if (body) {
-                    mdContent = body.innerText || body.textContent;
-                }
-            }
+        const response = await fetch('./assets/data/articles-index.json');
+        if (!response.ok) {
+            throw new Error('文章索引加载失败');
         }
-
-        const meta = parseMdMeta(mdContent);
-
-        // 如果是 HTML 格式且未解析到元数据，尝试从 HTML 的 h2 标签解析
-        if (isHtml && meta.title === '未知标题') {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(mdContent, 'text/html');
-            const firstH2 = doc.querySelector('h2');
-            if (firstH2) {
-                const h2Text = firstH2.textContent || '';
-                const lines = h2Text.split('\n');
-                lines.forEach(line => {
-                    const cleanLine = line.trim();
-                    if (!cleanLine) return;
-                    const colonIndex = cleanLine.indexOf(':');
-                    if (colonIndex === -1) return;
-
-                    const key = cleanLine.substring(0, colonIndex).trim();
-                    const value = cleanLine.substring(colonIndex + 1).trim();
-
-                    if (key && value && ['title', 'categories', 'createTime', 'updateTime', 'description', 'top'].includes(key)) {
-                        meta[key] = key === 'top' ? Number(value) || 0 : value;
-                    }
-                });
-            }
-        }
-
-        return {
-            title: meta.title,
-            categories: meta.categories,
-            createTime: meta.createTime,
-            updateTime: meta.updateTime,
-            top: meta.top,
-            fileName: fileName
-        };
+        const data = await response.json();
+        console.log(`[归档页] 加载了 ${data.total} 篇文章`);
+        return data.articles;
     } catch (error) {
-        logError('读取文章失败:', error);
-        return null;
+        logError('加载文章索引失败:', error);
+        // 降级：如果索引文件不存在，返回空数组
+        return [];
     }
 }
 
@@ -164,7 +65,7 @@ function renderStatsOverview() {
         </div>
         <div class="stat-card">
             <div class="stat-icon">⭐</div>
-            <div class="stat-value">${latestArticle ? latestArticle.createTime.substring(0, 10) : '-'}</div>
+            <div class="stat-value">${latestArticle ? latestArticle.updateTime.substring(0, 10) : '-'}</div>
             <div class="stat-label">最近更新</div>
         </div>
     `;
@@ -289,12 +190,8 @@ function renderTimeline() {
 
 // 初始化
 async function init() {
-    // 加载所有文章
-    allArticles = [];
-    for (const fileName of mdFileNames) {
-        const article = await fetchMdFile(fileName);
-        if (article) allArticles.push(article);
-    }
+    // 从索引文件加载所有文章（只需 1 次请求）
+    allArticles = await loadArticlesIndex();
 
     if (allArticles.length === 0) {
         document.getElementById('statsOverview').innerHTML = `

@@ -1,0 +1,13 @@
+{
+  "name": "myweb",
+  "version": "1.0.0",
+  "description": "个人网站",
+  "scripts": {
+    "build:index": "node scripts/generate-articles-index.js",
+    "build:sitemap": "node scripts/generate-sitemap.js",
+    "build": "npm run build:index && npm run build:sitemap"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
