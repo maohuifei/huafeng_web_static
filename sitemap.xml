@@ -5,14 +5,14 @@
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     <!-- 
     使用说明：
-    1. 将 https://jzwbuer.rth1.xyz/ 替换为你的实际域名
+    1. 将 https://jzw.asia/ 替换为你的实际域名
     2. 每次添加新文章后更新此文件
     3. 提交到 Google Search Console 和 Bing Webmaster Tools
     -->
     
     <!-- 首页 -->
     <url>
-        <loc>https://jzwbuer.rth1.xyz/</loc>
+        <loc>https://jzw.asia/</loc>
         <lastmod>2026-02-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
@@ -20,7 +20,7 @@
     
     <!-- 文章列表页 -->
     <url>
-        <loc>https://jzwbuer.rth1.xyz/articles.html</loc>
+        <loc>https://jzw.asia/articles.html</loc>
         <lastmod>2026-02-20</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
@@ -28,7 +28,7 @@
     
     <!-- 文章归档页 -->
     <url>
-        <loc>https://jzwbuer.rth1.xyz/archive.html</loc>
+        <loc>https://jzw.asia/archive.html</loc>
         <lastmod>2026-02-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
@@ -36,7 +36,7 @@
     
     <!-- 关于页 -->
     <url>
-        <loc>https://jzwbuer.rth1.xyz/about.html</loc>
+        <loc>https://jzw.asia/about.html</loc>
         <lastmod>2026-02-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
@@ -44,7 +44,7 @@
     
     <!-- 声明页 -->
     <url>
-        <loc>https://jzwbuer.rth1.xyz/declaration.html</loc>
+        <loc>https://jzw.asia/declaration.html</loc>
         <lastmod>2026-02-20</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.5</priority>
@@ -53,7 +53,7 @@
     <!-- 文章详情页 - 示例（需要根据实际文章更新） -->
     <!-- 
     <url>
-        <loc>https://jzwbuer.rth1.xyz/article_detail.html?fileName=JavaScript.md</loc>
+        <loc>https://jzw.asia/article_detail.html?fileName=JavaScript.md</loc>
         <lastmod>2026-02-21</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>

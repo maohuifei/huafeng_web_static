@@ -4,7 +4,6 @@ categories: 过程记录
 createTime: 2025-01-20
 updateTime: 2026-02-21
 description: arm架构macos部署sqlserver
-top:
 ---
 
 ## 安装docker

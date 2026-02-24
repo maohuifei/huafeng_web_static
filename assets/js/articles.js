@@ -9,33 +9,29 @@ let totalArticles = []; // 所有文章数据
 let totalPages = 0; // 总页数
 
 function parseMdMeta(mdContent) {
-    const metaRegex = /^---([\s\S]*?)---/;
-    const metaMatch = mdContent.match(metaRegex);
-    if (!metaMatch) {
-        return {
-            title: "未知标题",
-            categories: "未分类",
-            createTime: "未知时间",
-            updateTime: "未知时间",
-            description: "暂无摘要",
-            top: 0
-        };
-    }
-
-    const metaStr = metaMatch[1].trim();
+    // 匹配所有 --- 分隔的 frontmatter 块
+    const metaRegex = /---\r?\n([\s\S]*?)---\r?\n/g;
+    const matches = [...mdContent.matchAll(metaRegex)];
+    
+    // 收集所有 frontmatter 块的元数据
     const meta = {};
-    metaStr.split('\n').forEach(line => {
-        const cleanLine = line.trim();
-        if (!cleanLine) return;
-        const colonIndex = cleanLine.indexOf(':');
-        if (colonIndex === -1) return;
+    matches.forEach(match => {
+        const metaStr = match[1].trim();
+        if (!metaStr) return; // 跳过空的 frontmatter
+        
+        metaStr.split('\n').forEach(line => {
+            const cleanLine = line.trim();
+            if (!cleanLine) return;
+            const colonIndex = cleanLine.indexOf(':');
+            if (colonIndex === -1) return;
 
-        const key = cleanLine.substring(0, colonIndex).trim();
-        const value = cleanLine.substring(colonIndex + 1).trim();
+            const key = cleanLine.substring(0, colonIndex).trim();
+            const value = cleanLine.substring(colonIndex + 1).trim();
 
-        if (key && value) {
-            meta[key] = key === "top" ? Number(value) || 0 : value;
-        }
+            if (key && value) {
+                meta[key] = key === "top" ? Number(value) || 0 : value;
+            }
+        });
     });
 
     return {

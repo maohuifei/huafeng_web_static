@@ -1,5 +1,5 @@
 # robots.txt for 我的个人网页
-# https://jzwbuer.rth1.xyz/
+# https://jzw.asia/
 
 User-agent: *
 Allow: /
@@ -14,7 +14,7 @@ Allow: /declaration.html
 
 
 # 站点地图位置
-Sitemap: https://jzwbuer.rth1.xyz/sitemap.xml
+Sitemap: https://jzw.asia/sitemap.xml
 
 # 常见搜索引擎特定规则
 User-agent: Googlebot
