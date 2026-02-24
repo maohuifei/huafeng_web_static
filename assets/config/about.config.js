@@ -51,7 +51,7 @@ export const aboutConfig = {
         {
             icon: "icon-GitHub",
             title: "huafeng_web_dynamic",
-            description: "使用 TypeScript 全栈开发，前端 Vue + 后端 Express + 数据库：MySQL 的前后端分离的，简单的动态个人网站",
+            description: "使用 TypeScript 全栈开发，前端 Vue + 后端 Express + 数据库 MySQL 的，前后端分离的，简单的动态个人网站",
             url: "https://github.com/maohuifei/huafeng_web_dynamic"
         },
         {

@@ -20,6 +20,67 @@ if (!fileName) {
 }
 
 /**
+ * 配置 marked 渲染器以支持 Prism.js
+ */
+function configureMarkedForPrism() {
+    if (typeof marked !== 'undefined') {
+        // 配置 marked 使用自定义 renderer 来添加语言类名
+        const renderer = new marked.Renderer();
+        
+        renderer.code = function({ text, lang, escaped }) {
+            let language = lang || 'plaintext';
+            
+            // 处理语言别名
+            const langAlias = {
+                'js': 'javascript',
+                'ts': 'typescript',
+                'py': 'python',
+                'sh': 'bash',
+                'shell': 'bash'
+            };
+            if (langAlias[language]) {
+                language = langAlias[language];
+            }
+            
+            console.log('[Marked] Code block:', { lang: language, textLength: text?.length });
+            
+            // 转义 HTML 特殊字符（如果 marked 还没有转义）
+            const codeText = escaped ? text : String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            
+            return `<pre class="language-${language}"><code class="language-${language}">${codeText}</code></pre>`;
+        };
+        
+        marked.setOptions({
+            renderer: renderer,
+            gfm: true,
+            breaks: true
+        });
+        console.log('[Marked] 渲染器已配置');
+    }
+}
+
+/**
+ * 初始化代码块高亮和复制功能
+ */
+function initCodeBlocks() {
+    // 等待 Prism 加载完成
+    const initPrism = () => {
+        if (typeof Prism !== 'undefined' && Prism.highlightAll) {
+            // 使用 Prism 的自动高亮功能
+            Prism.highlightAll();
+            console.log('[Prism] 代码高亮已初始化');
+        } else {
+            // Prism 还未加载，稍后重试
+            setTimeout(initPrism, 100);
+        }
+    };
+    initPrism();
+}
+
+/**
  * 生成目录（支持层级折叠）
  */
 function generateToc(htmlContent) {
@@ -211,6 +272,9 @@ async function renderArticleDetail() {
             });
         });
 
+        // 配置 marked 渲染器以支持 Prism.js
+        configureMarkedForPrism();
+
         // 提取正文
         let content = mdContent.replace(metaRegex, '').trim();
         const htmlContent = marked.parse(content);
@@ -237,6 +301,7 @@ async function renderArticleDetail() {
         // 初始化交互
         initTocToggle();
         initScrollSpy();
+        initCodeBlocks();
     } catch (error) {
         logError('加载文章失败', error);
         document.getElementById('toc').innerHTML = '<div class="error">目录加载失败</div>';

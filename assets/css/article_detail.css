@@ -496,22 +496,11 @@
 /* 代码块 */
 .article-body pre {
     margin: 1.5rem 0;
-    padding: 1.5rem;
-    background: #1e293b;
     border-radius: var(--radius-lg);
     overflow-x: auto;
     position: relative;
     box-shadow: var(--shadow-md);
-}
-
-.article-body pre::before {
-    content: 'Code';
-    position: absolute;
-    top: 0.5rem;
-    right: 1rem;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.4);
-    font-family: monospace;
+    border: 1px solid var(--border-color);
 }
 
 .article-body code {
@@ -526,13 +515,6 @@
     border-radius: var(--radius-sm);
     color: var(--primary-color);
     border: 1px solid var(--border-color);
-}
-
-.article-body pre code {
-    background: transparent;
-    padding: 0;
-    color: #e2e8f0;
-    border: none;
 }
 
 /* 表格 */
@@ -583,6 +565,45 @@
 /* 分隔线 */
 .article-body > *:last-child {
     margin-bottom: 0;
+}
+
+/* ========== 代码块 Prism.js 样式 ========== */
+/* 代码块容器样式 */
+.article-body pre[class*="language-"] {
+    margin: 1.5rem 0;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+/* 行内代码样式保持不变 */
+
+/* 复制按钮样式 */
+div.code-toolbar > .toolbar {
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+div.code-toolbar > .toolbar .toolbar-item > button {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all var(--transition-base);
+    box-shadow: none;
+    cursor: pointer;
+}
+
+div.code-toolbar > .toolbar .toolbar-item > button:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+div.code-toolbar > .toolbar .toolbar-item > button:focus {
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
 }
 
 /* ========== 响应式设计 ========== */
