@@ -2,7 +2,7 @@
 
 ## 开源项目
 此网站项目源代码已经在 GitHub 上开源，欢迎访问并参与贡献。
-[前往 GitHub 查看项目](https://github.com/maohuifei/myWeb)
+[前往 GitHub 查看项目](https://github.com/maohuifei/huafeng_web_static)
 
 ## 关于本网站
 本网站由我独立开发与维护，不会主动对外推广，主要记录我自己的学习历程和心得。

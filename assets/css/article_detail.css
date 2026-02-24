@@ -373,11 +373,6 @@
     gap: 0.5rem;
 }
 
-.article-time-detail span::before {
-    content: '🕐';
-    font-size: 1rem;
-}
-
 /* ========== 文章正文样式 ========== */
 .article-body {
     color: var(--text-primary);

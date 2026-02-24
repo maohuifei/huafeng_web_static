@@ -1,11 +1,12 @@
 /**
- * 文章列表页脚本 - 支持分页
+ * 文章列表页脚本 - 使用预生成索引 + 缓存
  */
-import { articlesConfig } from '../config/articles.config.js';
 import { logError } from './utils.js';
 
 // 常量配置
-const PAGE_SIZE = 5; // 每页文章数
+const PAGE_SIZE = 5;
+const CACHE_KEY = 'articles_index';
+const CACHE_DURATION = 5 * 60 * 1000; // 缓存 5 分钟
 
 // 状态变量
 let currentPage = 1;
@@ -13,76 +14,41 @@ let totalArticles = [];
 let totalPages = 0;
 
 /**
- * 解析 Markdown 元信息
+ * 从缓存或网络获取文章索引
  */
-function parseMdMeta(mdContent) {
-    const metaRegex = /---\r?\n([\s\S]*?)---\r?\n/g;
-    const matches = [...mdContent.matchAll(metaRegex)];
-    const meta = {};
-
-    matches.forEach(match => {
-        match[1].trim().split('\n').forEach(line => {
-            const cleanLine = line.trim();
-            if (!cleanLine) return;
-            const colonIndex = cleanLine.indexOf(':');
-            if (colonIndex === -1) return;
-
-            const key = cleanLine.substring(0, colonIndex).trim();
-            const value = cleanLine.substring(colonIndex + 1).trim();
-            if (key && value) {
-                meta[key] = key === 'top' ? Number(value) || 0 : value;
-            }
-        });
-    });
-
-    return {
-        title: meta.title || '未知标题',
-        categories: meta.categories || '未分类',
-        createTime: meta.createTime || '未知时间',
-        updateTime: meta.updateTime || meta.createTime || '未知时间',
-        description: meta.description || '暂无摘要',
-        top: meta.top || 0
-    };
-}
-
-/**
- * 获取文章数据
- */
-async function fetchMdFile(fileName) {
+async function fetchArticlesIndex() {
+    // 尝试从缓存读取
     try {
-        const response = await fetch(`./articles/${fileName}`);
-        if (!response.ok) throw new Error(`文件 ${fileName} 读取失败`);
-
-        let mdContent = await response.text();
-
-        // 处理 HTML 格式（热铁盒渲染）
-        if (mdContent.includes('<body>')) {
-            const doc = new DOMParser().parseFromString(mdContent, 'text/html');
-            const markdownBody = doc.querySelector('.markdown-body');
-            if (markdownBody) {
-                const firstH2 = markdownBody.querySelector('h2');
-                if (firstH2 && firstH2.textContent.includes('title:')) {
-                    mdContent = firstH2.textContent + '\n\n' + markdownBody.innerHTML.replace(firstH2.outerHTML, '');
-                } else {
-                    mdContent = markdownBody.innerText;
-                }
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+            const { data, timestamp } = JSON.parse(cached);
+            if (Date.now() - timestamp < CACHE_DURATION) {
+                console.log('[Articles] 使用缓存数据');
+                return data;
             }
         }
-
-        const meta = parseMdMeta(mdContent);
-        return {
-            title: meta.title,
-            categories: meta.categories,
-            createTime: meta.createTime,
-            updateTime: meta.updateTime,
-            excerpt: meta.description,
-            top: meta.top,
-            fileName
-        };
-    } catch (error) {
-        logError('读取文章失败', error);
-        return null;
+    } catch (e) {
+        console.warn('[Articles] 缓存读取失败', e);
     }
+
+    // 从网络加载
+    console.log('[Articles] 加载索引文件...');
+    const response = await fetch('./articles_index.json');
+    if (!response.ok) throw new Error('索引文件加载失败');
+
+    const data = await response.json();
+
+    // 更新缓存
+    try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+            data,
+            timestamp: Date.now()
+        }));
+    } catch (e) {
+        console.warn('[Articles] 缓存写入失败', e);
+    }
+
+    return data;
 }
 
 /**
@@ -153,10 +119,10 @@ function renderArticlesByPage(page) {
             <span class="article-category">${article.categories}</span>
             <h2>${article.title}</h2>
             <div class="article-meta">
-                <span>${article.createTime}</span>
-                <span>${article.updateTime}</span>
+                <span title="创建时间">创建时间：${article.createTime}</span>
+                <span title="更新时间">更新时间：${article.updateTime}</span>
             </div>
-            <div class="article-excerpt">${article.excerpt}</div>
+            <div class="article-excerpt">${article.excerpt || article.description}</div>
         `;
         card.onclick = () => {
             window.location.href = `article_detail.html?fileName=${article.fileName}`;
@@ -174,24 +140,22 @@ async function renderArticleList() {
     const container = document.getElementById('articleList');
     if (!container) return;
 
-    container.innerHTML = '<div class="loading">加载文章列表中...</div>';
-
     try {
-        const results = await Promise.all(
-            articlesConfig.articleList.map(fileName => fetchMdFile(fileName))
-        );
-        totalArticles = results.filter(a => a).sort((a, b) => b.top - a.top);
+        const indexData = await fetchArticlesIndex();
+        totalArticles = indexData.articles;
         totalPages = Math.ceil(totalArticles.length / PAGE_SIZE);
 
+        console.log(`[Articles] 加载完成，共 ${totalArticles.length} 篇`);
+
         if (totalArticles.length === 0) {
-            container.innerHTML = '<div class="error">暂无文章或文章加载失败！</div>';
+            container.innerHTML = '<div class="error">暂无文章</div>';
             return;
         }
 
         renderArticlesByPage(currentPage);
     } catch (error) {
         logError('加载文章列表失败', error);
-        container.innerHTML = '<div class="error">文章加载失败</div>';
+        container.innerHTML = '<div class="error">文章加载失败，请刷新重试</div>';
     }
 }
 

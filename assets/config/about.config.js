@@ -37,7 +37,7 @@ export const aboutConfig = {
             icon: "icon-weixin",
             title: "微信",
             url: "javascript:;",
-            qrcode: "/assets/images/wechat-qrcode.jpg"
+            qrcode: "./assets/images/wechat_qrcode.jpg"
         },
         {
             icon: "icon-tuite",
@@ -50,9 +50,15 @@ export const aboutConfig = {
     projects: [
         {
             icon: "icon-GitHub",
-            title: "huafengWeb",
-            description: "使用 TypeScript 编写的、前后端分离的、简单的动态个人网站",
-            url: "https://github.com/maohuifei/myWeb"
+            title: "huafeng_web_dynamic",
+            description: "使用 TypeScript 全栈开发，前端 Vue + 后端 Express + 数据库：MySQL 的前后端分离的，简单的动态个人网站",
+            url: "https://github.com/maohuifei/huafeng_web_dynamic"
+        },
+        {
+            icon: "icon-GitHub",
+            title: "huafeng_web_static",
+            description: "使用原生 HTML/CSS/JavaScript 编写的，纯静态的个人在线笔记，解析本地 markdown 文件并展示",
+            url: "https://github.com/maohuifei/huafeng_web_static"
         },
         {
             icon: "icon-ziyuan",

@@ -1,81 +1,51 @@
 /**
- * 归档页脚本 - 统计概览、分类目录、时间线
+ * 归档页脚本 - 使用预生成索引 + 缓存
  */
-import { articlesConfig } from '../config/articles.config.js';
 import { logError } from './utils.js';
+
+// 缓存配置
+const CACHE_KEY = 'articles_index';
+const CACHE_DURATION = 5 * 60 * 1000; // 缓存 5 分钟
 
 // 存储所有文章数据
 let allArticles = [];
 
 /**
- * 解析 Markdown 元信息
+ * 从缓存或网络获取文章索引
  */
-function parseMdMeta(mdContent) {
-    const metaRegex = /---\r?\n([\s\S]*?)---\r?\n/g;
-    const matches = [...mdContent.matchAll(metaRegex)];
-    const meta = {};
-
-    matches.forEach(match => {
-        match[1].trim().split('\n').forEach(line => {
-            const cleanLine = line.trim();
-            if (!cleanLine) return;
-            const colonIndex = cleanLine.indexOf(':');
-            if (colonIndex === -1) return;
-
-            const key = cleanLine.substring(0, colonIndex).trim();
-            const value = cleanLine.substring(colonIndex + 1).trim();
-            if (key && value) {
-                meta[key] = key === 'top' ? Number(value) || 0 : value;
-            }
-        });
-    });
-
-    return {
-        title: meta.title || '未知标题',
-        categories: meta.categories || '未分类',
-        createTime: meta.createTime || '未知时间',
-        updateTime: meta.updateTime || meta.createTime || '未知时间',
-        top: meta.top || 0
-    };
-}
-
-/**
- * 获取文章数据
- */
-async function fetchMdFile(fileName) {
+async function fetchArticlesIndex() {
+    // 尝试从缓存读取
     try {
-        const response = await fetch(`./articles/${fileName}`);
-        if (!response.ok) throw new Error(`文件 ${fileName} 读取失败`);
-
-        let mdContent = await response.text();
-
-        // 处理 HTML 格式
-        if (mdContent.includes('<body>')) {
-            const doc = new DOMParser().parseFromString(mdContent, 'text/html');
-            const markdownBody = doc.querySelector('.markdown-body');
-            if (markdownBody) {
-                const firstH2 = markdownBody.querySelector('h2');
-                if (firstH2 && firstH2.textContent.includes('title:')) {
-                    mdContent = firstH2.textContent + '\n\n' + markdownBody.innerHTML.replace(firstH2.outerHTML, '');
-                } else {
-                    mdContent = markdownBody.innerText;
-                }
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+            const { data, timestamp } = JSON.parse(cached);
+            if (Date.now() - timestamp < CACHE_DURATION) {
+                console.log('[Archive] 使用缓存数据');
+                return data;
             }
         }
-
-        const meta = parseMdMeta(mdContent);
-        return {
-            title: meta.title,
-            categories: meta.categories,
-            createTime: meta.createTime,
-            updateTime: meta.updateTime,
-            top: meta.top,
-            fileName
-        };
-    } catch (error) {
-        logError('读取文章失败', error);
-        return null;
+    } catch (e) {
+        console.warn('[Archive] 缓存读取失败', e);
     }
+
+    // 从网络加载
+    console.log('[Archive] 加载索引文件...');
+    const response = await fetch('./articles_index.json');
+    if (!response.ok) throw new Error('索引文件加载失败');
+
+    const data = await response.json();
+
+    // 更新缓存
+    try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+            data,
+            timestamp: Date.now()
+        }));
+    } catch (e) {
+        console.warn('[Archive] 缓存写入失败', e);
+    }
+
+    return data;
 }
 
 /**
@@ -150,7 +120,7 @@ function renderCategories() {
         return `
             <div class="category-card">
                 <div class="category-header">
-                    <div class="category-name"><span>📂</span><span>${category}</span></div>
+                    <div class="category-name">${category}</div>
                     <div class="category-count">${articles.length}</div>
                 </div>
                 <ul class="category-articles">
@@ -213,7 +183,7 @@ function renderTimeline() {
                                             <a href="article_detail.html?fileName=${article.fileName}" class="timeline-article-link">${article.title}</a>
                                             <div class="timeline-article-meta">
                                                 <span>${article.createTime.substring(0, 10)}</span>
-                                                <span>📁 ${article.categories}</span>
+                                                <span>${article.categories}</span>
                                             </div>
                                         </li>
                                     `).join('')}
@@ -233,22 +203,26 @@ function renderTimeline() {
  * 初始化
  */
 async function init() {
-    // 加载所有文章
-    const results = await Promise.all(
-        articlesConfig.articleList.map(fileName => fetchMdFile(fileName))
-    );
-    allArticles = results.filter(a => a);
+    try {
+        const indexData = await fetchArticlesIndex();
+        allArticles = indexData.articles;
 
-    if (allArticles.length === 0) {
-        document.getElementById('statsOverview').innerHTML = '<div class="empty-state"><span class="icon">📭</span><p>暂无文章</p></div>';
-        document.getElementById('categoriesContainer').innerHTML = '';
-        document.getElementById('timeline').innerHTML = '';
-        return;
+        console.log(`[Archive] 加载完成，共 ${allArticles.length} 篇`);
+
+        if (allArticles.length === 0) {
+            document.getElementById('statsOverview').innerHTML = '<div class="empty-state"><span class="icon">📭</span><p>暂无文章</p></div>';
+            document.getElementById('categoriesContainer').innerHTML = '';
+            document.getElementById('timeline').innerHTML = '';
+            return;
+        }
+
+        renderStatsOverview();
+        renderCategories();
+        renderTimeline();
+    } catch (error) {
+        logError('加载归档失败', error);
+        document.getElementById('statsOverview').innerHTML = '<div class="error">加载失败，请刷新重试</div>';
     }
-
-    renderStatsOverview();
-    renderCategories();
-    renderTimeline();
 }
 
 // 初始化

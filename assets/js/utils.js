@@ -11,7 +11,8 @@
 export function renderIcon(icon, className = '') {
     if (!icon) return '';
 
-    if (icon.startsWith('http://') || icon.startsWith('https://')) {
+    // 判断是否是图片 URL（包括本地路径）
+    if (icon.startsWith('http://') || icon.startsWith('https://') || icon.includes('/')) {
         return `<img src="${icon}" alt="icon" class="${className}" loading="lazy">`;
     }
     return `<i class="iconfont ${icon} ${className}"></i>`;
