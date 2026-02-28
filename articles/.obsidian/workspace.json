@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "办公文档格式规范总结.md",
+                "file": "操作系统使用笔记.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "办公文档格式规范总结"
+              "title": "操作系统使用笔记"
             }
           }
         ]
@@ -142,13 +142,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "办公文档格式规范总结.md",
+                "file": "操作系统使用笔记.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "办公文档格式规范总结 的大纲"
+              "title": "操作系统使用笔记 的大纲"
             }
           }
         ],
@@ -171,14 +171,14 @@
   },
   "active": "be5cc786f2733a41",
   "lastOpenFiles": [
-    "Git 使用笔记.md",
-    "个人网站 部署过程记录.md",
-    "JavaScript 使用笔记.md",
-    "操作系统使用笔记.md",
+    "泛微二开标准代码总结.md",
+    "个人网站部署过程记录.md",
+    "Git使用笔记.md",
+    "Markdown使用笔记.md",
     "办公文档格式规范总结.md",
-    "markdown 使用笔记.md",
-    "开发规范总结.md",
-    "泛微二开标准代码模板.md",
+    "应用开发规范总结.md",
+    "JavaScript使用笔记.md",
+    "操作系统使用笔记.md",
     "图片地址.md",
     "工具应用使用笔记.md",
     "2026-02-21.md",

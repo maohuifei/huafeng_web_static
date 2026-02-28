@@ -1,6 +1,6 @@
 #!/bin/bash
 # 更新文章索引脚本
-# 使用方法：./update-index.sh
+# 使用方法：./update_index.sh
 
 echo "正在生成文章索引..."
 node assets/js/generate_index.js

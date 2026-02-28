@@ -1,10 +1,10 @@
 ---
-title: Git使用笔记
+title: Git 使用笔记
 categories: 使用笔记
-description: Git使用笔记
 createTime: 2022-12-03
 updateTime: 2026-02-21
-top: 0
+description: Git使用笔记
+top: 8
 ---
 ## Git的下载与安装
 

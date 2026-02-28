@@ -1,9 +1,9 @@
 ---
-title: JavaScript
+title: JavaScript 使用笔记
 categories: 使用笔记
 createTime: 2022-11-11
 updateTime: 2026-02-21
-description: JavaScript
+description: JavaScript使用笔记
 top: 0
 ---
 ## 数组对象
