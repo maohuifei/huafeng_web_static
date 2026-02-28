@@ -4,8 +4,8 @@ categories: 使用笔记
 description: Git使用笔记
 createTime: 2022-12-03
 updateTime: 2026-02-21
+top: 0
 ---
-
 ## Git的下载与安装
 
 官网：[https://git-scm.com/](https://git-scm.com/)
@@ -175,3 +175,6 @@ C盘用户目录下的`.gitconfig`文件。路径示例：`C:\Users\用户名\.g
 #### 新建的.git配置文件
 
 执行`git init`后，
+
+## 提交前执行的脚本
+

@@ -1,11 +1,11 @@
 ---
 title: JavaScript
-categories: 学习笔记
+categories: 使用笔记
 createTime: 2022-11-11
 updateTime: 2026-02-21
 description: JavaScript
+top: 0
 ---
-
 ## 数组对象
 
 ### 检测是否为数组：instanceof / isArray
