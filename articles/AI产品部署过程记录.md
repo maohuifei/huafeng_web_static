@@ -4,7 +4,7 @@ categories: 过程记录
 createTime: 2026-03-03
 updateTime: 2026-03-03
 description: AI产品部署过程记录
-top: false
+top: true
 ---
 # Ollama
 ## 部署本地DeepSeek

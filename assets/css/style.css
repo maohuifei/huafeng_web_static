@@ -1,18 +1,18 @@
-/* ========== 全局 CSS 变量定义 ========== */
+/* ========== 全局 CSS 变量定义 - 浅色主题（默认） ========== */
 :root {
     /* 主色调 - 优雅的蓝紫色渐变 */
     --primary-color: #4f46e5;
     --primary-light: #6366f1;
     --primary-dark: #4338ca;
     --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    
+
     /* 辅助色 */
     --secondary-color: #0ea5e9;
     --accent-color: #f59e0b;
     --success-color: #10b981;
     --danger-color: #ef4444;
-    
-    /* 中性色 */
+
+    /* 中性色 - 浅色主题 */
     --text-primary: #1f2937;
     --text-secondary: #4b5563;
     --text-muted: #9ca3af;
@@ -140,6 +140,10 @@ nav a {
     vertical-align: middle;
 }
 
+nav a span {
+    color: inherit !important;
+}
+
 nav a::before {
     content: '';
     position: absolute;
@@ -154,7 +158,7 @@ nav a::before {
 }
 
 nav a:hover {
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
     background: var(--bg-tertiary);
 }
 
@@ -163,12 +167,16 @@ nav a:hover::before {
 }
 
 nav a.active {
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
     background: rgba(99, 102, 241, 0.1);
 }
 
 nav a.active::before {
     width: 80%;
+}
+
+nav a.active:hover {
+    color: var(--primary-color) !important;
 }
 
 /* 导航图标 */
@@ -595,13 +603,58 @@ footer a:hover {
     footer {
         display: none;
     }
-    
+
     .container {
         padding-top: 0;
     }
-    
+
     .content-card {
         box-shadow: none;
         border: 1px solid var(--border-color);
+    }
+}
+
+/* ========== 深色主题支持 ========== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* 中性色 - 深色主题 */
+        --text-primary: #f9fafb;
+        --text-secondary: #d1d5db;
+        --text-muted: #6b7280;
+        --bg-primary: #1f2937;
+        --bg-secondary: #111827;
+        --bg-tertiary: #374151;
+        --border-color: #374151;
+
+        /* 调整主色调以适应深色背景 */
+        --primary-color: #6366f1;
+        --primary-light: #818cf8;
+        --primary-dark: #4f46e5;
+    }
+
+    /* 头部导航 - 深色主题 */
+    header {
+        background: rgba(17, 24, 39, 0.95);
+    }
+
+    header.scrolled {
+        background: rgba(17, 24, 39, 0.98);
+    }
+
+    /* 页脚 - 深色主题下保持统一 */
+    footer {
+        background: var(--bg-primary);
+        border-top: 1px solid var(--border-color);
+    }
+
+    /* 滚动条 - 深色主题 */
+    ::-webkit-scrollbar-track {
+        background: var(--bg-secondary);
+    }
+
+    /* 选中文本 - 深色主题 */
+    ::selection {
+        background: rgba(99, 102, 241, 0.3);
+        color: var(--text-primary);
     }
 }

@@ -290,3 +290,41 @@ body>.container {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* ========== 深色主题支持 ========== */
+@media (prefers-color-scheme: dark) {
+    /* 欢迎区域 - 深色主题 */
+    .section-welcome {
+        background: linear-gradient(135deg, #0f172a 0%, #1a2332 100%);
+    }
+
+    .section-welcome h1 {
+        /* 深色模式下使用更亮的渐变色 */
+        background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    /* 理念区域 - 深色主题 */
+    .section-philosophy {
+        background: linear-gradient(135deg, #1a2332 0%, #0f172a 100%);
+    }
+
+    .section-philosophy .highlight {
+        /* 深色模式下使用更亮的渐变色 */
+        background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    /* 技术栈区域 - 深色主题 */
+    .tech-stack-section {
+        border-top-color: var(--border-color);
+    }
+
+    .tech-title {
+        color: var(--text-primary);
+    }
+}
