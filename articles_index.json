@@ -1,33 +1,15 @@
 {
-  "generatedAt": "2026-03-03T08:51:24.899Z",
+  "generatedAt": "2026-03-03T09:29:20.333Z",
   "total": 9,
   "articles": [
     {
-      "fileName": "办公文档格式规范总结.md",
-      "title": "办公文档格式规范总结",
-      "categories": "规范总结",
-      "createTime": "2026-02-28",
-      "updateTime": "2026-02-28",
-      "description": "参考GB/T 9704-2012《党政机关公文格式》，采用免费可商用的思源字体，整理可直接套用的文档格式规范，适配办公、公文、正式报告等场景",
-      "top": 9
-    },
-    {
-      "fileName": "应用开发规范总结.md",
-      "title": "应用开发规范总结",
-      "categories": "规范总结",
-      "createTime": "2023-12-09",
-      "updateTime": "2026-02-28",
-      "description": "应用开发规范总结",
-      "top": 9
-    },
-    {
-      "fileName": "Git使用笔记.md",
-      "title": "Git 使用笔记",
-      "categories": "使用笔记",
-      "createTime": "2022-12-03",
-      "updateTime": "2026-02-21",
-      "description": "Git使用笔记",
-      "top": 8
+      "fileName": "AI产品部署过程记录.md",
+      "title": "AI产品部署过程记录",
+      "categories": "过程记录",
+      "createTime": "2026-03-03",
+      "updateTime": "2026-03-03",
+      "description": "AI产品部署过程记录",
+      "top": true
     },
     {
       "fileName": "个人网站部署过程记录.md",
@@ -36,7 +18,25 @@
       "createTime": "2023-02-10",
       "updateTime": "2026-02-28",
       "description": "尝试多种解决方案与部署流程的简单记录",
-      "top": 8
+      "top": true
+    },
+    {
+      "fileName": "办公文档格式规范总结.md",
+      "title": "办公文档格式规范总结",
+      "categories": "规范总结",
+      "createTime": "2026-02-28",
+      "updateTime": "2026-02-28",
+      "description": "参考GB/T 9704-2012《党政机关公文格式》，采用免费可商用的思源字体，整理可直接套用的文档格式规范，适配办公、公文、正式报告等场景",
+      "top": true
+    },
+    {
+      "fileName": "应用开发规范总结.md",
+      "title": "应用开发规范总结",
+      "categories": "规范总结",
+      "createTime": "2023-12-09",
+      "updateTime": "2026-02-28",
+      "description": "应用开发规范总结",
+      "top": true
     },
     {
       "fileName": "泛微二开标准代码总结.md",
@@ -45,25 +45,7 @@
       "createTime": "2025-01-20",
       "updateTime": "2026-02-21",
       "description": "总结的泛微二次开发标准的极简的可执行代码模板",
-      "top": 7
-    },
-    {
-      "fileName": "AI产品部署过程记录.md",
-      "title": "AI产品部署过程记录",
-      "categories": "过程记录",
-      "createTime": "2026-03-03",
-      "updateTime": "2026-03-03",
-      "description": "AI产品部署过程记录",
-      "top": 0
-    },
-    {
-      "fileName": "JavaScript使用笔记.md",
-      "title": "JavaScript 使用笔记",
-      "categories": "使用笔记",
-      "createTime": "2022-11-11",
-      "updateTime": "2026-02-21",
-      "description": "JavaScript使用笔记",
-      "top": 0
+      "top": true
     },
     {
       "fileName": "Markdown使用笔记.md",
@@ -72,7 +54,25 @@
       "createTime": "2026-02-28",
       "updateTime": "2026-02-28",
       "description": "Markdown是一种轻量级标记语言，语法简洁、易上手，无需复杂操作即可快速排版，广泛应用于笔记、文档、博客等场景，核心优势是“所见即所得”的简洁排版逻辑",
-      "top": 0
+      "top": false
+    },
+    {
+      "fileName": "Git使用笔记.md",
+      "title": "Git 使用笔记",
+      "categories": "使用笔记",
+      "createTime": "2022-12-03",
+      "updateTime": "2026-02-21",
+      "description": "Git使用笔记",
+      "top": false
+    },
+    {
+      "fileName": "JavaScript使用笔记.md",
+      "title": "JavaScript 使用笔记",
+      "categories": "使用笔记",
+      "createTime": "2022-11-11",
+      "updateTime": "2026-02-21",
+      "description": "JavaScript使用笔记",
+      "top": false
     },
     {
       "fileName": "操作系统使用笔记.md",
@@ -81,7 +81,7 @@
       "createTime": "2024-08-15",
       "updateTime": "2026-02-21",
       "description": "操作系统使用笔记",
-      "top": 0
+      "top": false
     }
   ]
 }

@@ -205,7 +205,12 @@ function renderTimeline() {
 async function init() {
     try {
         const indexData = await fetchArticlesIndex();
-        allArticles = indexData.articles;
+        // 排序：top 为 true 的在前，然后按 updateTime 降序（新的在前）
+        allArticles = indexData.articles.sort((a, b) => {
+            if (a.top === true && b.top !== true) return -1;
+            if (a.top !== true && b.top === true) return 1;
+            return new Date(b.updateTime) - new Date(a.updateTime);
+        });
 
         console.log(`[Archive] 加载完成，共 ${allArticles.length} 篇`);
 

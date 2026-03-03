@@ -28,7 +28,12 @@ function parseMdMeta(mdContent) {
             const key = cleanLine.substring(0, colonIndex).trim();
             const value = cleanLine.substring(colonIndex + 1).trim();
             if (key && value) {
-                meta[key] = key === 'top' ? Number(value) || 0 : value;
+                if (key === 'top') {
+                    // top 字段：true 表示置顶，false 表示不置顶
+                    meta[key] = value.trim().toLowerCase() === 'true';
+                } else {
+                    meta[key] = value;
+                }
             }
         });
     });
@@ -39,7 +44,7 @@ function parseMdMeta(mdContent) {
         createTime: meta.createTime || '未知时间',
         updateTime: meta.updateTime || meta.createTime || '未知时间',
         description: meta.description || '暂无摘要',
-        top: meta.top || 0
+        top: meta.top || false
     };
 }
 
@@ -66,8 +71,12 @@ mdFiles.forEach(fileName => {
     }
 });
 
-// 按置顶优先级排序
-articles.sort((a, b) => b.top - a.top);
+// 按置顶优先级排序：top 为 true 的在前，然后按 updateTime 降序
+articles.sort((a, b) => {
+    if (a.top === true && b.top !== true) return -1;
+    if (a.top !== true && b.top === true) return 1;
+    return new Date(b.updateTime) - new Date(a.updateTime);
+});
 
 // 生成 JSON 文件
 const output = {

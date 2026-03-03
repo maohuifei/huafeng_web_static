@@ -142,7 +142,12 @@ async function renderArticleList() {
 
     try {
         const indexData = await fetchArticlesIndex();
-        totalArticles = indexData.articles;
+        // 排序：top 为 true 的在前，然后按 updateTime 降序（新的在前）
+        totalArticles = indexData.articles.sort((a, b) => {
+            if (a.top === true && b.top !== true) return -1;
+            if (a.top !== true && b.top === true) return 1;
+            return new Date(b.updateTime) - new Date(a.updateTime);
+        });
         totalPages = Math.ceil(totalArticles.length / PAGE_SIZE);
 
         console.log(`[Articles] 加载完成，共 ${totalArticles.length} 篇`);
