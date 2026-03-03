@@ -24,41 +24,40 @@ if (!fileName) {
  */
 function configureMarkedForPrism() {
     if (typeof marked !== 'undefined') {
-        // 配置 marked 使用自定义 renderer 来添加语言类名
-        const renderer = new marked.Renderer();
-        
-        renderer.code = function({ text, lang, escaped }) {
-            let language = lang || 'plaintext';
-            
-            // 处理语言别名
-            const langAlias = {
-                'js': 'javascript',
-                'ts': 'typescript',
-                'py': 'python',
-                'sh': 'bash',
-                'shell': 'bash'
-            };
-            if (langAlias[language]) {
-                language = langAlias[language];
-            }
-            
-            console.log('[Marked] Code block:', { lang: language, textLength: text?.length });
-            
-            // 转义 HTML 特殊字符（如果 marked 还没有转义）
-            const codeText = escaped ? text : String(text)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-            
-            return `<pre class="language-${language}"><code class="language-${language}">${codeText}</code></pre>`;
-        };
-        
+        // 配置 marked 选项
         marked.setOptions({
-            renderer: renderer,
             gfm: true,
             breaks: true
         });
-        console.log('[Marked] 渲染器已配置');
+        
+        // 配置 code 渲染器以支持 Prism.js
+        const codeRenderer = {
+            code(token) {
+                let language = token.lang || 'plaintext';
+
+                // 处理语言别名
+                const langAlias = {
+                    'js': 'javascript',
+                    'ts': 'typescript',
+                    'py': 'python',
+                    'sh': 'bash',
+                    'shell': 'bash'
+                };
+                if (langAlias[language]) {
+                    language = langAlias[language];
+                }
+
+                // 转义 HTML 特殊字符
+                const codeText = String(token.text)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+
+                return `<pre class="language-${language}"><code class="language-${language}">${codeText}</code></pre>`;
+            }
+        };
+
+        marked.use({ renderer: codeRenderer });
     }
 }
 
@@ -279,8 +278,15 @@ async function renderArticleDetail() {
         let content = mdContent.replace(metaRegex, '').trim();
         const htmlContent = marked.parse(content);
 
-        // 生成目录
-        const { tocHtml, updatedHtml } = generateToc(htmlContent);
+        // 修复 HTML 中的图片路径：将 markdown 图片语法转换为正确的 img 标签
+        // 匹配 ![alt](./path/to/image.png) 并转换为 <img src="./articles/path/to/image.png" alt="alt">
+        const fixedHtmlContent = htmlContent.replace(
+            /!\[([^\]]*)\]\(\.\/([^)]+)\)/g,
+            `<img src="./articles/$2" alt="$1">`
+        );
+
+        // 生成目录（使用修复后的 HTML）
+        const { tocHtml, updatedHtml } = generateToc(fixedHtmlContent);
 
         // 渲染页面
         document.title = `${meta.title} - 我的个人网页`;

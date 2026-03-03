@@ -4,7 +4,7 @@ categories: 过程记录
 createTime: 2026-03-03
 updateTime: 2026-03-03
 description: AI产品部署过程记录
-top: 0
+top: 7
 ---
 # Ollama
 ## 部署本地DeepSeek
@@ -25,7 +25,7 @@ $npm i -g openclaw
 $openclaw onboard
 ```
 ### 3. 产品的介绍和风险说明
-![产品的介绍和风险说明](./AI 产品部署过程记录/截屏2026-03-03 14.08.47.png)
+![产品的介绍和风险说明](/articles/AI产品部署过程记录/chanpinjieshao.png)
 ### 4. 部署模式选择快速
 ```bash
  Onboarding mode
@@ -33,17 +33,17 @@ $openclaw onboard
 │  QuickStart
 ```
 ### 5. 选择大模型平台，并配置ApiKey
-![选择大模型平台，并配置ApiKey](./AI 产品部署过程记录/截屏2026-03-03 14.11.57.png)
+![选择大模型平台，并配置ApiKey](/articles/AI产品部署过程记录/daxingmoxingpingtai.png)
 ### 5. 选择消息机器人，并配置AppId和AppSecret
-![选择消息机器人，并配置AppId和AppSecret](./AI 产品部署过程记录/截屏2026-03-03 14.41.31.png)
+![选择消息机器人，并配置AppId和AppSecret](/articles/AI产品部署过程记录/xiaoxijiqiren.png)
 ### 6. 选择是否现在配置 skills 和 hooks
 skills选择no，后续按需配置。
 hooks默认全选
-![选择是否现在配置skills和hooks](./AI 产品部署过程记录/截屏2026-03-03 14.44.39.png)
+![选择是否现在配置skills和hooks](/articles/AI产品部署过程记录/skillshehooks.png)
 ### 7. 选择使用时的界面类型
-![选择使用时的界面类型](./AI 产品部署过程记录/截屏2026-03-03 14.45.45.png)
+![选择使用时的界面类型](/articles/AI产品部署过程记录/wancheng.png)
 ### 8. 完成
-![完成](./AI 产品部署过程记录/截屏2026-03-03 14.48.35.png)
+![完成](/articles/AI产品部署过程记录/buquwancheng.png)
 ### 9. 相关命令
 ```bash
 #停止服务

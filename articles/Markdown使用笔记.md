@@ -4,7 +4,7 @@ categories: 使用笔记
 createTime: 2026-02-28
 updateTime: 2026-02-28
 description: Markdown是一种轻量级标记语言，语法简洁、易上手，无需复杂操作即可快速排版，广泛应用于笔记、文档、博客等场景，核心优势是“所见即所得”的简洁排版逻辑
-top: 0
+top: 8
 ---
 # 基础文本格式化
 

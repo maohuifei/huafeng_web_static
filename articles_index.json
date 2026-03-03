@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-02-28T04:57:22.970Z",
-  "total": 8,
+  "generatedAt": "2026-03-03T08:51:24.899Z",
+  "total": 9,
   "articles": [
     {
       "fileName": "办公文档格式规范总结.md",
@@ -46,6 +46,15 @@
       "updateTime": "2026-02-21",
       "description": "总结的泛微二次开发标准的极简的可执行代码模板",
       "top": 7
+    },
+    {
+      "fileName": "AI产品部署过程记录.md",
+      "title": "AI产品部署过程记录",
+      "categories": "过程记录",
+      "createTime": "2026-03-03",
+      "updateTime": "2026-03-03",
+      "description": "AI产品部署过程记录",
+      "top": 0
     },
     {
       "fileName": "JavaScript使用笔记.md",
