@@ -22,6 +22,38 @@ export const siteConfig = {
 };
 
 /**
+ * 判断是否为当前页面（支持静态HTML文章页）
+ */
+function isCurrentNavPage(navUrl) {
+    const currentPath = window.location.pathname;
+    
+    // 如果当前是静态文章页（在articles_html目录下）
+    if (currentPath.includes('articles_html/')) {
+        // 静态文章页的"当前页面"应该是"文章"导航项
+        // navUrl 可能是 "articles.html" 或 "../articles.html"
+        return navUrl === 'articles.html' || navUrl === '../articles.html' || navUrl === 'articles.html';
+    }
+    
+    // 普通页面比较
+    const currentPage = currentPath.split('/').pop() || 'index.html';
+    return currentPage === navUrl;
+}
+
+/**
+ * 获取正确的导航链接路径
+ */
+function getNavUrl(url) {
+    const currentPath = window.location.pathname;
+    
+    // 如果当前在articles_html目录下，需要返回上级目录
+    if (currentPath.includes('articles_html/')) {
+        return `../${url}`;
+    }
+    
+    return url;
+}
+
+/**
  * 渲染头部导航
  */
 export function renderHeader() {
@@ -31,7 +63,7 @@ export function renderHeader() {
                 <ul>
                     ${siteConfig.navMenu.map(item => `
                         <li>
-                            <a href="${item.url}" ${isCurrentPage(item.url) ? 'class="active"' : ''}>
+                            <a href="${getNavUrl(item.url)}" ${isCurrentNavPage(item.url) ? 'class="active"' : ''}>
                                 ${renderIcon(item.icon, 'nav-icon')}
                                 <span>${item.name}</span>
                             </a>

@@ -3,68 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文章详情 - 我的个人网页</title>
-    <meta name="description" content="阅读精彩的技术文章和学习笔记，获取实用的编程知识和经验">
-    <meta name="keywords" content="文章详情，技术文章，编程教程，学习笔记">
+    <title>重定向中 - 我的个人网页</title>
+    <meta name="description" content="文章重定向页面">
     <meta name="author" content="画风">
     <link rel="icon" href="./assets/images/favicon.ico">
-    <link rel="stylesheet" href="./assets/css/iconfont.css">
-    <!-- Prism.js 代码高亮 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
-    <link rel="stylesheet" href="./assets/css/style.css">
-    <link rel="stylesheet" href="./assets/css/article_detail.css">
-    <script src="./assets/js/marked.min.js" defer></script>
+    <script>
+        // 获取URL参数
+        function getUrlParam(name) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(name);
+        }
+        
+        // 从索引文件查找对应的HTML文件
+        async function redirectToStaticHtml() {
+            const fileName = getUrlParam('fileName');
+            if (!fileName) {
+                document.getElementById('error').textContent = '无效的文章链接！';
+                return;
+            }
+            
+            try {
+                // 加载索引文件
+                const response = await fetch('./articles_index.json');
+                const indexData = await response.json();
+                
+                // 查找对应的文章
+                const article = indexData.articles.find(a => a.fileName === fileName);
+                
+                if (article && article.htmlFile) {
+                    // 重定向到静态HTML文件
+                    window.location.href = `./articles_html/${article.htmlFile}`;
+                } else {
+                    document.getElementById('error').textContent = '文章未找到！';
+                }
+            } catch (error) {
+                console.error('重定向失败:', error);
+                document.getElementById('error').textContent = '重定向失败，请刷新重试！';
+            }
+        }
+        
+        // 页面加载后执行重定向
+        document.addEventListener('DOMContentLoaded', redirectToStaticHtml);
+    </script>
 </head>
 <body>
-    <script type="module">
-        import { renderHeader, renderFooter } from './assets/js/common.js';
-        renderHeader();
-        renderFooter();
-    </script>
-
-    <!-- 详情页布局：左侧目录 + 右侧内容 -->
-    <div class="detail-container">
-        <!-- 返回列表按钮 -->
-        <a href="articles.html" class="btn-back-fixed" aria-label="返回文章列表">
-            <span class="icon" aria-hidden="true">←</span>
-            <span>返回列表</span>
-        </a>
-
-        <!-- 左侧目录 -->
-        <div class="sidebar">
-            <div class="sidebar-title">文章目录</div>
-            <div class="toc" id="toc">
-                <div class="loading">加载目录中...</div>
-            </div>
-        </div>
-
-        <!-- 右侧文章内容 -->
-        <div class="article-content">
-            <div class="loading" id="contentLoading">加载文章中...</div>
-            <div class="article-detail" id="articleDetail"></div>
-        </div>
-
-        <!-- 返回顶部按钮 -->
-        <button class="btn-back-top-fixed" id="backToTop" title="返回顶部" aria-label="返回顶部">
-            <span aria-hidden="true">↑</span>
-        </button>
+    <div style="text-align: center; margin-top: 50px; padding: 20px;">
+        <h1>文章重定向中...</h1>
+        <p>如果长时间没有跳转，请点击 <a href="articles.html">返回文章列表</a></p>
+        <p id="error" style="color: #ef4444;"></p>
     </div>
-
-    <script type="module" src="./assets/js/article_detail.js"></script>
-    <!-- Prism.js 代码高亮 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" defer></script>
-    <!-- 常用语言支持 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markdown.min.js" defer></script>
 </body>
 </html>

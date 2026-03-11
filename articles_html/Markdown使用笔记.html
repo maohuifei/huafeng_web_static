@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown 使用笔记 - 我的个人网页</title>
+    <meta name="description" content="Markdown是一种轻量级标记语言，语法简洁、易上手，无需复杂操作即可快速排版，广泛应用于笔记、文档、博客等场景，核心优势是“所见即所得”的简洁排版逻辑">
+    <meta name="keywords" content="技术文章,编程教程,学习笔记">
+    <meta name="author" content="画风">
+    <link rel="icon" href="../assets/images/favicon.ico">
+    <link rel="stylesheet" href="../assets/css/iconfont.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/article_detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="container">
+                <a href="../index.html" class="logo">我的个人网页</a>
+                <nav id="nav"></nav>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="container">
+                <div class="article-content">
+                    <div class="article-detail" id="articleDetail">
+                        <div class="article-meta-detail">
+                            <span class="article-category-detail">使用笔记</span>
+                            <h1 class="article-title-detail">Markdown 使用笔记</h1>
+                            <div class="article-time-detail">
+                                <span>创建时间：2026-02-28</span>
+                                <span>更新时间：2026-02-28</span>
+                            </div>
+                        </div>
+                        <div class="article-body"># 基础文本格式化
+
+- **标题（1-6级）**：# 加空格，#数量对应级别，最多6级
+<code><pre><code class="language-text"># 一级标题
+## 二级标题
+### 三级标题
+#### 四级标题
+##### 五级标题
+###### 六级标题</code></pre></code>
+
+- **加粗**：**包裹文本
+<code><pre><code class="language-text">**加粗文本**</code></pre></code>
+
+- **斜体**：*包裹文本
+<code><pre><code class="language-text">*斜体文本*</code></pre></code>
+
+- **删除线**：~~包裹文本
+<code><pre><code class="language-text">~~删除线文本~~</code></pre></code>
+
+- **引用**：> 加空格
+<code><pre><code class="language-text">&gt; 引用内容</code></pre></code>
+
+# 列表排版
+
+- **无序列表**：- 加空格，支持嵌套
+<code><pre><code class="language-text">- 列表项1
+  - 嵌套项</code></pre></code>
+
+- **有序列表**：数字+. 加空格
+<code><pre><code class="language-text">1. 列表项1
+2. 列表项2</code></pre></code>
+
+# 链接与图片
+
+- **链接**：\[显示文本\](链接地址)
+<code><pre><code class="language-text">[百度](https://www.baidu.com)</code></pre></code>
+
+- **图片**：!\[\]包裹alt文本，加链接
+<code><pre><code class="language-text"><img src="https://example.com/fengjing.jpg" alt="风景图" loading="lazy"></code></pre></code>
+
+# 代码块与行内代码
+
+- **行内代码**：\<code>\</code>包裹代码片段
+<code><pre><code class="language-text">这里有</code>print(&quot;Hello&quot;)<code>行内代码</code></pre></code>
+
+- **代码块**：\<code>\</code>\<code>包裹，可加语言
+<pre><code class="language-js">console.log(&quot;Hello Markdown&quot;)</code></pre>
+
+# 表格
+
+- **表格**：|分隔列，-分隔表头，:控制对齐
+</code><pre><code class="language-text">| 表头1 | 表头2 |
+| :--- | :---: |
+| 内容1 | 内容2 |</code></pre><code>
+
+# 其他基础语法
+
+- **分割线**：三个减号/星号/下划线
+</code><pre><code class="language-text">---</code></pre><code>
+
+- **转义字符**：\加语法符号
+</code><pre><code class="language-text">\# 这不是标题</code></pre><code>
+
+- **脚注**：文本[^标识]，文末添加脚注
+</code><pre><code class="language-text">文本[^1]
+[^1]: 脚注内容</code></pre><code>
+
+# 进阶语法
+
+- **表格合并**：rowspan/colspan属性
+</code><pre><code class="language-text">| rowspan=&quot;2&quot; | 单元格1 |
+|  | 单元格2 |</code></pre><code>
+
+- **目录生成**：\[TOC\]自动生成
+</code><pre><code class="language-text">[TOC]</code></pre><code>
+
+- **文本高亮**：==包裹文本
+</code><pre><code class="language-text">==高亮文本==</code></pre><code>
+
+- **任务列表**：- [ ] 待办，- [x] 已办
+</code><pre><code class="language-text">- [ ] 待办事项
+- [x] 已办事项</code></pre><code>
+
+- **数学公式**：$行内公式，$$公式块
+</code><pre><code class="language-text">$a^2 + b^2 = c^2$
+$$f(x) = x^2$$</code></pre><code>
+
+- **图片调整**：调整大小+居中
+</code><pre><code class="language-text"><img src="https://example.com/fengjing.jpg =300x200" alt="风景图" loading="lazy">
+&lt;center&gt;<img src="https://example.com/fengjing.jpg" alt="风景图" loading="lazy">&lt;/center&gt;</code></pre>`</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <p>© 2023-2026 我的个人网页. 保留所有权利.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../assets/js/common.js" type="module"></script>
+</body>
+</html>

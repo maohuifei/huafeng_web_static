@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI产品部署过程记录 - 我的个人网页</title>
+    <meta name="description" content="AI产品部署过程记录">
+    <meta name="keywords" content="技术文章,编程教程,学习笔记">
+    <meta name="author" content="画风">
+    <link rel="icon" href="../assets/images/favicon.ico">
+    <link rel="stylesheet" href="../assets/css/iconfont.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/article_detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="container">
+                <a href="../index.html" class="logo">我的个人网页</a>
+                <nav id="nav"></nav>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="container">
+                <div class="article-content">
+                    <div class="article-detail" id="articleDetail">
+                        <div class="article-meta-detail">
+                            <span class="article-category-detail">过程记录</span>
+                            <h1 class="article-title-detail">AI产品部署过程记录</h1>
+                            <div class="article-time-detail">
+                                <span>创建时间：2026-03-03</span>
+                                <span>更新时间：2026-03-03</span>
+                            </div>
+                        </div>
+                        <div class="article-body"># Ollama
+## 部署本地DeepSeek
+# OpenClaw
+## 前置环境
+1. win11虚拟机
+2. <code>GIT</code> 和 <code>Node</code>
+## 基础部署
+进入官网：[openclaw官网](ttps://openclaw.ai)
+### 1、执行npm安装命令
+<pre><code class="language-bash"># Install OpenClaw（安装openclaw）
+$npm i -g openclaw</code></pre>
+### 2. 执行初始化openclaw命令
+<pre><code class="language-bash"># Meet your lobster（开始使用）
+$openclaw onboard</code></pre>
+### 3. 产品的介绍和风险说明
+<img src="/articles/AI产品部署过程记录/chanpinjieshao.png" alt="产品的介绍和风险说明" loading="lazy">
+### 4. 部署模式选择快速
+<pre><code class="language-bash"> Onboarding mode
+
+│  QuickStart</code></pre>
+### 5. 选择大模型平台，并配置ApiKey
+<img src="/articles/AI产品部署过程记录/daxingmoxingpingtai.png" alt="选择大模型平台，并配置ApiKey" loading="lazy">
+### 5. 选择消息机器人，并配置AppId和AppSecret
+<img src="/articles/AI产品部署过程记录/xiaoxijiqiren.png" alt="选择消息机器人，并配置AppId和AppSecret" loading="lazy">
+### 6. 选择是否现在配置 skills 和 hooks
+skills选择no，后续按需配置。
+hooks默认全选
+<img src="/articles/AI产品部署过程记录/skillshehooks.png" alt="选择是否现在配置skills和hooks" loading="lazy">
+### 7. 选择使用时的界面类型
+<img src="/articles/AI产品部署过程记录/wancheng.png" alt="选择使用时的界面类型" loading="lazy">
+### 8. 完成
+<img src="/articles/AI产品部署过程记录/buquwancheng.png" alt="完成" loading="lazy">
+### 9. 相关命令
+<pre><code class="language-bash">#停止服务
+openclaw gateway stop
+
+#启动服务
+openclaw gateway start
+
+#重启服务
+openclaw gateway restart
+
+#查看服务状态
+openclaw gateway status
+
+#重新运行配置
+openclaw configure</code></pre>
+## 进阶配置</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <p>© 2023-2026 我的个人网页. 保留所有权利.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../assets/js/common.js" type="module"></script>
+</body>
+</html>

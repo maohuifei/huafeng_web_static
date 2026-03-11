@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 使用笔记 - 我的个人网页</title>
+    <meta name="description" content="JavaScript使用笔记">
+    <meta name="keywords" content="技术文章,编程教程,学习笔记">
+    <meta name="author" content="画风">
+    <link rel="icon" href="../assets/images/favicon.ico">
+    <link rel="stylesheet" href="../assets/css/iconfont.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/article_detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="container">
+                <a href="../index.html" class="logo">我的个人网页</a>
+                <nav id="nav"></nav>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="container">
+                <div class="article-content">
+                    <div class="article-detail" id="articleDetail">
+                        <div class="article-meta-detail">
+                            <span class="article-category-detail">使用笔记</span>
+                            <h1 class="article-title-detail">JavaScript 使用笔记</h1>
+                            <div class="article-time-detail">
+                                <span>创建时间：2022-11-11</span>
+                                <span>更新时间：2026-02-21</span>
+                            </div>
+                        </div>
+                        <div class="article-body">## 数组对象
+
+### 检测是否为数组：instanceof / isArray
+
+**方法一：**
+使用 <code>instanceof Array</code> 运算符检测：
+
+<pre><code class="language-javascript">function checkArray(arr) {
+    if (arr instanceof Array) {
+        // ...
+    }
+}</code></pre>
+
+**方法二：**
+使用 <code>Array.isArray()</code> 方法检测（HTML5 新增，IE9+ 支持）：
+
+<pre><code class="language-javascript">function checkArray(arr) {
+    if (Array.isArray(arr)) {
+        // ...
+    }
+}</code></pre>
+
+---
+
+### 插入/删除元素：push/pop & shift/unshift
+
+#### 队列操作（FIFO）
+
+- <code>push()</code>：在数组末端添加元素
+- <code>shift()</code>：移除数组首端元素
+
+#### 栈操作（LIFO）
+
+- <code>push()</code>：在数组末端添加元素
+- <code>pop()</code>：从数组末端移除元素
+
+**双端队列操作示例：**
+
+<pre><code class="language-javascript">// 末端操作
+let fruits = [&#039;Apple&#039;, &#039;Orange&#039;, &#039;Pear&#039;]
+alert(fruits.pop()) // 移除 &quot;Pear&quot; 并弹出
+alert(fruits) // Apple, Orange
+
+fruits.push(&#039;Pear&#039;)
+alert(fruits) // Apple, Orange, Pear
+
+// 首端操作
+let fruits2 = [&#039;Apple&#039;, &#039;Orange&#039;, &#039;Pear&#039;]
+alert(fruits2.shift()) // 移除 Apple 并弹出
+alert(fruits2) // Orange, Pear
+
+fruits2.unshift(&#039;Apple&#039;)
+alert(fruits2) // Apple, Orange, Pear</code></pre>
+
+**批量操作：**
+
+<pre><code class="language-javascript">let arr = [&#039;Apple&#039;]
+arr.push(&#039;Orange&#039;, &#039;Peach&#039;)
+arr.unshift(&#039;Pineapple&#039;, &#039;Lemon&#039;)
+// [&quot;Pineapple&quot;, &quot;Lemon&quot;, &quot;Apple&quot;, &quot;Orange&quot;, &quot;Peach&quot;]</code></pre>
+
+---
+
+### 数组排序：reverse/sort
+
+**翻转数组：**
+
+<pre><code class="language-javascript">let arr = [&#039;three&#039;, &#039;two&#039;, &#039;one&#039;]
+arr.reverse()
+console.log(arr) // [&quot;one&quot;, &quot;two&quot;, &quot;three&quot;]</code></pre>
+
+**排序优化：**
+
+<pre><code class="language-javascript">let nums = [3, 1, 16, 7, 68]
+nums.sort((a, b) =&gt; a - b) // 升序 [1, 3, 7, 16, 68]
+nums.sort((a, b) =&gt; b - a) // 降序 [68, 16, 7, 3, 1]</code></pre>
+
+---
+
+### 数组索引：indexOf/lastIndexOf
+
+<pre><code class="language-javascript">let colors = [&#039;red&#039;, &#039;green&#039;, &#039;yellow&#039;, &#039;pink&#039;, &#039;pink&#039;]
+console.log(colors.indexOf(&#039;pink&#039;)) // 3（首个匹配项）
+console.log(colors.lastIndexOf(&#039;pink&#039;)) // 4（末次匹配项）
+console.log(colors.indexOf(&#039;blue&#039;)) // -1（未找到）</code></pre>
+
+---
+
+### 数组转字符串：toString/join
+
+<pre><code class="language-javascript">let nums = [1, 2, 3, 4, 5]
+console.log(nums.toString()) // &quot;1,2,3,4,5&quot;
+console.log(nums.join(&#039;-&#039;)) // &quot;1-2-3-4-5&quot;</code></pre>
+
+---
+
+### 数组操作：splice
+
+**删除/替换元素：**
+
+<pre><code class="language-javascript">let arr = [1, 2, 3, 4, 5]
+console.log(arr.splice(1, 3)) // 返回 [2, 3, 4]
+console.log(arr) // 剩余 [1, 5]
+
+// 插入元素
+let arr2 = [1, 2, 3]
+arr2.splice(1, 0, 9, 99, 999)
+console.log(arr2) // [1, 9, 99, 999, 2, 3]</code></pre>
+
+---
+
+### 截取数组：slice
+
+<pre><code class="language-javascript">let nums = [1, 2, 3, 4, 5, 6, 7]
+console.log(nums.slice(1, -1)) // [2, 3, 4, 5, 6]
+console.log(nums.slice(0, 3)) // [1, 2, 3]
+console.log(nums.slice(3)) // [4, 5, 6, 7]</code></pre>
+
+---
+
+### 拼接数组：concat
+
+<pre><code class="language-javascript">let arr1 = [1, 2, 3]
+let arr2 = [4, 5]
+console.log(arr1.concat(arr2)) // [1, 2, 3, 4, 5]</code></pre>
+
+---
+
+## 字符串对象
+
+### 不可变性特性
+
+字符串重新赋值会创建新内存空间，原空间保留。
+
+---
+
+### 字符定位：indexOf/lastIndexOf
+
+<pre><code class="language-javascript">let str = &#039;改革春风吹满地，春天来了&#039;
+console.log(str.indexOf(&#039;春&#039;)) // 2
+console.log(str.indexOf(&#039;春&#039;, 3)) // 8
+console.log(str.lastIndexOf(&#039;春&#039;)) // 8</code></pre>
+
+---
+
+### 字符获取
+
+<pre><code class="language-javascript">let str = &#039;改革春风吹满地&#039;
+console.log(str.charAt(2)) // &quot;春&quot;
+console.log(str.charCodeAt(2)) // 26149 (Unicode)
+console.log(str[2]) // &quot;春&quot; (ES6)</code></pre>
+
+---
+
+### 字符串拼接：concat
+
+<pre><code class="language-javascript">let base = &#039;Hello&#039;
+console.log(base.concat(&#039; World&#039;, &#039;!&#039;)) // &quot;Hello World!&quot;</code></pre>
+
+---
+
+### 字符串截取
+
+<pre><code class="language-javascript">let str = &#039;abcdefg&#039;
+console.log(str.substr(2, 3)) // &quot;cde&quot; (从索引2取3字符)
+console.log(str.slice(2, 5)) // &quot;cde&quot; (索引2到5)
+console.log(str.substring(2, 5)) // &quot;cde&quot; (同slice，但兼容旧浏览器)</code></pre>
+
+---
+
+### 字符串替换：replace
+
+<pre><code class="language-javascript">let text = &#039;apple,orange,apple&#039;
+console.log(text.replace(&#039;apple&#039;, &#039;kiwi&#039;)) // &quot;kiwi,orange,apple&quot;（仅替换首个）</code></pre>
+
+---
+
+### 字符串分割：split
+
+<pre><code class="language-javascript">let colors = &#039;red,blue,yellow,pink&#039;
+console.log(colors.split(&#039;,&#039;)) // [&quot;red&quot;, &quot;blue&quot;, &quot;yellow&quot;, &quot;pink&quot;]</code></pre>
+
+---
+
+### 大小写转换
+
+<pre><code class="language-javascript">let word = &#039;JavaScript&#039;
+console.log(word.toUpperCase()) // &quot;JAVASCRIPT&quot;
+console.log(word.toLowerCase()) // &quot;javascript&quot;</code></pre>
+
+---
+
+## 数据类型与内存管理
+
+### 值类型 vs 引用类型
+
+- **值类型**：String、Number、Boolean、undefined、null（栈内存）
+- **引用类型**：Object、Array、Date（堆内存）
+
+---
+
+### 参数传递特性
+
+- 值类型参数传递：副本操作，不影响原值
+- 引用类型参数传递：地址引用，修改会影响原对象
+
+<pre><code class="language-javascript">// 值类型示例
+function modify(num) {
+    num = 10
+}
+let x = 5
+modify(x)
+console.log(x) // 5
+
+// 引用类型示例
+function updateObj(obj) {
+    obj.name = &#039;Modified&#039;
+}
+let person = { name: &#039;Original&#039; }
+updateObj(person)
+console.log(person.name) // &quot;Modified&quot;</code></pre>
+
+---
+
+## 鼠标事件对比
+
+| 事件           | 触发条件                   | 特性     |
+| -------------- | -------------------------- | -------- |
+| <code>onmouseover</code>  | 鼠标进入元素时             | 支持冒泡 |
+| <code>onmouseenter</code> | 鼠标首次进入元素时         | 不冒泡   |
+| <code>onmouseout</code>   | 鼠标离开元素时             | 支持冒泡 |
+| <code>onmouseleave</code> | 鼠标完全离开元素时         | 不冒泡   |
+| <code>onmousemove</code>  | 鼠标在元素内移动时连续触发 | 高频触发 |
+</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <p>© 2023-2026 我的个人网页. 保留所有权利.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../assets/js/common.js" type="module"></script>
+</body>
+</html>

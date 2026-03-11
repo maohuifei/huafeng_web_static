@@ -117,7 +117,8 @@ function createArticleCard(article, index) {
         <div class="article-excerpt">${article.excerpt || article.description}</div>
     `;
     card.onclick = () => {
-        window.location.href = `article_detail.html?fileName=${article.fileName}`;
+        // 链接到静态HTML文件
+        window.location.href = `articles_html/${article.htmlFile}`;
     };
     return card;
 }
@@ -200,8 +201,12 @@ async function renderArticleList() {
         const indexData = await fetchArticlesIndex();
         
         // 置顶文章：按 updateTime 降序（新的在前）
+        // 处理top字段（可能是布尔值或字符串"true"/"false"）
         topArticles = indexData.articles
-            .filter(a => a.top === true)
+            .filter(a => {
+                const topValue = a.top;
+                return topValue === true || topValue === "true" || topValue === "True";
+            })
             .sort((a, b) => new Date(b.updateTime) - new Date(a.updateTime));
         
         // 全部文章：按 updateTime 降序（新的在前），不管是否置顶

@@ -150,17 +150,16 @@
     color: var(--text-muted);
     font-size: 0.85rem;
     margin-bottom: 1rem;
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    align-items: center;
+    line-height: 1.6;
 }
 
 .article-meta span {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
+    display: block;
     color: var(--text-secondary);
+}
+
+.article-meta span + span {
+    margin-top: 0.25rem;
 }
 
 /* 文章摘要 */

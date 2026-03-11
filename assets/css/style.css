@@ -167,7 +167,7 @@ nav a:hover::before {
 }
 
 nav a.active {
-    color: var(--primary-color) !important;
+    color: var(--text-primary) !important;
     background: rgba(99, 102, 241, 0.1);
 }
 
