@@ -117,7 +117,7 @@ function createArticleCard(article, index) {
         <div class="article-excerpt">${article.excerpt || article.description}</div>
     `;
     card.onclick = () => {
-        // 链接到静态HTML文件
+        // 直接链接到原始HTML文件，不使用重定向文件
         window.location.href = `articles_html/${article.htmlFile}`;
     };
     return card;

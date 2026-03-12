@@ -2,9 +2,13 @@
 .detail-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
-    padding-top: calc(70px + 2rem);
+    padding: 1.5rem 2rem;  /* 减少顶部内边距 */
+    padding-top: calc(70px + 0.5rem);  /* 顶部只留导航栏高度+小间距 */
     min-height: calc(100vh - 70px - 100px);
+    display: grid;
+    grid-template-columns: 280px 1fr;  /* 左侧目录280px，右侧内容区域 */
+    gap: 2rem;
+    align-items: start;
 }
 
 /* ========== 左侧目录栏 ========== */
@@ -186,13 +190,27 @@
 }
 
 /* ========== 空状态和错误 ========== */
-.toc-empty {
+.toc-empty,
+#toc p {  /* 目录区域默认消息的样式 */
     color: var(--text-muted);
     padding: 1rem;
     text-align: center;
     font-size: 0.9rem;
     background: var(--bg-tertiary);
     border-radius: var(--radius-md);
+    margin: 0;
+}
+
+/* 确保目录区域的最小高度 */
+.sidebar {
+    min-height: 300px;  /* 确保目录区域有一定高度 */
+}
+
+/* 如果目录为空，提供更好的视觉提示 */
+.sidebar:has(.toc-empty) {
+    border: 2px dashed var(--border-color);
+    background: linear-gradient(45deg, var(--bg-tertiary) 25%, transparent 25%, transparent 50%, var(--bg-tertiary) 50%, var(--bg-tertiary) 75%, transparent 75%, transparent);
+    background-size: 20px 20px;
 }
 
 .error {
@@ -358,7 +376,7 @@
 
 .article-time-detail {
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: 0.85rem;  /* 统一为0.85rem，与文章列表页一致 */
     display: flex;
     gap: 2rem;
     flex-wrap: wrap;
@@ -368,6 +386,9 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    font-size: 0.85rem;  /* 明确设置字体大小 */
+    font-variant-numeric: tabular-nums;  /* 表格数字，确保所有数字等宽 */
+    font-feature-settings: "tnum";       /* 传统浏览器支持 */
 }
 
 /* ========== 文章正文样式 ========== */
@@ -616,9 +637,12 @@ div.code-toolbar > .toolbar .toolbar-item > button:focus {
         top: 0;
         max-height: none;
         margin-bottom: 1rem;
+        order: 2;  /* 在小屏幕上，目录在内容下方 */
     }
 
     .article-content {
+        order: 1;  /* 在小屏幕上，内容在上方 */
+        padding: 1.5rem;
         max-height: none;
         padding: 1.5rem;
     }

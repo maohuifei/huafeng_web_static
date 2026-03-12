@@ -28,11 +28,26 @@
                 const indexData = await response.json();
                 
                 // 查找对应的文章
-                const article = indexData.articles.find(a => a.fileName === fileName);
+                let article = indexData.articles.find(a => a.fileName === fileName);
                 
-                if (article && article.htmlFile) {
-                    // 重定向到静态HTML文件
-                    window.location.href = `./articles_html/${article.htmlFile}`;
+                // 如果没有直接匹配，尝试匹配URL友好名称
+                if (!article) {
+                    article = indexData.articles.find(a => a.urlFriendlyName === fileName);
+                }
+                
+                // 如果还没有找到，尝试匹配不带扩展名的文件名
+                if (!article) {
+                    const fileNameWithoutExt = fileName.replace(/\.(md|html)$/, '');
+                    article = indexData.articles.find(a => 
+                        a.fileName.replace('.md', '') === fileNameWithoutExt ||
+                        a.htmlFile.replace('.html', '') === fileNameWithoutExt
+                    );
+                }
+                
+                if (article) {
+                    // 优先使用URL友好名称重定向
+                    const targetFile = article.urlFriendlyName || article.htmlFile;
+                    window.location.href = `./articles_html/${targetFile}`;
                 } else {
                     document.getElementById('error').textContent = '文章未找到！';
                 }

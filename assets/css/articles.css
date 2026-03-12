@@ -156,6 +156,9 @@
 .article-meta span {
     display: block;
     color: var(--text-secondary);
+    font-size: 0.85rem;  /* 明确设置字体大小，不依赖继承 */
+    font-variant-numeric: tabular-nums;  /* 表格数字，确保所有数字等宽 */
+    font-feature-settings: "tnum";       /* 传统浏览器支持 */
 }
 
 .article-meta span + span {

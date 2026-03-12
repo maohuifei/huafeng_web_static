@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试文章 - 我的个人网页</title>
+    <meta name="description" content="测试时间显示和目录功能的文章">
+    <meta name="keywords" content="技术文章,编程教程,学习笔记">
+    <meta name="author" content="画风">
+    <link rel="icon" href="../assets/images/favicon.ico">
+    <link rel="stylesheet" href="../assets/css/iconfont.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/article_detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- 导航栏将通过JavaScript渲染 -->
+    </div>
+
+    <!-- 文章详情页布局 -->
+    <div class="detail-container">
+        <!-- 左侧目录（如果有的话） -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-title">文章目录</div>
+            <div class="toc" id="toc">
+                <p class="toc-empty">目录生成中...</p>
+            </div>
+        </div>
+        
+        <!-- 右侧文章内容 -->
+        <div class="article-content">
+            <div class="article-detail" id="articleDetail">
+                <div class="article-meta-detail">
+                    <span class="article-category-detail">测试</span>
+                    <h1 class="article-title-detail">测试文章</h1>
+                    <div class="article-time-detail">
+                        <span>创建时间：2026-01-15</span>
+                        <span>更新时间：2026-01-15</span>
+                    </div>
+                </div>
+                <div class="article-body"># 文章标题
+
+这是一篇测试文章，用于验证时间显示和目录功能。
+
+## 章节一：时间显示测试
+
+创建时间：2026-01-15
+更新时间：2026-01-15
+
+注意观察数字"1"的宽度是否与其他数字一致。
+
+## 章节二：目录功能测试
+
+这个章节应该出现在目录中。
+
+### 子章节一
+
+这是一个子章节。
+
+### 子章节二
+
+这是另一个子章节。
+
+## 章节三：代码块测试
+
+下面是一个代码块：
+
+<pre><code class="language-python">def hello_world():
+    print(&quot;Hello, World!&quot;)
+    
+# 包含数字1的代码
+test_var = 12345</code></pre>
+
+## 章节四：表格测试
+
+这是一个简单的Markdown表格：
+
+| 列1 | 列2 | 列3 |
+|-----|-----|-----|
+| 数据1 | 数据2 | 数据3 |
+| 包含1 | 2026-01-15 | 测试 |
+
+## 总结
+
+这篇文章用于测试：
+1. 时间显示中的数字"1"宽度问题
+2. 文章详情页的目录生成
+3. 页面布局是否正常</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 返回列表按钮 -->
+    <a href="../articles.html" class="btn-back-fixed">
+        <span class="icon">←</span> 返回文章列表
+    </a>
+
+    <!-- 返回顶部按钮 -->
+    <button class="btn-back-top-fixed" id="backToTop">
+        ↑
+    </button>
+
+    <!-- 页脚将通过JavaScript渲染 -->
+    
+    <!-- 导入JavaScript模块 -->
+    <script src="../assets/js/common.js" type="module"></script>
+    <script src="../assets/js/article_detail.js" type="module"></script>
+    <script type="module">
+        import { renderHeader, renderFooter } from '../assets/js/common.js';
+        // 渲染导航栏和页脚
+        renderHeader();
+        renderFooter();
+    </script>
+</body>
+</html>

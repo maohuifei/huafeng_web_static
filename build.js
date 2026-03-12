@@ -153,39 +153,56 @@ function buildArticleHtml(mdFilePath, outputDir) {
 </head>
 <body>
     <div id="app">
-        <header class="header">
-            <div class="container">
-                <a href="../index.html" class="logo">我的个人网页</a>
-                <nav id="nav"></nav>
-            </div>
-        </header>
-
-        <main class="main">
-            <div class="container">
-                <div class="article-content">
-                    <div class="article-detail" id="articleDetail">
-                        <div class="article-meta-detail">
-                            <span class="article-category-detail">${meta.categories}</span>
-                            <h1 class="article-title-detail">${meta.title}</h1>
-                            <div class="article-time-detail">
-                                <span>创建时间：${meta.createTime}</span>
-                                <span>更新时间：${meta.updateTime}</span>
-                            </div>
-                        </div>
-                        <div class="article-body">${htmlContent}</div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <footer class="footer">
-            <div class="container">
-                <p>© 2023-2026 我的个人网页. 保留所有权利.</p>
-            </div>
-        </footer>
+        <!-- 导航栏将通过JavaScript渲染 -->
     </div>
 
+    <!-- 文章详情页布局 -->
+    <div class="detail-container">
+        <!-- 左侧目录（如果有的话） -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-title">文章目录</div>
+            <div class="toc" id="toc">
+                <p class="toc-empty">目录生成中...</p>
+            </div>
+        </div>
+        
+        <!-- 右侧文章内容 -->
+        <div class="article-content">
+            <div class="article-detail" id="articleDetail">
+                <div class="article-meta-detail">
+                    <span class="article-category-detail">${meta.categories}</span>
+                    <h1 class="article-title-detail">${meta.title}</h1>
+                    <div class="article-time-detail">
+                        <span>创建时间：${meta.createTime}</span>
+                        <span>更新时间：${meta.updateTime}</span>
+                    </div>
+                </div>
+                <div class="article-body">${htmlContent}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 返回列表按钮 -->
+    <a href="../articles.html" class="btn-back-fixed">
+        <span class="icon">←</span> 返回文章列表
+    </a>
+
+    <!-- 返回顶部按钮 -->
+    <button class="btn-back-top-fixed" id="backToTop">
+        ↑
+    </button>
+
+    <!-- 页脚将通过JavaScript渲染 -->
+    
+    <!-- 导入JavaScript模块 -->
     <script src="../assets/js/common.js" type="module"></script>
+    <script src="../assets/js/article_detail.js" type="module"></script>
+    <script type="module">
+        import { renderHeader, renderFooter } from '../assets/js/common.js';
+        // 渲染导航栏和页脚
+        renderHeader();
+        renderFooter();
+    </script>
 </body>
 </html>`;
         
