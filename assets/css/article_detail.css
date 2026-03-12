@@ -585,44 +585,13 @@
     margin-bottom: 0;
 }
 
-/* ========== 代码块 Prism.js 样式 ========== */
-/* 代码块容器样式 */
-.article-body pre[class*="language-"] {
-    margin: 1.5rem 0;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-md);
+/* ========== 代码块样式（集成代码块容器） ========== */
+.article-body pre {
+    margin: 0; /* 由容器控制间距 */
 }
 
-/* 行内代码样式保持不变 */
-
-/* 复制按钮样式 */
-div.code-toolbar > .toolbar {
-    top: 0.5rem;
-    right: 0.5rem;
-}
-
-div.code-toolbar > .toolbar .toolbar-item > button {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    transition: all var(--transition-base);
-    box-shadow: none;
-    cursor: pointer;
-}
-
-div.code-toolbar > .toolbar .toolbar-item > button:hover {
-    background: var(--primary-color);
-    color: white;
-}
-
-div.code-toolbar > .toolbar .toolbar-item > button:focus {
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
-}
+/* 确保代码块容器样式生效 */
+@import url('./code-block.css');
 
 /* ========== 响应式设计 ========== */
 @media (max-width: 900px) {

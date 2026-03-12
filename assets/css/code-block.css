@@ -1,0 +1,196 @@
+/* ========== 代码块容器样式 ========== */
+.code-block-container {
+    position: relative;
+    margin: 1.5rem 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    background: #2d2d2d; /* 暗色主题背景 */
+}
+
+/* ========== 代码块顶部工具栏 ========== */
+.code-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1e1e1e; /* 工具栏背景更暗 */
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #444;
+}
+
+/* 语言标签 */
+.code-language {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+/* ========== 复制按钮样式 ========== */
+.copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+.copy-btn:hover {
+    background: rgba(99, 102, 241, 0.8); /* 主色调 */
+    color: white;
+}
+
+.copy-btn:active {
+    transform: scale(0.95);
+}
+
+.copy-btn .icon {
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+.copy-btn.copied {
+    background: var(--success-color);
+    color: white;
+}
+
+/* ========== Prism.js 代码块适配 ========== */
+.code-block-container pre[class*="language-"] {
+    margin: 0;
+    border-radius: 0;
+    border: none;
+    background: #2d2d2d;
+}
+
+.code-block-container code[class*="language-"] {
+    background: transparent;
+}
+
+/* 保持原有的代码高亮主题 */
+.code-block-container :not(pre) > code[class*="language-"],
+.code-block-container pre[class*="language-"] {
+    background: #2d2d2d;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .code-toolbar {
+        padding: 0.4rem 0.75rem;
+    }
+    
+    .code-language {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+    
+    .copy-btn {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+}
+
+/* ========== 针对不同语言的样式微调 ========== */
+.code-language.javascript,
+.code-language.js {
+    background: rgba(247, 223, 30, 0.15);
+    color: #f7df1e;
+}
+
+.code-language.python,
+.code-language.py {
+    background: rgba(49, 119, 198, 0.15);
+    color: #3777c6;
+}
+
+.code-language.java {
+    background: rgba(230, 81, 0, 0.15);
+    color: #e65100;
+}
+
+.code-language.html {
+    background: rgba(227, 79, 38, 0.15);
+    color: #e34f26;
+}
+
+.code-language.css {
+    background: rgba(38, 77, 228, 0.15);
+    color: #264de4;
+}
+
+.code-language.markdown,
+.code-language.md {
+    background: rgba(0, 153, 255, 0.15);
+    color: #0099ff;
+}
+
+.code-language.json {
+    background: rgba(123, 36, 28, 0.15);
+    color: #7b241c;
+}
+
+.code-language.yaml,
+.code-language.yml {
+    background: rgba(203, 56, 55, 0.15);
+    color: #cb3837;
+}
+
+.code-language.shell,
+.code-language.bash {
+    background: rgba(72, 143, 64, 0.15);
+    color: #488f40;
+}
+
+.code-language.php {
+    background: rgba(119, 123, 179, 0.15);
+    color: #777bb3;
+}
+
+.code-language.sql {
+    background: rgba(0, 105, 148, 0.15);
+    color: #006994;
+}
+
+.code-language.c,
+.code-language.cpp,
+.code-language.cplusplus {
+    background: rgba(0, 90, 156, 0.15);
+    color: #005a9c;
+}
+
+.code-language.ruby,
+.code-language.rb {
+    background: rgba(204, 52, 45, 0.15);
+    color: #cc342d;
+}
+
+.code-language.go,
+.code-language.golang {
+    background: rgba(0, 173, 216, 0.15);
+    color: #00add8;
+}
+
+.code-language.rust,
+.code-language.rs {
+    background: rgba(165, 11, 11, 0.15);
+    color: #a50b0b;
+}
+
+.code-language.typescript,
+.code-language.ts {
+    background: rgba(49, 120, 198, 0.15);
+    color: #3178c6;
+}
