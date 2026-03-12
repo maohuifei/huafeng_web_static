@@ -41,107 +41,107 @@
                         <span>更新时间：2026-02-21</span>
                     </div>
                 </div>
-                <div class="article-body"># MacOS
-## 取消系统更新通知
-### 核心屏蔽法：修改 Hosts 文件 (阻止连接更新服务器)
+                <div class="article-body"><h1>MacOS</h1>
+<h2>取消系统更新通知</h2>
+<h3>核心屏蔽法：修改 Hosts 文件 (阻止连接更新服务器)</h3>
+<p>此方法直接阻止 Mac 访问苹果的更新服务器。</p>
+<ol>
+<li><strong>打开 Hosts 文件：</strong></li>
+</ol>
+<ul>
+<li>打开 <code>终端</code>。</li>
+<li>输入 <code>sudo nano /etc/hosts</code> 并按回车。</li>
+<li>输入管理员密码。</li>
+</ul>
+<ol>
+<li><strong>添加屏蔽规则：</strong></li>
+</ol>
+<ul>
+<li>在文件末尾<strong>添加</strong>以下行：</li>
+</ul>
+<pre><code class="language-plain_text">
+        127.0.0.1 swscan.apple.com
 
-此方法直接阻止 Mac 访问苹果的更新服务器。
-
-1. **打开 Hosts 文件：**
-    - 打开 <code>终端</code>。
-    - 输入 <code>sudo nano /etc/hosts</code> 并按回车。
-    - 输入管理员密码。
-2. **添加屏蔽规则：**
-    - 在文件末尾**添加**以下行：
-        
-        <pre><code class="language-plain_text">        127.0.0.1 swscan.apple.com
         127.0.0.1 swdist.apple.com
+
         127.0.0.1 swcdn.apple.com
+
         127.0.0.1 gdmf.apple.com
+
         127.0.0.1 mesu.apple.com
+
         127.0.0.1 xp.apple.com
-        ``<code>
-        
-    - _(注意：去掉行首的 </code>http://<code>，仅保留域名)_
-3. **保存并生效：**
-    - 按 </code>Control + O<code> 保存，按 </code>Control + X<code> 退出 nano 编辑器。
-    - 执行以下命令刷新 DNS 缓存：
-        
-        </code>`<code>bash
+
+</code></pre>
+<ul>
+<li><em>(注意：去掉行首的 <code>http://</code>，仅保留域名)</em></li>
+</ul>
+<ol>
+<li><strong>保存并生效：</strong></li>
+</ol>
+<ul>
+<li>按 <code>Control + O</code> 保存，按 <code>Control + X</code> 退出 nano 编辑器。</li>
+<li>执行以下命令刷新 DNS 缓存：</li>
+</ul>
+<pre><code class="language-bash">
         sudo dscacheutil -flushcache
+
         sudo killall -HUP mDNSResponder
-        </code>`<code>
-        
-4. **效果：** Mac 将无法连接苹果更新服务器，从根本上阻止检测到新更新，**小红点通常会随之消失**。
-5. **关键词：** 修改Hosts屏蔽更新, 阻止Mac连接更新服务器, 屏蔽更新域名列表
 
-### 消除小红点：终端命令 (快速清除标记)
-
-如果小红点依然存在（通常是之前检测到的更新标记），可用命令清除：
-
-1. **清除现有小红点：**
-    
-    </code>`<code>bash
+</code></pre>
+<ol>
+<li><strong>效果：</strong> Mac 将无法连接苹果更新服务器，从根本上阻止检测到新更新，<strong>小红点通常会随之消失</strong>。</li>
+<li><strong>关键词：</strong> 修改Hosts屏蔽更新, 阻止Mac连接更新服务器, 屏蔽更新域名列表</li>
+</ol>
+<h3>消除小红点：终端命令 (快速清除标记)</h3>
+<p>如果小红点依然存在（通常是之前检测到的更新标记），可用命令清除：</p>
+<ol>
+<li><strong>清除现有小红点：</strong></li>
+</ol>
+<pre><code class="language-bash">
     defaults write com.apple.systempreferences AttentionPrefBundleIDs 0
+
     killall Dock
-    </code>`<code>
-    
-    - 此命令重置通知标记并重启 Dock 进程，**立即消除系统偏好设置图标上的小红点**。
-## Homebrew
 
-安装(镜像、国内第三方脚本)
 </code></pre>
-/bin/zsh -c "$(curl -fsSL <https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh>)"
+<ul>
+<li>此命令重置通知标记并重启 Dock 进程，<strong>立即消除系统偏好设置图标上的小红点</strong>。</li>
+</ul>
+<h2>Homebrew</h2>
+<p>安装(镜像、国内第三方脚本)</p>
 <pre><code class="language-text">
-卸载
+/bin/zsh -c &quot;$(curl -fsSL &lt;https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh&gt;)&quot;
+
 </code></pre>
-/bin/zsh -c "$(curl -fsSL <https://gitee.com/cunkai/HomebrewCN/raw/master/HomebrewUninstall.sh>)"
-</code>`<code>
+<p>卸载</p>
+<pre><code class="language-text">
+/bin/zsh -c &quot;$(curl -fsSL &lt;https://gitee.com/cunkai/HomebrewCN/raw/master/HomebrewUninstall.sh&gt;)&quot;
 
-默认命令行安装的软件包路径：usr/local Homebrew安装的路径：opt/homebrew
-
-## 偏好设置
-
-## 终端
-
-### 文件操作
-
-</code>查找目录下所有名字包含666的所有文件及目录 查找：sudo find /usr/local -type d -name "*666*" 删除：sudo find /usr/local -type d -name "*666*" -exec rm -rf {} +<code>
-
-### 权限操作
-
-</code>sudo -s<code>
-
-### 端口操作
-
-查看端口被哪个程序占用
-
-</code>sudo lsof -i tcp:port<code>
-
-示例：
-
-</code>sudo lsof -i tcp:8080 查看8080端口是否被占用<code>
-
-2. 看到进程的PID，可以将进程杀死。
-
-</code>sudo kill -9 PID<code>
-
-示例：
-
-</code>sudo kill -9 3210`
-
-## 用户权限
-
-### VScode编辑文件提示权限不足
-
-原因：目前看来是创建项目时使用root权限
-
-解决方案：右击项目文件夹，选择“查看简介”，在简介界面下方“共享与权限”中添加当前用户”读与写“权限，并且点击“···”应用到包含的所有项目
-
-# Windowns
-
-# Linux
-</div>
+</code></pre>
+<p>默认命令行安装的软件包路径：usr/local Homebrew安装的路径：opt/homebrew</p>
+<h2>偏好设置</h2>
+<h2>终端</h2>
+<h3>文件操作</h3>
+<p><code>查找目录下所有名字包含666的所有文件及目录 查找：sudo find /usr/local -type d -name "<em>666</em>" 删除：sudo find /usr/local -type d -name "<em>666</em>" -exec rm -rf {} +</code></p>
+<h3>权限操作</h3>
+<p><code>sudo -s</code></p>
+<h3>端口操作</h3>
+<p>查看端口被哪个程序占用</p>
+<p><code>sudo lsof -i tcp:port</code></p>
+<p>示例：</p>
+<p><code>sudo lsof -i tcp:8080 查看8080端口是否被占用</code></p>
+<ol>
+<li>看到进程的PID，可以将进程杀死。</li>
+</ol>
+<p><code>sudo kill -9 PID</code></p>
+<p>示例：</p>
+<p><code>sudo kill -9 3210</code></p>
+<h2>用户权限</h2>
+<h3>VScode编辑文件提示权限不足</h3>
+<p>原因：目前看来是创建项目时使用root权限</p>
+<p>解决方案：右击项目文件夹，选择“查看简介”，在简介界面下方“共享与权限”中添加当前用户”读与写“权限，并且点击“···”应用到包含的所有项目</p>
+<h1>Windowns</h1>
+<h1>Linux</h1></div>
             </div>
         </div>
     </div>

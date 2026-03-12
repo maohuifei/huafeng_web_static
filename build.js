@@ -17,37 +17,309 @@ const INDEX_FILE = path.join(__dirname, 'articles_index.json');
 let changedFiles = [];
 
 /**
- * 简单的Markdown转HTML
- * 只处理代码块和图片，其他保持原样
+ * 增强的Markdown转HTML
+ * 支持完整的Markdown语法
  */
-function simpleMarkdownToHtml(content) {
-    let html = content;
+function enhancedMarkdownToHtml(content) {
+    // 按行分割内容
+    const lines = content.split('\n');
+    const result = [];
+    let inCodeBlock = false;
+    let currentLanguage = '';
+    let currentParagraph = [];
+    let inList = false;
+    let listType = ''; // 'ul' 或 'ol'
+    let inBlockquote = false;
     
-    // 1. 处理代码块
-    const codeBlockRegex = /```(\w*)\n([\s\S]*?)\n```/g;
-    html = html.replace(codeBlockRegex, (match, lang, code) => {
-        const language = lang || 'text';
-        // 转义HTML特殊字符
-        const escapedCode = code
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-        return `<pre><code class="language-${language}">${escapedCode}</code></pre>`;
-    });
+    function flushParagraph() {
+        if (currentParagraph.length > 0) {
+            const paragraphText = currentParagraph.join('<br>');
+            // 处理段落内的内联markdown
+            let processedText = processInlineMarkdown(paragraphText);
+            result.push(`<p>${processedText}</p>`);
+            currentParagraph = [];
+        }
+    }
     
-    // 2. 处理图片
-    const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
-    html = html.replace(imageRegex, (match, alt, src) => {
-        const fixedSrc = src.startsWith('./') ? `../articles/${src.substring(2)}` : src;
-        return `<img src="${fixedSrc}" alt="${alt || ''}" loading="lazy">`;
-    });
+    function flushList() {
+        if (inList && listType) {
+            result.push(`</${listType}>`);
+            inList = false;
+            listType = '';
+        }
+    }
     
-    // 3. 处理行内代码
-    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    function flushBlockquote() {
+        if (inBlockquote) {
+            result.push('</blockquote>');
+            inBlockquote = false;
+        }
+    }
     
-    return html;
+    // 处理内联markdown语法
+    function processInlineMarkdown(text) {
+        let processed = text;
+        
+        // 处理删除线（必须在粗体之前，因为~~可能被误匹配）
+        processed = processed.replace(/~~(.*?)~~/g, '<del>$1</del>');
+        
+        // 处理粗体
+        processed = processed.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        processed = processed.replace(/__(.*?)__/g, '<strong>$1</strong>');
+        
+        // 处理斜体
+        processed = processed.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        processed = processed.replace(/_(.*?)_/g, '<em>$1</em>');
+        
+        // 处理行内代码
+        processed = processed.replace(/`([^`]+)`/g, '<code>$1</code>');
+        
+        // 处理图片（必须在链接之前）
+        processed = processed.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, src) => {
+            const fixedSrc = src.startsWith('./') ? `../articles/${src.substring(2)}` : src;
+            return `<img src="${fixedSrc}" alt="${alt || ''}" loading="lazy">`;
+        });
+        
+        // 处理链接
+        processed = processed.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
+            // 检查URL是否有效
+            const href = url.startsWith('http') ? url : 
+                        url.startsWith('#') ? url : 
+                        `https://${url}`;
+            return `<a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+        });
+        
+        return processed;
+    }
+    
+    // 处理表格
+    function processTable(lines, startIdx) {
+        const tableLines = [];
+        let i = startIdx;
+        
+        // 收集表格行
+        while (i < lines.length && lines[i].includes('|')) {
+            tableLines.push(lines[i]);
+            i++;
+        }
+        
+        if (tableLines.length < 2) return { html: '', newIndex: startIdx };
+        
+        let html = '<div class="table-container"><table>\n';
+        
+        for (let j = 0; j < tableLines.length; j++) {
+            const line = tableLines[j].trim();
+            if (line === '') continue;
+            
+            const cells = line.split('|').map(cell => cell.trim()).filter(cell => cell !== '');
+            
+            if (j === 0) {
+                // 表头
+                html += '<thead><tr>\n';
+                cells.forEach(cell => {
+                    html += `  <th>${processInlineMarkdown(cell)}</th>\n`;
+                });
+                html += '</tr></thead>\n<tbody>\n';
+            } else if (j === 1 && line.replace(/[^:-]/g, '').includes(':')) {
+                // 第二行是分隔线，跳过
+                continue;
+            } else {
+                // 数据行
+                html += '<tr>\n';
+                cells.forEach(cell => {
+                    html += `  <td>${processInlineMarkdown(cell)}</td>\n`;
+                });
+                html += '</tr>\n';
+            }
+        }
+        
+        html += '</tbody></table></div>\n';
+        
+        return { html, newIndex: i - 1 };
+    }
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmedLine = line.trim();
+        
+        // 处理代码块
+        if (trimmedLine.startsWith('```')) {
+            if (!inCodeBlock) {
+                // 开始代码块
+                flushParagraph();
+                flushList();
+                flushBlockquote();
+                inCodeBlock = true;
+                // 支持三个或四个反引号
+                const backtickCount = trimmedLine.match(/^`+/)[0].length;
+                currentLanguage = trimmedLine.substring(backtickCount).trim() || 'text';
+                result.push(`<pre><code class="language-${currentLanguage}">`);
+            } else {
+                // 结束代码块
+                inCodeBlock = false;
+                result.push('</code></pre>');
+            }
+            continue;
+        }
+        
+        if (inCodeBlock) {
+            // 在代码块内，直接添加内容（转义HTML）
+            const escapedLine = line
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+            result.push(escapedLine + '\n');
+            continue;
+        }
+        
+        // 处理空行
+        if (trimmedLine === '') {
+            flushParagraph();
+            flushList();
+            flushBlockquote();
+            continue;
+        }
+        
+        // 检查是否是表格
+        if (trimmedLine.includes('|') && trimmedLine.replace(/[^|]/g, '').length >= 2) {
+            const { html, newIndex } = processTable(lines, i);
+            if (html) {
+                flushParagraph();
+                flushList();
+                flushBlockquote();
+                result.push(html);
+                i = newIndex;
+                continue;
+            }
+        }
+        
+        // 处理标题
+        if (trimmedLine.startsWith('###### ')) {
+            flushParagraph();
+            flushList();
+            flushBlockquote();
+            const title = trimmedLine.substring(7).trim();
+            result.push(`<h6>${processInlineMarkdown(title)}</h6>`);
+            continue;
+        } else if (trimmedLine.startsWith('##### ')) {
+            flushParagraph();
+            flushList();
+            flushBlockquote();
+            const title = trimmedLine.substring(6).trim();
+            result.push(`<h5>${processInlineMarkdown(title)}</h5>`);
+            continue;
+        } else if (trimmedLine.startsWith('#### ')) {
+            flushParagraph();
+            flushList();
+            flushBlockquote();
+            const title = trimmedLine.substring(5).trim();
+            result.push(`<h4>${processInlineMarkdown(title)}</h4>`);
+            continue;
+        } else if (trimmedLine.startsWith('### ')) {
+            flushParagraph();
+            flushList();
+            flushBlockquote();
+            const title = trimmedLine.substring(4).trim();
+            result.push(`<h3>${processInlineMarkdown(title)}</h3>`);
+            continue;
+        } else if (trimmedLine.startsWith('## ')) {
+            flushParagraph();
+            flushList();
+            flushBlockquote();
+            const title = trimmedLine.substring(3).trim();
+            result.push(`<h2>${processInlineMarkdown(title)}</h2>`);
+            continue;
+        } else if (trimmedLine.startsWith('# ')) {
+            flushParagraph();
+            flushList();
+            flushBlockquote();
+            const title = trimmedLine.substring(2).trim();
+            result.push(`<h1>${processInlineMarkdown(title)}</h1>`);
+            continue;
+        }
+        
+        // 处理引用
+        if (trimmedLine.startsWith('>')) {
+            if (!inBlockquote) {
+                flushParagraph();
+                flushList();
+                result.push('<blockquote>');
+                inBlockquote = true;
+            }
+            const quoteText = trimmedLine.replace(/^>\s*/, '').trim();
+            if (quoteText) {
+                result.push(`<p>${processInlineMarkdown(quoteText)}</p>`);
+            }
+            continue;
+        } else if (inBlockquote) {
+            flushBlockquote();
+        }
+        
+        // 处理水平线
+        if (/^---$/.test(trimmedLine) || /^\*\*\*$/.test(trimmedLine) || /^___$/.test(trimmedLine)) {
+            flushParagraph();
+            flushList();
+            flushBlockquote();
+            result.push('<hr>');
+            continue;
+        }
+        
+        // 处理无序列表
+        if (/^[-*+]\s/.test(trimmedLine)) {
+            if (!inList || listType !== 'ul') {
+                flushParagraph();
+                if (inList) flushList();
+                result.push('<ul>');
+                inList = true;
+                listType = 'ul';
+            }
+            const listItem = trimmedLine.substring(2).trim();
+            result.push(`<li>${processInlineMarkdown(listItem)}</li>`);
+            continue;
+        }
+        
+        // 处理有序列表
+        if (/^\d+\.\s/.test(trimmedLine)) {
+            if (!inList || listType !== 'ol') {
+                flushParagraph();
+                if (inList) flushList();
+                result.push('<ol>');
+                inList = true;
+                listType = 'ol';
+            }
+            const listItem = trimmedLine.replace(/^\d+\.\s+/, '').trim();
+            result.push(`<li>${processInlineMarkdown(listItem)}</li>`);
+            continue;
+        }
+        
+        // 如果是列表的延续（缩进内容）
+        if (inList && /^\s{2,}/.test(line)) {
+            const continuedText = line.trim();
+            if (continuedText) {
+                // 添加到上一个列表项
+                const lastIndex = result.length - 1;
+                if (lastIndex >= 0) {
+                    const lastItem = result[lastIndex];
+                    if (lastItem.startsWith('<li>')) {
+                        result[lastIndex] = lastItem.replace(/<\/li>$/, `<br>${processInlineMarkdown(continuedText)}</li>`);
+                    }
+                }
+            }
+            continue;
+        }
+        
+        // 普通文本，添加到当前段落
+        currentParagraph.push(line);
+    }
+    
+    // 处理最后的内容
+    flushParagraph();
+    flushList();
+    flushBlockquote();
+    
+    return result.join('\n');
 }
 
 /**
@@ -130,8 +402,8 @@ function buildArticleHtml(mdFilePath, outputDir) {
         // 解析元信息
         const { meta, content: cleanContent } = parseMarkdownMeta(content);
         
-        // 转换Markdown为HTML（只处理代码块和图片）
-        const htmlContent = simpleMarkdownToHtml(cleanContent);
+        // 转换Markdown为HTML（增强版）
+        const htmlContent = enhancedMarkdownToHtml(cleanContent);
         
         // 创建HTML模板
         const html = `<!DOCTYPE html>
@@ -216,6 +488,35 @@ function buildArticleHtml(mdFilePath, outputDir) {
         // 记录变化的文件
         changedFiles.push(`articles_html/${outputFilename}`);
         
+        // 生成URL友好名称（使用简单的英文名称）
+        // 基于文件名生成简单的英文URL
+        let urlFriendlyName;
+        
+        // 常见中文标题的英文映射
+        const titleMap = {
+            'AI产品部署过程记录': 'ai-product-deployment',
+            'Markdown 使用笔记': 'markdown-notes',
+            '个人网站部署过程记录': 'website-deployment',
+            '办公文档格式规范总结': 'document-format',
+            '应用开发规范总结': 'app-development',
+            'Git 使用笔记': 'git-notes',
+            'JavaScript 使用笔记': 'javascript-notes',
+            '操作系统使用笔记': 'os-notes',
+            '泛微二开标准代码模板': 'weaver-development',
+            '测试文章': 'test-article'
+        };
+        
+        if (titleMap[meta.title]) {
+            urlFriendlyName = titleMap[meta.title] + '.html';
+        } else {
+            // 默认使用文件名（移除扩展名和特殊字符）
+            urlFriendlyName = fileName
+                .replace('.md', '')
+                .replace(/[^\w\u4e00-\u9fa5]/g, '-')
+                .replace(/\s+/g, '-')
+                .toLowerCase() + '.html';
+        }
+        
         return {
             fileName: fileName,
             htmlFile: outputFilename,
@@ -224,7 +525,8 @@ function buildArticleHtml(mdFilePath, outputDir) {
             createTime: meta.createTime,
             updateTime: meta.updateTime,
             description: meta.description,
-            top: meta.top
+            top: meta.top,
+            urlFriendlyName: urlFriendlyName
         };
         
     } catch (error) {

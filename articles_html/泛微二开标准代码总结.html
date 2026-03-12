@@ -41,1801 +41,3334 @@
                         <span>更新时间：2026-02-21</span>
                     </div>
                 </div>
-                <div class="article-body"># E9
+                <div class="article-body"><h1>E9</h1>
+<h2>前端</h2>
+<h3>触发时机</h3>
+<h4>jQuery</h4>
+<pre><code class="language-js">
+//页面挂载触发
 
-## 前端
+$(document).ready(function () {})
 
-### 触发时机
+</code></pre>
+<h4>JS原生</h4>
+<pre><code class="language-js">
+//dom挂载触发
 
-#### jQuery
-
-<pre><code class="language-js">//页面挂载触发
-$(document).ready(function () {})</code></pre>
-
-#### JS原生
-
-<pre><code class="language-js">//dom挂载触发
 document.addEventListener(&#039;DOMContentLoaded&#039;, function)
+
 //hash路径变化触发
+
 window.addEventListener(&#039;hashchange&#039;, function)
+
 // 监听页面可见性变化
-document.addEventListener(&quot;visibilitychange&quot;, function);</code></pre>
 
-### 限定范围
+document.addEventListener(&quot;visibilitychange&quot;, function);
 
-#### ecodeSDK.checkLPath
+</code></pre>
+<h3>限定范围</h3>
+<h4>ecodeSDK.checkLPath</h4>
+<pre><code class="language-js">
+if (ecodeSDK.checkLPath(&#039;/spa/workflow/static4form/index.html&#039;)) {
 
-<pre><code class="language-js">if (ecodeSDK.checkLPath(&#039;/spa/workflow/static4form/index.html&#039;)) {
     console.log(&#039; XXX 代码开始执行&#039;)
-}</code></pre>
 
-#### JS原生
-
-<pre><code class="language-js">//全路径
-window.location.pathname === &#039;/sp/integration/loginSingle/freepass&#039;
-//路径包含
-window.location.href.includes(&#039;/workflow/request/&#039;)
-//正则匹配
-if (
-    /#\/main\/workflow\/req\?([^&amp;]*&amp;)*workflowid=42441(&amp;|$)/.test(location.href)
-) {
-    console.log(&#039;【retrieve-from-report】 触发&#039;)
 }
-//哈希包含
+
+</code></pre>
+<h4>JS原生</h4>
+<pre><code class="language-js">
+//全路径
+
+window.location.pathname === &#039;/sp/integration/loginSingle/freepass&#039;
+
+//路径包含
+
+window.location.href.includes(&#039;/workflow/request/&#039;)
+
+//正则匹配
+
 if (
-    window.location.hash.includes(
-        &#039;#/main/workflow/req?iscreate=1&amp;workflowid=37502&#039;
-    )
+
+    /#\/main\/workflow\/req\?([^&amp;]*&amp;)*workflowid=42441(&amp;|$)/.test(location.href)
+
 ) {
+
+    console.log(&#039;【retrieve-from-report】 触发&#039;)
+
+}
+
+//哈希包含
+
+if (
+
+    window.location.hash.includes(
+
+        &#039;#/main/workflow/req?iscreate=1&amp;workflowid=37502&#039;
+
+    )
+
+) {
+
     console.log(&#039;逻辑触发&#039;)
-}</code></pre>
 
-### 组件复写
+}
 
-<pre><code class="language-js">ecodeSDK.overwritePropsFnQueueMapSet(&#039;WeaTop&#039;, {
+</code></pre>
+<h3>组件复写</h3>
+<pre><code class="language-js">
+ecodeSDK.overwritePropsFnQueueMapSet(&#039;WeaTop&#039;, {
+
     fn: (newProps) =&gt; {
+
         console.log(&#039;拦截到目标组件，参数：&#039;, newProps)
+
     },
+
     order: 1,
+
     desc: &#039; XXX 组件重写&#039;,
-})</code></pre>
 
-#### 拦截WeaTop加按钮
+})
 
-<pre><code class="language-js">ecodeSDK.overwritePropsFnQueueMapSet(&#039;WeaTop&#039;, {
+</code></pre>
+<h4>拦截WeaTop加按钮</h4>
+<pre><code class="language-js">
+ecodeSDK.overwritePropsFnQueueMapSet(&#039;WeaTop&#039;, {
+
     fn: (newProps) =&gt; {
+
         if (newProps.ecId === &#039;_Route@4q280c_WeaTop@c0nzkl&#039;) {
+
             console.log(&#039;拦截到目标组件，参数：&#039;, newProps)
+
         }
+
         const { Button } = antd //自定义点击事件
+
         const handleIndicatorClick = () =&gt; {
+
             alert(&#039;按钮被点击&#039;)
+
         }
+
         const newButton = (
+
             &lt;Button type=&quot;primary&quot; onClick={handleIndicatorClick}&gt;
+
                 退回到提报人
+
             &lt;/Button&gt;
+
         ) //将新按钮插入到 buttons 数组的最前面
+
         newProps.buttons = [newButton, ...newProps.buttons]
+
     },
+
     order: 1,
+
     desc: &#039;拦截到weatop,用于添加按钮&#039;,
-})</code></pre>
 
-### 组件重写
+})
 
-register.js
+</code></pre>
+<h3>组件重写</h3>
+<p>register.js</p>
+<pre><code class="language-js">
+const NewWeaTab = (props) =&gt; {
 
-<pre><code class="language-js">const NewWeaTab = (props) =&gt; {
     const acParams = {
+
         appId: &#039;${appId}&#039;,
+
         name: &#039;NewWeaTabCom&#039;,
+
         isPage: false,
+
         noCss: true,
+
         props,
+
     }
+
+
 
     const NewCom = props.Com
+
     return window.comsMobx ? (
+
         ecodeSDK.getAsyncCom(acParams)
+
     ) : (
+
         &lt;NewCom {...props} /&gt;
+
     )
+
 }
 
+
+
 ecodeSDK.overwriteClassFnQueueMapSet(&#039;WeaTab&#039;, {
+
     fn: (Com, newProps) =&gt; {
+
         if (
+
             !(
+
                 newProps.ecId ===
+
                 &#039;_ListCell@cebo01_DropdownOverlay@fpgeqx_Tabs@abxotu_WeaTab@3x9y9h&#039;
+
             )
+
         )
+
             return
+
         if (newProps._noOverwrite) return
+
         return {
+
             com: NewWeaTab,
+
             props: newProps,
+
         }
+
     },
+
     order: 1,
+
     desc: &#039;WeaTab组件重写&#039;,
-})</code></pre>
 
-NewWeaTab.js
+})
 
-<pre><code class="language-js">const { WeaTab } = ecCom
+</code></pre>
+<p>NewWeaTab.js</p>
+<pre><code class="language-js">
+const { WeaTab } = ecCom
+
 const { Modal, message } = antd
 
+
+
 class NewWeaTabCom extends React.Component {
+
     constructor(props) {
+
         super(props)
+
         this.state = {}
+
     }
+
+
 
     handleTabChange(key) {}
 
+
+
     componentDidMount() {} //生命周期-初始
 
+
+
     componentWillUnmount() {} //生命周期-卸载
+
     /* ===== 渲染 WeaTab ===== */
 
+
+
     render() {
+
         const { selectedKey } = this.state
+
         let datas = [...this.props.datas]
+
         const newProps = {
+
             ...this.props,
+
             datas,
+
             _noOverwrite: true,
+
         }
+
         return (
+
             &lt;&gt;
+
                 &lt;WeaTab {...newProps} /&gt; 
+
             &lt;/&gt;
+
         )
+
     }
+
 }
+
 // 发布组件
-ecodeSDK.setCom(&#039;${appId}&#039;, &#039;NewWeaTabCom&#039;, NewWeaTabCom)</code></pre>
 
-### 请求接口
+ecodeSDK.setCom(&#039;${appId}&#039;, &#039;NewWeaTabCom&#039;, NewWeaTabCom)
 
-#### WeaTools
+</code></pre>
+<h3>请求接口</h3>
+<h4>WeaTools</h4>
+<pre><code class="language-jsx">
+const { WeaTools } = ecCom
 
-<pre><code class="language-jsx">const { WeaTools } = ecCom
 WeaTools.callApi(
+
     &#039;/api/MedicalEthicsExamination/gradeInquiry/calculateGrades&#039;,
+
     &#039;GET&#039;
+
 )
+
     .then((response) =&gt; {
+
         if (response) {
+
             //console.log(&quot;接口逻辑成功&quot;)
+
             //window.location.reload()刷新页面
+
         } else {
+
             //console.log(&quot;接口逻辑失败&quot;)
+
         }
+
     })
+
     .catch((error) =&gt; {
+
         //console.log(&quot;接口请求失败&quot;,error)
-    })</code></pre>
 
-#### jQuery
+    })
 
-<pre><code class="language-js">//
+</code></pre>
+<h4>jQuery</h4>
+<pre><code class="language-js">
+//
+
+
 
 //===== GET（异步） =====
+
 //定义
+
 function GetCalculateUpTask(projectId, taskId, newYjjssj) {
+
     return $.ajax({
-        url: <code>/interface/recurringtask/GetCalculateUpTask.jsp?projectId=${projectId}&amp;taskId=${taskId}&amp;newYjjssj=${newYjjssj}</code>,
+
+        url: `/interface/recurringtask/GetCalculateUpTask.jsp?projectId=${projectId}&amp;taskId=${taskId}&amp;newYjjssj=${newYjjssj}`,
+
         type: &#039;GET&#039;,
+
     })
+
 }
+
 //调用
+
 GetCalculateUpTask(projectId, taskId, newYjjssj)
+
     .done(function (res) {
+
         console.log(&#039;GetCalculateUpTask 响应结果:&#039;, res)
+
     })
+
     .fail(function (err) {
+
         console.error(&#039;请求失败:&#039;, err)
+
     })
+
+
 
 //===== POST =====
+
 //定义
+
 const paramsObj = { key: &#039;value&#039;, ids: [1, 2, 3] }
+
 function ListeningModelSave(paramsObj) {
+
     return $.ajax({
+
         url: &#039;/interface/JZW/ListeningModelSave.jsp&#039;,
+
         type: &#039;POST&#039;,
+
         data: paramsObj,
+
         traditional: true,
+
     })
+
 }
+
 //调用
+
 ListeningModelSave(paramsObj)
+
     .done(function (res) {
+
         console.log(&#039;ListeningModelSave 响应结果:&#039;, res)
+
     })
+
     .fail(function (xhr, status, err) {
+
         console.error(&#039;请求失败:&#039;, err)
-    })</code></pre>
 
-### 接口拦截
+    })
 
-#### 拦截请求
+</code></pre>
+<h3>接口拦截</h3>
+<h4>拦截请求</h4>
+<pre><code class="language-js">
+ecodeSDK.rewriteApiParamsQueueSet({
 
-<pre><code class="language-js">ecodeSDK.rewriteApiParamsQueueSet({
     fn: (url, method, params) =&gt; {
+
         if (url.indexOf(&#039;/api/cube/mode/mode/saveBatchImportInfo&#039;) !== -1) {
+
             return {
+
                 url: url,
+
                 method: method,
+
                 params: { ...params, fname: wenjianname },
+
             }
+
         }
+
         return { url, method, params }
+
     },
+
     desc: &#039;修改流程分页接口的默认查询条件&#039;, // 描述用途
-})</code></pre>
 
-#### 拦截响应
-
-<pre><code class="language-jsx">//拦截接口响应
-ecodeSDK.rewriteApiDataQueueSet({
-    fn: function (url, params, data) {
-        if (url.indexOf(&#039;/api/hrm/kq/group/getForm&#039;) &gt; -1) {
-            const newData = JSON.parse(JSON.stringify(data))
-            console.log(&#039;拦截到接口：&#039;, newData)
-            return newData
-        }
-        return data
-    },
-    desc: &#039;拦截接口响应&#039;,
-})</code></pre>
-
-### 提醒
-
-#### 交互
-
-<pre><code class="language-jsx">window.antd.Modal.warning({
-    title: &#039;提示&#039;,
-    content: (
-        &lt;div&gt;
-            &lt;h5&gt;批量提交的签字意见必填已开启，意见必须要输入内容！&lt;/h5&gt;
-            如不想此控制，请到前端用户中心-个性化设置-工作流程 中进行关闭。
-        &lt;/div&gt;
-    ),
-    onOk() {},
-})</code></pre>
-
-#### 气泡
-
-<pre><code class="language-jsx">//流程表单，0提示，1错误，2警告，3成功
-WfForm.showMessage(&#039;这里是自定义提示内容&#039;)
-//建模表单，0提示，1错误，2警告，3成功
-ModeForm.showMessage(&#039;这里是自定义提示内容&#039;)
-//全局
-const { message } = antd
-message.success(content, duration)
-message.error(content, duration)
-message.info(content, duration)
-message.warning(content, duration)
-message.warn(content, duration)
-message.loading(content, duration)</code></pre>
-
-### 获取设备信息
-
-<pre><code class="language-js">// 判断PC端or移动端
-function isMobile() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-    )
-}
-if (isMobile()) {
-    console.log(&#039;当前是移动端&#039;)
-} else {
-    console.log(&#039;当前是PC端&#039;)
-}</code></pre>
-
-### 获取用户信息
-
-#### ecode
-
-<pre><code class="language-js">const userInfo = JSON.parse(localStorage.getItem(&#039;theme-account&#039;))
-/**
-1. **<code>subcompanyid</code>: &quot;0&quot;**  
-    → 所属子公司的 ID，&quot;0&quot; 可能表示“无”或“总公司/默认公司”。
-2. **<code>jobs</code>: &quot;&quot;**  
-    → 用户职位/岗位，当前为空字符串，可能未设置或无职位。
-3. **<code>icon</code>: &quot;/messager/images/icon_m_wev8.jpg&quot;**  
-    → 用户头像或默认图标路径，用于前端显示。
-4. **<code>deptid</code>: &quot;0&quot;**  
-    → 所属部门 ID，&quot;0&quot; 同样可能表示“无部门”或“顶级部门”。
-5. **<code>subcompanyname</code>: &quot;&quot;**  
-    → 子公司名称，当前为空。
-6. **<code>iscurrent</code>: &quot;1&quot;**  
-    → 是否为当前激活账户，&quot;1&quot; 通常表示“是”。
-7. **<code>userid</code>: &quot;1&quot;**  
-    → 用户唯一 ID，这里是 1，通常系统管理员默认为 1。
-8. **<code>deptname</code>: &quot;&quot;**  
-    → 部门名称，当前为空
-9. **<code>userLanguage</code>: &quot;7&quot;**  
-    → 用户界面语言设置，&quot;7&quot; 可能代表某种语言编码（如中文、英文等），需查系统语言映射表。
-10. **<code>showSearch</code>: false**  
-    → 是否显示搜索功能，false 表示隐藏。
-11. **<code>showMore</code>: true**  
-    → 是否显示“更多”按钮或菜单，true 表示显示。
-12. **<code>username</code>: &quot;系统管理员&quot;**  
-    → 用户显示名称。
-13. **<code>fontSetting</code>: false**  
-    → 是否启用字体设置功能，false 表示未启用或隐藏。
-<code>accountlist</code> 数组（多账户支持）
-**/</code></pre>
-
-#### java/jsp
-
-<pre><code class="language-java">User user = HrmUserVarify.getUser(request, response);
-int userId = user.getUID();</code></pre>
-
-### 检测元素是否已渲染
-
-<pre><code class="language-js">/**
- * 持续轮询查找元素，支持超时
- * @param {string} selector - CSS选择器
- * @param {function} callback - 找到后执行的方法
- * @param {number} interval - 轮询间隔（毫秒）
- * @param {number} timeout - 超时时间（毫秒）
- */
-function WatchElementReady(selector, callback, interval = 500, timeout = 10000) {
-  const startTime = Date.now();
-  function check() {
-    const el = document.querySelector(selector);
-    if (el) {
-      //console.log(<code>元素已渲染，执行回调</code>);
-      if (callback &amp;&amp; typeof callback === &#039;function&#039;) {
-        callback();
-      } else {
-        console.log(<code>未指定回调，执行默认打印</code>);
-      }
-    } else {
-      const elapsed = Date.now() - startTime;
-      if (elapsed &gt;= timeout) {
-        console.log(<code>超时（${timeout}ms），停止重试</code>);
-        return; // 停止重试
-      }
-      setTimeout(check, interval); // 继续重试
-    }
-  }
-  check(); // 立即执行第一次检查
-}
-
-//调用方式
-CheckWfFormLoaded(() =&gt; {
-	//渲染后执行
-}</code></pre>
-
-### 检测变量是否已就绪
-
-<pre><code class="language-js">/**
- * 轮询等待 WfForm 对象加载完成（表单SDK初始化完毕）
- * @param {Function} callback - 加载成功后的回调
- * @param {number} maxAttempts - 最大尝试次数（默认50次）
- * @param {number} interval - 轮询间隔（默认100ms）
- */
-function CheckWfFormLoaded(callback, maxAttempts = 50, interval = 100) {
-    let attempts = 0
-    const poll = setInterval(() =&gt; {
-        if (typeof WfForm !== &#039;undefined&#039;) {
-            clearInterval(poll)
-            callback() //已加载，执行回调
-        } else if (attempts &gt;= maxAttempts) {
-            clearInterval(poll)
-            console.log(&#039;加载超时&#039;)
-        }
-        attempts++
-    }, interval)
-}
-//调用方式
-CheckWfFormLoaded(() =&gt; {
-    console.log(&#039;就绪&#039;)
-})</code></pre>
-
-### 建模
-
-#### ecode刷新台账表格数据
-
-<pre><code class="language-js">ModeList.reloadTable()</code></pre>
-
-### 流程
-
-#### 获取流程信息
-
-<pre><code class="language-js">const baseInfo = WfForm.getBaseInfo()
-/*
-- f_weaver_belongto_userid：用户身份标识，表示当前操作或数据所属的人员ID（0代表内部用户，1代表外部用户）。值为&quot;1&quot;时通常表示系统管理员或默认用户。
-- f_weaver_belongto_usertype：用户类型标识，固定值&quot;0&quot;代表OA内部用户（如员工），&quot;1&quot;代表外部用户（如客户）。
-- workflowid：流程模板的唯一标识ID，此处&quot;19&quot;代表特定类型的流程（如报销、公文等）。
-- requestid：流程请求的唯一ID，&quot;-1&quot;通常表示新建流程或测试状态。
-- nodeid：流程节点ID，&quot;77&quot;表示流程中的具体操作步骤（如审批节点）。
-- formid：表单模板ID，&quot;-29&quot;代表系统预置或自定义的表单结构。
-- isbill：是否单据式表单，&quot;1&quot;表示是单据式（带明细表格），&quot;0&quot;表示非单据式。
-- languageid：语言标识，&quot;7&quot;代表中文（其他值如8英文、9繁体）。
-*/</code></pre>
-
-#### 流程表单SDK
-
-##### 获取主表字段值
-
-<pre><code class="language-js">//获取文本字段或浏览按钮主键值
-var fieldvalue1 = WfForm.getFieldValue(&#039;field110&#039;)
-//获取浏览按钮specialobj
-var fieldvalue2 = mobx.toJS(wfform.getFieldValueObj(&#039;field110&#039;).specialobj)</code></pre>
-
-##### 修改主表字段值
-
-<pre><code class="language-js">//修改文本框、多行文本、选择框等字段类型
-WfForm.changeFieldValue(&#039;field123&#039;, { value: &#039;1.234&#039; })
-//修改浏览框字段的值，必须有specialobj数组结构对象
-WfForm.changeFieldValue(&#039;field11_2&#039;, {
-    value: &#039;2,3&#039;,
-    specialobj: [
-        { id: &#039;2&#039;, name: &#039;张三&#039; },
-        { id: &#039;3&#039;, name: &#039;李四&#039; },
-    ],
 })
-//修改check框字段(0不勾选、1勾选)
-WfForm.changeFieldValue(&#039;field123&#039;, { value: &#039;1&#039; })
-//针对单行文本框字段类型，只读情况，支持显示值跟入库值不一致
-WfForm.changeFieldValue(&#039;field123&#039;, {
-    value: &#039;入库真实值&#039;,
-    specialobj: { showhtml: &#039;界面显示值&#039; },
-})</code></pre>
 
-##### 监听主表字段值变化
+</code></pre>
+<h4>拦截响应</h4>
+<pre><code class="language-jsx">
+//拦截接口响应
 
-<pre><code class="language-js">//----- 主表 -----
-WfForm.bindFieldChangeEvent(&quot;field27555,field27556&quot;, function(obj,id,value){
-	console.log(&quot;WfForm.bindFieldChangeEvent--&quot;,obj,id,value);
-});
-//注意：如果字段绑定事件，事件内改变本字段的值，需要setTimeout延时下
-WfForm.bindFieldChangeEvent(&quot;field111&quot;, function(obj,id,value{
-	window.setTimeout(function(){
-		WfForm.changeFieldValue(&quot;field111&quot;,{value:&quot;修改本字段值需要延时&quot;});
-	}, 10);
-	WfForm.changeFieldValue(&quot;field222&quot;,{value:&quot;修改非本字段不需要延时&quot;});
-});</code></pre>
+ecodeSDK.rewriteApiDataQueueSet({
 
-##### 明细表
+    fn: function (url, params, data) {
 
-<pre><code class="language-js">//遍历明细表
-var rowIndexStr = WfForm.getDetailAllRowIndexStr(&quot;detail_1&quot;);
-var rowArr = rowIndexStr.split(&quot;,&quot;);
-for (var i = 0; i &lt; rowArr.length; i++) { var rowIndex = rowArr[i]; if (rowIndex !== &quot;&quot;) {
-	var fieldMark = &quot;field593_&quot; + rowIndex;
-	var fieldValue = WfForm.getFieldValue(fieldMark);
+        if (url.indexOf(&#039;/api/hrm/kq/group/getForm&#039;) &gt; -1) {
+
+            const newData = JSON.parse(JSON.stringify(data))
+
+            console.log(&#039;拦截到接口：&#039;, newData)
+
+            return newData
+
+        }
+
+        return data
+
+    },
+
+    desc: &#039;拦截接口响应&#039;,
+
+})
+
+</code></pre>
+<h3>提醒</h3>
+<h4>交互</h4>
+<pre><code class="language-jsx">
+window.antd.Modal.warning({
+
+    title: &#039;提示&#039;,
+
+    content: (
+
+        &lt;div&gt;
+
+            &lt;h5&gt;批量提交的签字意见必填已开启，意见必须要输入内容！&lt;/h5&gt;
+
+            如不想此控制，请到前端用户中心-个性化设置-工作流程 中进行关闭。
+
+        &lt;/div&gt;
+
+    ),
+
+    onOk() {},
+
+})
+
+</code></pre>
+<h4>气泡</h4>
+<pre><code class="language-jsx">
+//流程表单，0提示，1错误，2警告，3成功
+
+WfForm.showMessage(&#039;这里是自定义提示内容&#039;)
+
+//建模表单，0提示，1错误，2警告，3成功
+
+ModeForm.showMessage(&#039;这里是自定义提示内容&#039;)
+
+//全局
+
+const { message } = antd
+
+message.success(content, duration)
+
+message.error(content, duration)
+
+message.info(content, duration)
+
+message.warning(content, duration)
+
+message.warn(content, duration)
+
+message.loading(content, duration)
+
+</code></pre>
+<h3>获取设备信息</h3>
+<pre><code class="language-js">
+// 判断PC端or移动端
+
+function isMobile() {
+
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+
+        navigator.userAgent
+
+    )
+
 }
+
+if (isMobile()) {
+
+    console.log(&#039;当前是移动端&#039;)
+
+} else {
+
+    console.log(&#039;当前是PC端&#039;)
+
+}
+
+</code></pre>
+<h3>获取用户信息</h3>
+<h4>ecode</h4>
+<pre><code class="language-js">
+const userInfo = JSON.parse(localStorage.getItem(&#039;theme-account&#039;))
+
+/**
+
+1. **`subcompanyid`: &quot;0&quot;**  
+
+    → 所属子公司的 ID，&quot;0&quot; 可能表示“无”或“总公司/默认公司”。
+
+2. **`jobs`: &quot;&quot;**  
+
+    → 用户职位/岗位，当前为空字符串，可能未设置或无职位。
+
+3. **`icon`: &quot;/messager/images/icon_m_wev8.jpg&quot;**  
+
+    → 用户头像或默认图标路径，用于前端显示。
+
+4. **`deptid`: &quot;0&quot;**  
+
+    → 所属部门 ID，&quot;0&quot; 同样可能表示“无部门”或“顶级部门”。
+
+5. **`subcompanyname`: &quot;&quot;**  
+
+    → 子公司名称，当前为空。
+
+6. **`iscurrent`: &quot;1&quot;**  
+
+    → 是否为当前激活账户，&quot;1&quot; 通常表示“是”。
+
+7. **`userid`: &quot;1&quot;**  
+
+    → 用户唯一 ID，这里是 1，通常系统管理员默认为 1。
+
+8. **`deptname`: &quot;&quot;**  
+
+    → 部门名称，当前为空
+
+9. **`userLanguage`: &quot;7&quot;**  
+
+    → 用户界面语言设置，&quot;7&quot; 可能代表某种语言编码（如中文、英文等），需查系统语言映射表。
+
+10. **`showSearch`: false**  
+
+    → 是否显示搜索功能，false 表示隐藏。
+
+11. **`showMore`: true**  
+
+    → 是否显示“更多”按钮或菜单，true 表示显示。
+
+12. **`username`: &quot;系统管理员&quot;**  
+
+    → 用户显示名称。
+
+13. **`fontSetting`: false**  
+
+    → 是否启用字体设置功能，false 表示未启用或隐藏。
+
+`accountlist` 数组（多账户支持）
+
+**/
+
+</code></pre>
+<h4>java/jsp</h4>
+<pre><code class="language-java">
+User user = HrmUserVarify.getUser(request, response);
+
+int userId = user.getUID();
+
+</code></pre>
+<h3>检测元素是否已渲染</h3>
+<pre><code class="language-js">
+/**
+
+ * 持续轮询查找元素，支持超时
+
+ * @param {string} selector - CSS选择器
+
+ * @param {function} callback - 找到后执行的方法
+
+ * @param {number} interval - 轮询间隔（毫秒）
+
+ * @param {number} timeout - 超时时间（毫秒）
+
+ */
+
+function WatchElementReady(selector, callback, interval = 500, timeout = 10000) {
+
+  const startTime = Date.now();
+
+  function check() {
+
+    const el = document.querySelector(selector);
+
+    if (el) {
+
+      //console.log(`元素已渲染，执行回调`);
+
+      if (callback &amp;&amp; typeof callback === &#039;function&#039;) {
+
+        callback();
+
+      } else {
+
+        console.log(`未指定回调，执行默认打印`);
+
+      }
+
+    } else {
+
+      const elapsed = Date.now() - startTime;
+
+      if (elapsed &gt;= timeout) {
+
+        console.log(`超时（${timeout}ms），停止重试`);
+
+        return; // 停止重试
+
+      }
+
+      setTimeout(check, interval); // 继续重试
+
+    }
+
+  }
+
+  check(); // 立即执行第一次检查
+
+}
+
+
+
+//调用方式
+
+CheckWfFormLoaded(() =&gt; {
+
+	//渲染后执行
+
+}
+
+</code></pre>
+<h3>检测变量是否已就绪</h3>
+<pre><code class="language-js">
+/**
+
+ * 轮询等待 WfForm 对象加载完成（表单SDK初始化完毕）
+
+ * @param {Function} callback - 加载成功后的回调
+
+ * @param {number} maxAttempts - 最大尝试次数（默认50次）
+
+ * @param {number} interval - 轮询间隔（默认100ms）
+
+ */
+
+function CheckWfFormLoaded(callback, maxAttempts = 50, interval = 100) {
+
+    let attempts = 0
+
+    const poll = setInterval(() =&gt; {
+
+        if (typeof WfForm !== &#039;undefined&#039;) {
+
+            clearInterval(poll)
+
+            callback() //已加载，执行回调
+
+        } else if (attempts &gt;= maxAttempts) {
+
+            clearInterval(poll)
+
+            console.log(&#039;加载超时&#039;)
+
+        }
+
+        attempts++
+
+    }, interval)
+
+}
+
+//调用方式
+
+CheckWfFormLoaded(() =&gt; {
+
+    console.log(&#039;就绪&#039;)
+
+})
+
+</code></pre>
+<h3>建模</h3>
+<h4>ecode刷新台账表格数据</h4>
+<pre><code class="language-js">
+ModeList.reloadTable()
+
+</code></pre>
+<h3>流程</h3>
+<h4>获取流程信息</h4>
+<pre><code class="language-js">
+const baseInfo = WfForm.getBaseInfo()
+
+/*
+
+- f_weaver_belongto_userid：用户身份标识，表示当前操作或数据所属的人员ID（0代表内部用户，1代表外部用户）。值为&quot;1&quot;时通常表示系统管理员或默认用户。
+
+- f_weaver_belongto_usertype：用户类型标识，固定值&quot;0&quot;代表OA内部用户（如员工），&quot;1&quot;代表外部用户（如客户）。
+
+- workflowid：流程模板的唯一标识ID，此处&quot;19&quot;代表特定类型的流程（如报销、公文等）。
+
+- requestid：流程请求的唯一ID，&quot;-1&quot;通常表示新建流程或测试状态。
+
+- nodeid：流程节点ID，&quot;77&quot;表示流程中的具体操作步骤（如审批节点）。
+
+- formid：表单模板ID，&quot;-29&quot;代表系统预置或自定义的表单结构。
+
+- isbill：是否单据式表单，&quot;1&quot;表示是单据式（带明细表格），&quot;0&quot;表示非单据式。
+
+- languageid：语言标识，&quot;7&quot;代表中文（其他值如8英文、9繁体）。
+
+*/
+
+</code></pre>
+<h4>流程表单SDK</h4>
+<h5>获取主表字段值</h5>
+<pre><code class="language-js">
+//获取文本字段或浏览按钮主键值
+
+var fieldvalue1 = WfForm.getFieldValue(&#039;field110&#039;)
+
+//获取浏览按钮specialobj
+
+var fieldvalue2 = mobx.toJS(wfform.getFieldValueObj(&#039;field110&#039;).specialobj)
+
+</code></pre>
+<h5>修改主表字段值</h5>
+<pre><code class="language-js">
+//修改文本框、多行文本、选择框等字段类型
+
+WfForm.changeFieldValue(&#039;field123&#039;, { value: &#039;1.234&#039; })
+
+//修改浏览框字段的值，必须有specialobj数组结构对象
+
+WfForm.changeFieldValue(&#039;field11_2&#039;, {
+
+    value: &#039;2,3&#039;,
+
+    specialobj: [
+
+        { id: &#039;2&#039;, name: &#039;张三&#039; },
+
+        { id: &#039;3&#039;, name: &#039;李四&#039; },
+
+    ],
+
+})
+
+//修改check框字段(0不勾选、1勾选)
+
+WfForm.changeFieldValue(&#039;field123&#039;, { value: &#039;1&#039; })
+
+//针对单行文本框字段类型，只读情况，支持显示值跟入库值不一致
+
+WfForm.changeFieldValue(&#039;field123&#039;, {
+
+    value: &#039;入库真实值&#039;,
+
+    specialobj: { showhtml: &#039;界面显示值&#039; },
+
+})
+
+</code></pre>
+<h5>监听主表字段值变化</h5>
+<pre><code class="language-js">
+//----- 主表 -----
+
+WfForm.bindFieldChangeEvent(&quot;field27555,field27556&quot;, function(obj,id,value){
+
+	console.log(&quot;WfForm.bindFieldChangeEvent--&quot;,obj,id,value);
+
+});
+
+//注意：如果字段绑定事件，事件内改变本字段的值，需要setTimeout延时下
+
+WfForm.bindFieldChangeEvent(&quot;field111&quot;, function(obj,id,value{
+
+	window.setTimeout(function(){
+
+		WfForm.changeFieldValue(&quot;field111&quot;,{value:&quot;修改本字段值需要延时&quot;});
+
+	}, 10);
+
+	WfForm.changeFieldValue(&quot;field222&quot;,{value:&quot;修改非本字段不需要延时&quot;});
+
+});
+
+</code></pre>
+<h5>明细表</h5>
+<pre><code class="language-js">
+//遍历明细表
+
+var rowIndexStr = WfForm.getDetailAllRowIndexStr(&quot;detail_1&quot;);
+
+var rowArr = rowIndexStr.split(&quot;,&quot;);
+
+for (var i = 0; i &lt; rowArr.length; i++) { var rowIndex = rowArr[i]; if (rowIndex !== &quot;&quot;) {
+
+	var fieldMark = &quot;field593_&quot; + rowIndex;
+
+	var fieldValue = WfForm.getFieldValue(fieldMark);
+
+}
+
+
 
 //监听字段值变化
+
 WfForm.bindDetailFieldChangeEvent(&#039;field27583&#039;, function (id, rowIndex, value) {
+
     console.log(&#039;WfForm.bindDetailFieldChangeEvent--&#039;, id, rowIndex, value)
+
 })
+
+
 
 //删除明细表指定行/清空
+
 WfForm.delDetailRow(&#039;detail_1&#039;, &#039;all&#039;)
+
 WfForm.delDetailRow(&#039;detail_1&#039;, &#039;3,6&#039;) //删除明细1行标为3,6的行
 
+
+
 //添加明细表
+
 WfForm.addDetailRow(&#039;detail_2&#039;, { field111: { value: &#039;初始值&#039; } })
 
+
+
 //监听明细表字段值变化
+
 WfForm.bindDetailFieldChangeEvent(
+
     &#039;field27583,field27584&#039;,
+
     function (id, rowIndex, value) {
+
         console.log(&#039;WfForm.bindDetailFieldChangeEvent--&#039;, id, rowIndex, value)
+
     }
+
 )
-//</code></pre>
 
-##### 注册拦截
+//
 
-<pre><code class="language-js">// 保存前
+</code></pre>
+<h5>注册拦截</h5>
+<pre><code class="language-js">
+// 保存前
+
 WfForm.registerCheckEvent(WfForm.OPER_SAVE, function (callback) {
+
     console.log(&#039;自定义逻辑&#039;)
+
     callback() // 继续提交需调用callback，不调用代表阻断
+
 })
+
+
 
 // 保存后，页面跳转前
+
 WfForm.registerCheckEvent(WfForm.OPER_SAVECOMPLETE, function (callback) {
+
     console.log(&#039;自定义逻辑&#039;)
+
     callback() // 继续提交需调用callback，不调用代表阻断
+
 })
+
+
 
 // 明细表行新增和删除前
+
 WfForm.registerCheckEvent(WfForm.OPER_ADDROW + &#039;1&#039;, function (callback) {
+
     alert(&#039;添加明细1前执行逻辑，明细1则是OPER_ADDROW+1，依次类推&#039;)
+
     callback() // 允许继续添加行调用callback，不调用代表阻断添加
+
 })
+
+
 
 WfForm.registerCheckEvent(WfForm.OPER_DELROW + &#039;2&#039;, function (callback) {
+
     alert(&#039;删除明细2前执行逻辑&#039;)
+
     callback() // 允许继续删除行调用callback，不调用代表阻断删除
+
 })
+
+
 
 // 明细表行新增和删除后
+
 WfForm.registerAction(WfForm.ACTION_ADDROW + &#039;1&#039;, function (index) {
+
     alert(&#039;添加行下标是&#039; + index)
+
 }) // 下标从1开始，明细1添加行触发事件，注册函数入参为新添加行下标
 
+
+
 WfForm.registerAction(WfForm.ACTION_DELROW + &#039;2&#039;, function (arg) {
+
     alert(&#039;删除行下标集合是&#039; + arg.join(&#039;,&#039;))
-}) // 下标从1开始，明细2删除行触发事件</code></pre>
 
-### 自定义按钮
+}) // 下标从1开始，明细2删除行触发事件
 
-#### 自定义id/class
+</code></pre>
+<h3>自定义按钮</h3>
+<h4>自定义id/class</h4>
+<p>newButton.css</p>
+<pre><code class="language-css">
+#jzwAddButton {
 
-newButton.css
-
-<pre><code class="language-css">#jzwAddButton {
   width: 60px;
+
   height: 30px;
+
   background-color: rgb(45, 183, 245) !important;
+
   border-radius: 2px !important;
+
   color: white !important;
+
   display: inline-block !important;
+
   font-size: 15px !important;
+
   box-sizing: border-box !important;
+
   margin: 5px !important;
+
   text-align: center !important;
+
   line-height: 30px;
+
   cursor: pointer; /* 建议加上，表示可点击 */
+
   transition: background-color 0.2s ease; /* 可选：增加过渡效果更流畅 */
+
   user-select: none;/*禁止内部元素文本选中*/
+
 }
+
 #jzwAddButton span {
+
   color: white !important;
+
 }
+
 #jzwAddButton:hover {
+
   background-color: rgb(65, 193, 255) !important; /* 稍浅的蓝色 */
-}</code></pre>
 
-newButton.js
+}
 
-<pre><code class="language-js">if (/#\/main\/workflow\/req\?([^&amp;]*&amp;)*workflowid=63(&amp;|$)/.test(location.href)) {
+</code></pre>
+<p>newButton.js</p>
+<pre><code class="language-js">
+if (/#\/main\/workflow\/req\?([^&amp;]*&amp;)*workflowid=63(&amp;|$)/.test(location.href)) {
+
     console.log(&#039;【copy-detailed】 触发&#039;)
 
+
+
     //========== 方法定义 ==========
+
     function WaitForElement(selector, callback, timeout = 10000) {
+
         const startTime = Date.now()
+
         const interval = setInterval(() =&gt; {
+
             const element = document.querySelector(selector)
+
             if (element) {
+
                 clearInterval(interval)
+
                 callback(element)
+
             } else if (Date.now() - startTime &gt; timeout) {
+
                 clearInterval(interval)
-                console.warn(<code>[WaitForElement] 超时未找到元素: ${selector}</code>)
+
+                console.warn(`[WaitForElement] 超时未找到元素: ${selector}`)
+
             }
+
         }, 200) // 每 200ms 检查一次
+
     }
+
     function CustomizeButton(btn) {
+
         // 防止重复绑定（可选）
+
         const hasCustomHandler = btn.dataset.customHandler
+
         if (hasCustomHandler) return
+
         btn.dataset.customHandler = &#039;true&#039; // 标记已绑定
+
         // 绑定在父级稳定元素上（比如 document）
+
         document.addEventListener(&#039;click&#039;, function (e) {
+
             if (e.target.closest &amp;&amp; e.target.closest(&#039;#jzwAddButton&#039;)) {
+
                 e.preventDefault()
+
                 ButtonClick()
+
             }
+
         })
+
     }
+
     function ButtonClick() {
+
         console.log(&#039;自定义按钮点击逻辑&#039;)
+
     }
+
+
 
     // ========== 逻辑执行 ==========
+
     WaitForElement(&#039;#jzwAddButton&#039;, CustomizeButton)
-}</code></pre>
 
-### 自定义页面
+}
 
-<pre><code class="language-js">//register.js
+</code></pre>
+<h3>自定义页面</h3>
+<pre><code class="language-js">
+//register.js
+
 ecodeSDK.rewriteRouteQueue.push({
+
     fn: (params) =&gt; {
+
         const { Com, Route, nextState } = params
+
         const cpParams = {
+
             path: &#039;main/cs/app&#039;, //路由地址
+
             appId: &#039;${appId}&#039;,
+
             name: &#039;more&#039;, //具体页面应用id
+
             node: &#039;app&#039;, //渲染的路由节点，这里渲染的是app这个节点
+
             Route,
+
             nextState,
+
         }
+
         if (ecodeSDK.checkPath(cpParams)) {
+
             //判断地址是否是要注入的地址
+
             const acParams = {
+
                 appId: cpParams.appId,
+
                 name: cpParams.name, //模块名称
+
                 props: params, //参数
+
                 isPage: true, //是否是路由页面
+
                 noCss: true, //是否禁止单独加载css，通常为了减少css数量，css默认前置加载
+
             } //异步加载模块${appId}下的子模块pageSimple
+
             return ecodeSDK.getAsyncCom(acParams)
+
         }
+
         return null //这里一定要返回空，不然会干扰到其它新页面
+
     },
+
     order: 1,
+
     desc: &#039;常用应用更多页面&#039;,
+
 })
+
+
 
 // 访问路径/spa/custom/static/index.html#/main/cs/app/880d4b6242d2435f84f6d5261c2164fd_more
 
+
+
 //index.js
+
 const { WeaTop } = ecCom
+
 class SimplePage extends React.Component {
+
     render() {
+
         return (
+
             &lt;div&gt;
+
                 &lt;WeaTop title=&quot;标题&quot; /&gt;
+
                 &lt;div&gt;内容&lt;/div&gt;
+
             &lt;/div&gt;
+
         )
+
     }
+
 }
-ecodeSDK.setCom(&#039;${appId}&#039;, &#039;simple&#039;, SimplePage)</code></pre>
 
-### 自定义组件
+ecodeSDK.setCom(&#039;${appId}&#039;, &#039;simple&#039;, SimplePage)
 
-<pre><code class="language-js">//register.js
+</code></pre>
+<h3>自定义组件</h3>
+<pre><code class="language-js">
+//register.js
+
 ecodeSDK.rewritePortalCusEleQueue.push({
+
     fn: (params) =&gt; {
+
         const { props, options } = params
+
         if (options.ebaseid === &#039;Custom_1768803998784&#039;) {
+
             const acParams = {
+
                 appId: &#039;${appId}&#039;,
+
                 name: &#039;cyyy&#039;, //模块名称
+
                 params, //参数
+
                 isPage: false, //是否是路由页面
+
                 noCss: true, //是否禁止单独加载css，通常为了减少css数量，css默认前置加载
+
             } //异步加载模块${appId}下的子模块CusEle
+
             return ecodeSDK.getAsyncCom(acParams)
+
         }
+
         return null
+
     },
+
     order: 1,
+
     desc: &#039;常用应用&#039;,
+
 })
 
+
+
 //index.js
+
 class SimpleCyyy extends React.Component {
+
     render() {
+
         return (
+
             &lt;div&gt;
+
                 &lt;div className=&quot;cyyy-title-za&quot;&gt;
+
                     &lt;img src=&quot;${appRes}/tright2.png&quot; /&gt;
+
                     &lt;p&gt;常用应用&lt;/p&gt;
+
                     &lt;img src=&quot;${appRes}/tleft2.png&quot; /&gt;
+
                 &lt;/div&gt;
+
                 &lt;div className=&quot;cyyy-main-za&quot;&gt;
+
                     &lt;div className=&quot;cyyy-yy-za&quot;&gt;
+
                         &lt;a href=&quot;#&quot;&gt;
+
                             &lt;img src=&quot;/icon.png&quot; /&gt;
+
                         &lt;/a&gt;
+
                         &lt;a href=&quot;#&quot;&gt;
+
                             &lt;p&gt;示例应用&lt;/p&gt;
+
                         &lt;/a&gt;
+
                     &lt;/div&gt;
+
                 &lt;/div&gt;
+
             &lt;/div&gt;
+
         )
+
     }
+
 }
-ecodeSDK.setCom(&#039;${appId}&#039;, &#039;simple&#039;, SimpleCyyy)</code></pre>
 
-## 后端
+ecodeSDK.setCom(&#039;${appId}&#039;, &#039;simple&#039;, SimpleCyyy)
 
-### 自定义API
+</code></pre>
+<h2>后端</h2>
+<h3>自定义API</h3>
+<h4>泛微标准</h4>
+<pre><code class="language-java">
+package com.api.MedicalEthicsExamination;
 
-#### 泛微标准
 
-<pre><code class="language-java">package com.api.MedicalEthicsExamination;
 
 import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
+
 import javax.ws.rs.GET;
+
 import javax.ws.rs.Path;
+
 import javax.ws.rs.core.Context;
+
 import java.util.HashMap;
+
 import java.util.Map;
+
 import com.alibaba.fastjson.JSONObject;
+
 import weaver.general.BaseBean;
+
 import weaver.conn.RecordSet;
 
+
+
 @Path(&quot;/MedicalEthicsExamination/Organization&quot;)
+
 public class GetLeader {
+
     @GET
+
     @Path(&quot;/getData&quot;)
+
     public String updateScorePublicAction(@Context HttpServletRequest request, @Context HttpServletResponse response){
+
 		//打印日志
+
         BaseBean log =new BaseBean();
+
         log.writeLog(&quot;自定义XXX接口开始执行&quot;);
 
+
+
         //获取前端传参：userId
+
         String userIdParam = request.getParameter(&quot;userId&quot;);
+
+
 
 		//。。。代码逻辑。。。
 
+
+
         //构建返回结构
+
         Map&lt;String, Object&gt; dataMap = new HashMap&lt;&gt;();
+
         dataMap.put(&quot;ascription&quot;, ascription);
+
         dataMap.put(&quot;kpdyId&quot;, kpdyId);
 
+
+
         JSONObject responseData = new JSONObject();
+
         responseData.put(&quot;code&quot;, 200);
+
         responseData.put(&quot;msg&quot;, &quot;success&quot;);
+
         responseData.put(&quot;data&quot;, dataMap);
 
+
+
         return responseData.toJSONString();
-    }}</code></pre>
 
-#### JSP接口
+    }}
 
-<pre><code class="language-java">&lt;%@ page import=&quot;java.util.*&quot; %&gt;
+</code></pre>
+<h4>JSP接口</h4>
+<pre><code class="language-java">
+&lt;%@ page import=&quot;java.util.*&quot; %&gt;
+
 &lt;%@ page import=&quot;com.alibaba.fastjson.JSONObject&quot; %&gt;
+
 &lt;%@ page import=&quot;com.weaver.general.BaseBean&quot; %&gt;
+
 &lt;%@ page import=&quot;weaver.conn.RecordSet&quot; %&gt;
+
 &lt;%@ page contentType=&quot;application/json;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+
 &lt;%
+
     //初始化打印日志对象
+
     BaseBean log = new BaseBean();
+
     log.writeLog(&quot;删除HIS排班jsp逻辑开始执行&quot;);
 
+
+
     //获取前端传参
+
     String[] ids = request.getParameterValues(&quot;ids&quot;);
+
     String kqzID = request.getParameter(&quot;kqzid&quot;);
 
+
+
     //sql操作
+
     RecordSet rs = new RecordSet();
+
     String sql = &quot;SELECT * FROM tableName&quot;;
+
     rs.executeQuery(sql);
+
     while (rs.next()) {
+
     String bcid = rs.getString(&quot;bcid&quot;)
+
     }
+
+
 
     //初始化返回结构
 
+
+
     JSONObject res = new JSONObject();
+
     res.put(&quot;data&quot;, &quot;666&quot;);
+
     out.print(res.toString());
-%&gt;</code></pre>
 
-#### 对外提供免认证
+%&gt;
 
-<pre><code class="language-js">在配置文件添加接口url白名单：
-Weaver/ecology/WEB-INF/prop/weaver_session_filter.properties
-//unchecksessionurl后，用分号隔开
-unchecksessionurl=/api/Pushpersonneldeptpinformation/PushData;/api/portal/themeCenter/getMyTheme;/api/hrm/login/getQrsLabels;
 </code></pre>
+<h4>对外提供免认证</h4>
+<pre><code class="language-js">
+在配置文件添加接口url白名单：
 
-### 数据库操作
+Weaver/ecology/WEB-INF/prop/weaver_session_filter.properties
 
-#### 查询
+//unchecksessionurl后，用分号隔开
 
-<pre><code class="language-java">String getLeaderSQL=&quot;select id from uf_hfkpdy where kpxzzc = ?&quot;;
+unchecksessionurl=/api/Pushpersonneldeptpinformation/PushData;/api/portal/themeCenter/getMyTheme;/api/hrm/login/getQrsLabels;
+
+
+
+</code></pre>
+<h3>数据库操作</h3>
+<h4>查询</h4>
+<pre><code class="language-java">
+String getLeaderSQL=&quot;select id from uf_hfkpdy where kpxzzc = ?&quot;;
+
 RecordSet getLeaderRS =new RecordSet();
+
 getLeaderRS.executeQuery(getLeaderSQL,userIdParam);
+
 if(getLeaderRS.next()){
+
 	log.writeLog(&quot;getLeaderRS查询成功&quot;);
+
 	kpdyId=getLeaderRS.getString(&quot;id&quot;);
+
 }else{
+
 	log.writeLog(&quot;getLeaderRS查询失败&quot;);
-}</code></pre>
 
-#### 更新&插入&删除
+}
 
-<pre><code class="language-java">String updateSQL = &quot;UPDATE cus_fielddata SET field21=?&quot;;
+</code></pre>
+<h4>更新&插入&删除</h4>
+<pre><code class="language-java">
+String updateSQL = &quot;UPDATE cus_fielddata SET field21=?&quot;;
+
 RecordSet updateRS = new RecordSet();
+
 boolean updateSuccess = updateRS.executeUpdate(updateSQL, newScore);
+
 if(updateSuccess &amp;&amp; updateRS.getUpdateCount() &gt; 0) {
+
 	log.writeLog(&quot;更新成功，影响行数：&quot; + updateRS.getUpdateCount());
+
 } else {
+
 	log.writeLog(&quot;更新失败);
-}</code></pre>
 
-#### 权限重构
+}
 
-<pre><code class="language-java">String uuid = UUID.randomUUID().toString();
+</code></pre>
+<h4>权限重构</h4>
+<pre><code class="language-java">
+String uuid = UUID.randomUUID().toString();
+
 Date now = new Date();
+
 String createdate = new java.text.SimpleDateFormat(&quot;yyyy-MM-dd&quot;).format(now);
+
 String createtime = new java.text.SimpleDateFormat(&quot;HH:mm:ss&quot;).format(now);
+
 int creatorId = 1;
+
 int creatorType = 0;
+
 int formmodeId = 538;//建模模块id
 
+
+
 //执行插入语句
+
 RecordSet rs = new RecordSet();
+
 String insertSql = &quot;INSERT INTO uf_ryjkfhz(ry, jkfleib, fs, nd, modeuuid, formmodeid, modedatacreater, modedatacreatertype, modedatacreatedate, modedatacreatetime) &quot; +
+
         &quot;VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)&quot;;
+
 boolean success = rs.executeUpdate(insertSql,
+
         userId,
+
         workflowId,
+
         score.toString(),
+
         year,
+
         uuid,
+
         formmodeId,
+
         creatorId,
+
         creatorType,
+
         createdate,
+
         createtime
+
 );
+
 // 通过 modeuuid 查询刚插入的主键 ID
+
 Integer newDataId = null;
+
 if (rs.getUpdateCount() &gt; 0) {
+
     String queryIdSql = &quot;SELECT id FROM uf_ryjkfhz WHERE modeuuid = ?&quot;;
+
     if (rs.executeQuery(queryIdSql, uuid) &amp;&amp; rs.next()) {
+
         newDataId = rs.getInt(&quot;id&quot;);
+
     } else {
+
         log.writeLog(&quot;&gt;&gt;&gt; 插入成功但未能通过 modeuuid 查询到主键 ID&quot;);
+
     }
+
 }
+
 //权限重构
+
 if (newDataId != null &amp;&amp; newDataId &gt; 0) {
+
         ModeRightInfo modeRightInfo = new ModeRightInfo();
+
         modeRightInfo.editModeDataShare(creatorId, formmodeId, newDataId);
+
         log.writeLog(&quot;【xxx】权限重构成功&quot;);
+
 } else if (success) {
+
     log.writeLog(&quot;【xxx】插入成功，但没有获取 newDataId，跳过权限设置&quot;);
+
 } else {
+
     log.writeLog(&quot;【xxx】插入失败或无影响行数&quot;);
-}</code></pre>
 
-#### 批量更新&插入
+}
 
-<pre><code class="language-java">List valueList = new ArrayList();
+</code></pre>
+<h4>批量更新&插入</h4>
+<pre><code class="language-java">
+List valueList = new ArrayList();
+
 valueList.add(uuid);
+
 valueList.add(ddh);
+
 List idList = new ArrayList();
+
 idList.add(valueList);
+
 //参数格式：[[uuid1,ddh1],[[uuid2,ddh2]],[[uuid3,ddh3]]]
+
 RecordSet rs=new RecordSet();
+
 String insertSQL =&quot;INSERT INTO uf_IntermediateTabl (uuid, ddh) VALUES (?,?)&quot;;
-rs.executeBatchSql(insertSQL,idList);</code></pre>
 
-### 打印日志
+rs.executeBatchSql(insertSQL,idList);
 
-<pre><code class="language-java">//方法一
+</code></pre>
+<h3>打印日志</h3>
+<pre><code class="language-java">
+//方法一
+
 import com.weaver.general.BaseBean;
+
+
 
 BaseBean log = new BaseBean();
-log.writeLog(&quot;XXX节点附加操作开始执行&quot;);</code></pre>
 
-### 流程
+log.writeLog(&quot;XXX节点附加操作开始执行&quot;);
 
-#### 节后附加操作
+</code></pre>
+<h3>流程</h3>
+<h4>节后附加操作</h4>
+<pre><code class="language-java">
+package weaver.workflow.MedicalEthicsExamination;
 
-<pre><code class="language-java">package weaver.workflow.MedicalEthicsExamination;
+
 
 import weaver.interfaces.workflow.action.Action;
+
 import weaver.soa.workflow.request.Property;
+
 import weaver.soa.workflow.request.RequestInfo;
+
 import com.weaver.general.BaseBean;
+
 import java.util.HashMap;
+
 import java.util.Map;
 
+
+
 public class MedicalEthicsExaminationUpdateScoreAi implements Action {
+
     @Override
+
     public String execute(RequestInfo requestInfo) {
+
         BaseBean log = new BaseBean();
+
         log.writeLog(&quot;XXX节点附加操作开始执行&quot;);
 
+
+
 		// 获取主表数据
+
 		Property[] props = requestInfo.getMainTableInfo().getProperty();
+
 		Map&lt;String, String&gt; fieldMap = new HashMap&lt;&gt;();
+
 		for (Property prop : props) {
+
 		    fieldMap.put(prop.getName(), prop.getValue());
+
 		}
+
 		String scorePrams = fieldMap.get(&quot;df&quot;);
+
 		String userIdPrams = fieldMap.get(&quot;cpr&quot;);
 
+
+
 		//获取流程id
+
 		String workflowid = requestInfo.getWorkflowid();
+
+
 
 		//。。。代码逻辑。。。
 
+
+
 		return Action.SUCCESS;
+
     }
-}</code></pre>
 
-#### 创建流程
-
-##### 构建主表
-
-<pre><code class="language-java">WorkflowMainTableInfo workflowMainTableInfo = new WorkflowMainTableInfo();
-WorkflowRequestTableRecord[] workflowRequestTableRecord = new WorkflowRequestTableRecord[1];  //固定值1
-WorkflowRequestTableField[] WorkflowRequestTableField = new WorkflowRequestTableField[3];  //总字段数
-
-WorkflowRequestTableField[0] = createTableField(&quot;dw&quot;, String.valueOf(currentPerson.getDw()));
-WorkflowRequestTableField[1] = createTableField(&quot;nd&quot;, String.valueOf(currentPerson.getNd()));
-WorkflowRequestTableField[2] = createTableField(&quot;xm&quot;, String.valueOf(currentPerson.getXm()));
-
-workflowRequestTableRecord[0] = new WorkflowRequestTableRecord();
-workflowRequestTableRecord[0].setWorkflowRequestTableFields(WorkflowRequestTableField);
-workflowMainTableInfo.setRequestRecords(workflowRequestTableRecord);</code></pre>
-
-##### 构建明细表
-
-<pre><code class="language-java">WorkflowDetailTableInfo[] workflowDetailTableInfo = new WorkflowDetailTableInfo[1];
-WorkflowRequestTableRecord[] workflowRequestTableRecord = new WorkflowRequestTableRecord[allData.size()];
-
-for (int i = 0; i &lt; allData.size(); i++) {
-    TranscriptStructure ts = allData.get(i);
-    WorkflowRequestTableField[] WorkflowRequestTableField = new WorkflowRequestTableField[3];  //数据总数
-
-    WorkflowRequestTableField[0] = createTableField(&quot;xm&quot;, String.valueOf(ts.getXm()));
-    WorkflowRequestTableField[1] = createTableField(&quot;zggh&quot;, String.valueOf(ts.getZggh()));
-    WorkflowRequestTableField[2] = createTableField(&quot;kpdc&quot;, String.valueOf(ts.getKpdc()));
-
-    workflowRequestTableRecord[i] = new WorkflowRequestTableRecord();
-    workflowRequestTableRecord[i].setWorkflowRequestTableFields(WorkflowRequestTableField);
 }
 
+</code></pre>
+<h4>创建流程</h4>
+<h5>构建主表</h5>
+<pre><code class="language-java">
+WorkflowMainTableInfo workflowMainTableInfo = new WorkflowMainTableInfo();
+
+WorkflowRequestTableRecord[] workflowRequestTableRecord = new WorkflowRequestTableRecord[1];  //固定值1
+
+WorkflowRequestTableField[] WorkflowRequestTableField = new WorkflowRequestTableField[3];  //总字段数
+
+
+
+WorkflowRequestTableField[0] = createTableField(&quot;dw&quot;, String.valueOf(currentPerson.getDw()));
+
+WorkflowRequestTableField[1] = createTableField(&quot;nd&quot;, String.valueOf(currentPerson.getNd()));
+
+WorkflowRequestTableField[2] = createTableField(&quot;xm&quot;, String.valueOf(currentPerson.getXm()));
+
+
+
+workflowRequestTableRecord[0] = new WorkflowRequestTableRecord();
+
+workflowRequestTableRecord[0].setWorkflowRequestTableFields(WorkflowRequestTableField);
+
+workflowMainTableInfo.setRequestRecords(workflowRequestTableRecord);
+
+</code></pre>
+<h5>构建明细表</h5>
+<pre><code class="language-java">
+WorkflowDetailTableInfo[] workflowDetailTableInfo = new WorkflowDetailTableInfo[1];
+
+WorkflowRequestTableRecord[] workflowRequestTableRecord = new WorkflowRequestTableRecord[allData.size()];
+
+
+
+for (int i = 0; i &lt; allData.size(); i++) {
+
+    TranscriptStructure ts = allData.get(i);
+
+    WorkflowRequestTableField[] WorkflowRequestTableField = new WorkflowRequestTableField[3];  //数据总数
+
+
+
+    WorkflowRequestTableField[0] = createTableField(&quot;xm&quot;, String.valueOf(ts.getXm()));
+
+    WorkflowRequestTableField[1] = createTableField(&quot;zggh&quot;, String.valueOf(ts.getZggh()));
+
+    WorkflowRequestTableField[2] = createTableField(&quot;kpdc&quot;, String.valueOf(ts.getKpdc()));
+
+
+
+    workflowRequestTableRecord[i] = new WorkflowRequestTableRecord();
+
+    workflowRequestTableRecord[i].setWorkflowRequestTableFields(WorkflowRequestTableField);
+
+}
+
+
+
 workflowDetailTableInfo[0] = new WorkflowDetailTableInfo();
-workflowDetailTableInfo[0].setWorkflowRequestTableRecords(workflowRequestTableRecord);</code></pre>
 
-##### 创建
+workflowDetailTableInfo[0].setWorkflowRequestTableRecords(workflowRequestTableRecord);
 
-<pre><code class="language-java">log.writeLog(&quot;开始为人员创建流程，人员信息：&quot; + currentPerson.getXm());
+</code></pre>
+<h5>创建</h5>
+<pre><code class="language-java">
+log.writeLog(&quot;开始为人员创建流程，人员信息：&quot; + currentPerson.getXm());
+
+
 
 // 创建流程信息
+
 WorkflowRequestInfo workflowRequestInfo = new WorkflowRequestInfo();
+
 workflowRequestInfo.setRequestName(&quot;医德考评成绩确认单&quot;);
+
 workflowRequestInfo.setCreatorId(userId);
 
+
+
 WorkflowBaseInfo workflowBaseInfo = new WorkflowBaseInfo();
+
 workflowBaseInfo.setWorkflowId(&quot;25&quot;);
+
 workflowRequestInfo.setWorkflowBaseInfo(workflowBaseInfo);
 
+
+
 // 构建主表
+
 WorkflowMainTableInfo workflowMainTableInfo = buildMainTableInfo(currentPerson);
+
 workflowRequestInfo.setWorkflowMainTableInfo(workflowMainTableInfo);
 
+
+
 // 构建明细表
+
 WorkflowDetailTableInfo[] workflowDetailTableInfo = buildDetailTableInfo(allData);
+
 workflowRequestInfo.setWorkflowDetailTableInfos(workflowDetailTableInfo);
 
+
+
 // 创建流程
+
 WorkflowServiceImpl wsi = new WorkflowServiceImpl();
+
 String requestId = wsi.doCreateWorkflowRequest(workflowRequestInfo, userIdInt);
 
-log.writeLog(&quot;创建流程成功，流程ID：&quot; + requestId);</code></pre>
 
-#### 流程干预
 
-<pre><code class="language-java">try {
+log.writeLog(&quot;创建流程成功，流程ID：&quot; + requestId);
+
+</code></pre>
+<h4>流程干预</h4>
+<pre><code class="language-java">
+try {
+
     // 获取干预服务
+
     WorkflowRequestOperatePAImpl service = ServiceUtil.getService(WorkflowRequestOperatePAImpl.class);
+
     // 使用有权限的用户（这里使用admin用户）
+
     User user = new User(1);
 
+
+
     // 遍历所有需要干预的流程
+
     for (Map&lt;String, String&gt; item : newRequestList) {
+
         String requestId = item.get(&quot;requestId&quot;);
+
         String xm = item.get(&quot;xm&quot;);
 
+
+
         try {
+
             log.writeLog(&quot;开始干预流程，requestId: &quot; + requestId + &quot;, 接收人: &quot; + xm);
 
+
+
             // 设置干预参数
+
             ReqOperateRequestEntity requestParam = new ReqOperateRequestEntity();
+
             requestParam.setRequestId(Integer.parseInt(requestId)); // 流程实例ID
+
             requestParam.setSubmitNodeId(94); // 目标节点ID（独立打印节点）
+
             requestParam.setIntervenorid(xm); // 设置接收人为当前xm
 
+
+
             // 执行干预
+
             PAResponseEntity result = service.doIntervenor(user, requestParam);
 
+
+
             // 检查干预结果 - 修改为正确的枚举比较方式
+
             if (PAResponseCode.SUCCESS.equals(result.getCode())) {
+
                 log.writeLog(&quot;干预成功，requestId: &quot; + requestId);
+
                 successCount++;
+
             } else {
+
                 log.writeLog(&quot;干预失败，requestId: &quot; + requestId +
+
                         &quot;, 错误码: &quot; + result.getCode().name() +
+
                         &quot;, 错误信息: &quot; + result.getErrMsg());
+
                 allSuccess = false;
+
                 failCount++;
+
                 failedRequests.add(requestId);
+
             }        } catch (Exception e) {
+
             log.writeLog(&quot;干预流程异常，requestId: &quot; + requestId + &quot;, 异常信息: &quot; + e.getMessage());
+
             allSuccess = false;
+
             failCount++;
+
             failedRequests.add(requestId);
+
         }    }
+
     // 记录总体干预结果
+
     log.writeLog(&quot;流程干预完成，成功: &quot; + successCount + &quot;个，失败: &quot; + failCount + &quot;个&quot;);
+
     if (!failedRequests.isEmpty()) {
+
         log.writeLog(&quot;失败的requestIds: &quot; + failedRequests);
+
     }
+
 } catch (Exception e) {
+
     log.writeLog(&quot;获取干预服务或初始化用户异常: &quot; + e.getMessage());
+
     allSuccess = false;
-}</code></pre>
 
-### 邮件
+}
 
-#### 内部邮件
+</code></pre>
+<h3>邮件</h3>
+<h4>内部邮件</h4>
+<pre><code class="language-java">
+/**
 
-<pre><code class="language-java">/**
 E9 内部邮件发送接口
+
 可参考 weaver.email.MailSend.java 类的 sendSysInternalMailNew 方法
+
      * 发送内部邮件系统提醒
+
      * @param fromid 发送人，人员id。必填。
+
      * @param subject 邮件标题。必填。
+
      * @param content 邮件内容。非必填。
+
      * @param toids 接收人ids，例如1,2,3,4。 必填。
+
      * @param ccids 抄送人ids，例如 1,2,3,4。非必填。
+
      * @param ccids 密送人ids，例如 1,2,3,4。非必填。
+
      * @param path 附件路径。非必填。 值为OA服务器能访问到的实体文件全路径。录入系统时文件名与实体文件名一致。
+
      * @return
+
      */
-mailSend.sendSysInternalMailNew(fromid, managerId, &quot;&quot;, &quot;&quot;, subject, content, null);</code></pre>
 
-#### 外部邮件
+mailSend.sendSysInternalMailNew(fromid, managerId, &quot;&quot;, &quot;&quot;, subject, content, null);
 
-<pre><code class="language-text"></code></pre>
+</code></pre>
+<h4>外部邮件</h4>
+<pre><code class="language-text">
 
-### 消息
 
-#### 企业微信
+</code></pre>
+<h3>消息</h3>
+<h4>企业微信</h4>
+<pre><code class="language-java">
+public void PushWXMessage(String userId, String content) {
 
-<pre><code class="language-java">public void PushWXMessage(String userId, String content) {
     List&lt;String&gt; userList = new ArrayList&lt;String&gt;();
+
     userList.add(userId);
+
     String tpids = &quot;3493db33baf74b9e8200dea64698841f&quot;; // 根据消息类型选择模板
+
     int type = -1; // 固定为消息推送类型
+
     try {
+
         InterfaceUtil.sendMsg(userList, tpids, &quot;&quot;, content, type);
+
         log.writeLog(&quot;✅ 微信消息推送成功：用户=&quot; + userId + &quot;, 模板=&quot; + tpids + &quot;, 内容=&quot; + content);
+
     } catch (Exception e) {
+
         log.writeLog(&quot;❌ 微信推送失败: &quot; + e);
+
     }
-}</code></pre>
 
-## 源码
+}
 
-#### 打包
+</code></pre>
+<h2>源码</h2>
+<h4>打包</h4>
+<p>步骤</p>
+<pre><code class="language-shell">
+//1、安装依赖
 
-步骤
-
-<pre><code class="language-shell">//1、安装依赖
 yarn install
+
+
 
 //2、新建spa文件夹，把项目的spa/moduleConfig.js放到下面，这是版本文件，打包的时候需要同步
 
+
+
 //3、禁用eslint，打包流程模块
-yarn build --noeslint  --pubModule=workflow</code></pre>
 
-其他
+yarn build --noeslint  --pubModule=workflow
 
-<pre><code class="language-text">//禁用过滤调试打印
-src4js-pctool-v1/config/webpack.config.prod 里面的 drop_console 改为false</code></pre>
+</code></pre>
+<p>其他</p>
+<pre><code class="language-text">
+//禁用过滤调试打印
 
-# E10
+src4js-pctool-v1/config/webpack.config.prod 里面的 drop_console 改为false
 
-## 前端
+</code></pre>
+<h1>E10</h1>
+<h2>前端</h2>
+<h3>获取用户信息</h3>
+<pre><code class="language-js">
 
-### 获取用户信息
 
-<pre><code class="language-js"></code></pre>
+</code></pre>
+<h3>组件复写</h3>
+<pre><code class="language-js">
+import { regOvProps } from &#039;@weapp/utils&#039;
 
-### 组件复写
-
-<pre><code class="language-js">import { regOvProps } from &#039;@weapp/utils&#039;
 regOvProps(
+
     &#039;weappUi&#039;,
+
     &#039;Table&#039;,
+
     (props) =&gt; {
+
         if (
+
             props.weId ==
+
             &#039;xj9ztk_n9fsi1_ktapm0_93rio8_s9t7xg_ll4efn_rr53ls_vqqhsb&#039;
+
         ) {
+
             console.log(&#039;拦截到目标组件&#039;, props)
+
             props.columns = props.columns.filter(
+
                 (col) =&gt; col.title !== &#039;大小&#039; &amp;&amp; col.title !== &#039;更新时间&#039;
+
             )
+
         }
+
         return props
+
     },
+
     0
-)</code></pre>
 
-### 组件重写
+)
 
-<pre><code class="language-js">import React from &#039;react&#039;
+</code></pre>
+<h3>组件重写</h3>
+<pre><code class="language-js">
+import React from &#039;react&#039;
+
 import { regOvComponent } from &#039;@weapp/utils&#039;
+
 import { asyncImport } from &#039;@weapp/ecodesdk&#039;
+
+
 
 const NewHelp = React.lazy(() =&gt; asyncImport(&#039;${appId}&#039;, &#039;NewHelp&#039;))
 
+
+
 regOvComponent(
+
     &#039;weappUi&#039;,
+
     &#039;Help&#039;,
+
     (Com) =&gt; {
+
         if (
+
             window.location.pathname === &#039;/sp/integration/loginSingle/freepass&#039;
+
         ) {
+
             return React.forwardRef((props, ref) =&gt; {
+
                 console.log(&#039;获取的help参数&#039;, props)
+
                 return (
+
                     &lt;React.Suspense fallback={() =&gt; {}}&gt;
+
                              {&#039; &#039;}
+
                         &lt;NewHelp
+
                             {...props}
+
                             OriginCom={Com}
+
                             ref={ref}
+
                             forwardedRef={ref}
+
                         /&gt;
+
                            {&#039; &#039;}
+
                     &lt;/React.Suspense&gt;
+
                 )
+
             })
+
         }
+
     },
+
     1
-)</code></pre>
 
-### 请求接口
+)
 
-##### 泛微标准
+</code></pre>
+<h3>请求接口</h3>
+<h5>泛微标准</h5>
+<h5>Axios</h5>
+<pre><code class="language-js">
+import axios from &#039;axios&#039;
 
-##### Axios
-
-<pre><code class="language-js">import axios from &#039;axios&#039;
 // 发起 GET 请求
+
 axios
+
     .get(&#039;https://api.example.com/data&#039;)
+
     .then((response) =&gt; {
+
         console.log(&#039;成功:&#039;, response.data)
+
     })
+
     .catch((error) =&gt; {
+
         console.error(&#039;错误:&#039;, error)
-    })</code></pre>
 
-### 接口拦截
-
-#### 响应拦截
-
-<pre><code class="language-js">axios.interceptors.response.use(
-    (response) =&gt; {
-        if (response.config.url === &#039;/api/doc/document/queryInfo&#039;) {
-            const createUserId =
-                response.data?.data?.document?.author?.employeeId
-            if (createUserId &amp;&amp; createUserId !== userId) {
-                console.log(&#039;PC：非创建人，删除 share/log 元素&#039;)
-                waitForElementsAndDelete([&#039;share&#039;, &#039;log&#039;])
-            }
-        }
-        return response
-    },
-    (error) =&gt; Promise.reject(error)
-)</code></pre>
-
-#### 请求拦截
-
-<pre><code class="language-js">axios.interceptors.request.use((request) =&gt; {
-    if (request.url === &#039;/api/ebuilder/coms/list/getData&#039;) {
-        const params = new URLSearchParams(request.data)
-        params.set(&#039;pageSize&#039;, &#039;10000&#039;)
-        request.data = params.toString()
-    }
-    return request
-})</code></pre>
-
-### 调用数据加工
-
-<pre><code class="language-js">//定义
-function GetTotalCount() {
-    return new Promise((resolve) =&gt; {
-        const ebSdk = window.ebuilderSDK
-        console.log(&#039;window.ebuilderSDK&#039;, ebSdk) // SQL 数据源 ID: 1040519435904892928
-        ebSdk.SQL(&#039;1040519435904892928&#039;, function (result) {
-            resolve(result?.[0] || { total_count: 0 })
-        })
     })
+
+</code></pre>
+<h3>接口拦截</h3>
+<h4>响应拦截</h4>
+<pre><code class="language-js">
+axios.interceptors.response.use(
+
+    (response) =&gt; {
+
+        if (response.config.url === &#039;/api/doc/document/queryInfo&#039;) {
+
+            const createUserId =
+
+                response.data?.data?.document?.author?.employeeId
+
+            if (createUserId &amp;&amp; createUserId !== userId) {
+
+                console.log(&#039;PC：非创建人，删除 share/log 元素&#039;)
+
+                waitForElementsAndDelete([&#039;share&#039;, &#039;log&#039;])
+
+            }
+
+        }
+
+        return response
+
+    },
+
+    (error) =&gt; Promise.reject(error)
+
+)
+
+</code></pre>
+<h4>请求拦截</h4>
+<pre><code class="language-js">
+axios.interceptors.request.use((request) =&gt; {
+
+    if (request.url === &#039;/api/ebuilder/coms/list/getData&#039;) {
+
+        const params = new URLSearchParams(request.data)
+
+        params.set(&#039;pageSize&#039;, &#039;10000&#039;)
+
+        request.data = params.toString()
+
+    }
+
+    return request
+
+})
+
+</code></pre>
+<h3>调用数据加工</h3>
+<pre><code class="language-js">
+//定义
+
+function GetTotalCount() {
+
+    return new Promise((resolve) =&gt; {
+
+        const ebSdk = window.ebuilderSDK
+
+        console.log(&#039;window.ebuilderSDK&#039;, ebSdk) // SQL 数据源 ID: 1040519435904892928
+
+        ebSdk.SQL(&#039;1040519435904892928&#039;, function (result) {
+
+            resolve(result?.[0] || { total_count: 0 })
+
+        })
+
+    })
+
 }
+
 //使用
+
 const box = await GetTotalCount()
-console.log(&#039;box&#039;, box)</code></pre>
 
-### 流程
+console.log(&#039;box&#039;, box)
 
-#### 获取流程信息
+</code></pre>
+<h3>流程</h3>
+<h4>获取流程信息</h4>
+<pre><code class="language-js">
+const baseParam = window.weappWorkflow.getCurrentFlowPageSDK().getBaseParam()
 
-<pre><code class="language-js">const baseParam = window.weappWorkflow.getCurrentFlowPageSDK().getBaseParam()</code></pre>
+</code></pre>
+<p><code>baseParam</code> 参数说明：</p>
+<div class="table-container"><table>
+<thead><tr>
+  <th>参数名</th>
+  <th>说明</th>
+  <th>示例值 / 说明</th>
+</tr></thead>
+<tbody>
+<tr>
+  <td>-------------------</td>
+  <td>-------------------------------------------------------------</td>
+  <td>---------------------------------------------</td>
+</tr>
+<tr>
+  <td><code>apiModule</code></td>
+  <td>指示调用的 API 所属的功能模块。</td>
+  <td><code>"workflow"</code>（代表工作流模块）</td>
+</tr>
+<tr>
+  <td><code>workflowId</code></td>
+  <td>流程模板 ID，唯一标识某一种类型的审批流程（如请假、报销等）。</td>
+  <td><code>"1168054203621851177"</code></td>
+</tr>
+<tr>
+  <td><code>requestId</code></td>
+  <td>流程实例 ID，标识一次具体的审批申请。</td>
+  <td><code>"1225600292739776512"</code></td>
+</tr>
+<tr>
+  <td><code>isCreate</code></td>
+  <td>操作类型标志，表示是否为创建新流程。</td>
+  <td><code>true</code>：正在创建新流程；<code>false</code>：处理已有流程</td>
+</tr>
+<tr>
+  <td><code>authStr</code></td>
+  <td>身份验证令牌（基础信息 Base64 编码）。</td>
+  <td>由系统生成，具有时效性</td>
+</tr>
+<tr>
+  <td><code>authSignatureStr</code></td>
+  <td>身份验证签名，用于校验 <code>authStr</code> 是否被篡改。</td>
+  <td>与 <code>authStr</code> 成对使用</td>
+</tr>
+<tr>
+  <td><code>fixedNodeId</code></td>
+  <td>固定节点 ID，表示当前操作关联的流程节点。</td>
+  <td><code>"1168054203638636272"</code></td>
+</tr>
+<tr>
+  <td><code>userCurrentNodeId</code></td>
+  <td>用户当前所在节点 ID，通常与 <code>fixedNodeId</code> 相同。</td>
+  <td><code>"1168054203638636272"</code></td>
+</tr>
+<tr>
+  <td><code>identityId</code></td>
+  <td>操作者唯一身份 ID。</td>
+  <td><code>"1156568790879674394"</code></td>
+</tr>
+<tr>
+  <td><code>identityType</code></td>
+  <td>身份类型（如 0 表示内部员工账号）。</td>
+  <td><code>0</code></td>
+</tr>
+<tr>
+  <td><code>isAgent</code></td>
+  <td>代理操作标志，表示是否代他人办理。</td>
+  <td><code>false</code>：非代理操作；<code>true</code>：代理操作</td>
+</tr>
+<tr>
+  <td><code>beAgentId</code></td>
+  <td>被代理人 ID（仅在 <code>isAgent</code> 为 <code>true</code> 时有效）。</td>
+  <td><code>"0"</code>：未启用代理</td>
+</tr>
+<tr>
+  <td><code>objectId</code></td>
+  <td>关联对象 ID，指向流程关联的其他业务数据或表单。</td>
+  <td><code>undefined</code>：无关联对象</td>
+</tr>
+<tr>
+  <td><code>isMobile</code></td>
+  <td>请求来源标志，表示是否来自移动端。</td>
+  <td><code>true</code> / <code>false</code></td>
+</tr>
+</tbody></table></div>
 
-<code>baseParam</code> 参数说明：
+<h4>表单SDK</h4>
+<pre><code class="language-js">
+// 获取字段值
 
-| 参数名              | 说明                                                          | 示例值 / 说明                                 |
-| ------------------- | ------------------------------------------------------------- | --------------------------------------------- |
-| <code>apiModule</code>         | 指示调用的 API 所属的功能模块。                               | <code>"workflow"</code>（代表工作流模块）                |
-| <code>workflowId</code>        | 流程模板 ID，唯一标识某一种类型的审批流程（如请假、报销等）。 | <code>"1168054203621851177"</code>                       |
-| <code>requestId</code>         | 流程实例 ID，标识一次具体的审批申请。                         | <code>"1225600292739776512"</code>                       |
-| <code>isCreate</code>          | 操作类型标志，表示是否为创建新流程。                          | <code>true</code>：正在创建新流程；<code>false</code>：处理已有流程 |
-| <code>authStr</code>           | 身份验证令牌（基础信息 Base64 编码）。                        | 由系统生成，具有时效性                        |
-| <code>authSignatureStr</code>  | 身份验证签名，用于校验 <code>authStr</code> 是否被篡改。                 | 与 <code>authStr</code> 成对使用                         |
-| <code>fixedNodeId</code>       | 固定节点 ID，表示当前操作关联的流程节点。                     | <code>"1168054203638636272"</code>                       |
-| <code>userCurrentNodeId</code> | 用户当前所在节点 ID，通常与 <code>fixedNodeId</code> 相同。              | <code>"1168054203638636272"</code>                       |
-| <code>identityId</code>        | 操作者唯一身份 ID。                                           | <code>"1156568790879674394"</code>                       |
-| <code>identityType</code>      | 身份类型（如 0 表示内部员工账号）。                           | <code>0</code>                                           |
-| <code>isAgent</code>           | 代理操作标志，表示是否代他人办理。                            | <code>false</code>：非代理操作；<code>true</code>：代理操作         |
-| <code>beAgentId</code>         | 被代理人 ID（仅在 <code>isAgent</code> 为 <code>true</code> 时有效）。              | <code>"0"</code>：未启用代理                             |
-| <code>objectId</code>          | 关联对象 ID，指向流程关联的其他业务数据或表单。               | <code>undefined</code>：无关联对象                       |
-| <code>isMobile</code>          | 请求来源标志，表示是否来自移动端。                            | <code>true</code> / <code>false</code>                              |
-
-#### 表单SDK
-
-<pre><code class="language-js">// 获取字段值
 const idTypeFieldId = formSdk.convertFieldNameToId(&#039;zjlx&#039;)
+
 const idTypeValue = formSdk.getFieldValue(idTypeFieldId)
 
+
+
 // 监听字段值变化
+
 const idNumberFieldId = formSdk.convertFieldNameToId(&#039;zjhm&#039;)
+
 formSdk.bindFieldChangeEvent(idNumberFieldId, (data) =&gt; {
+
     console.log(&#039;【证件号码】的内容变化了：&#039;, data)
-})</code></pre>
 
-#### 拦截
+})
 
-##### 提交和保存
+</code></pre>
+<h4>拦截</h4>
+<h5>提交和保存</h5>
+<pre><code class="language-js">
+//拦截提交
 
-<pre><code class="language-js">//拦截提交
 wffpSdk.registerInterceptEvent(
+
     &#039;BeforeClickOperBtn|SUBMIT&#039;,
+
     (successFn, failFn) =&gt; {
+
         console.log(&#039;拦截到提交&#039;)
+
         const idTypeFieldId = formSdk.convertFieldNameToId(&#039;zjlx&#039;)
+
         const idTypeValue = formSdk.getFieldValue(idTypeFieldId)
+
         if (idTypeValue === &#039;0&#039;) {
+
             // 身份证类型
+
             const idNumberFieldId = formSdk.convertFieldNameToId(&#039;zjhm&#039;)
+
             const idNumber = formSdk.getFieldValue(idNumberFieldId)
+
             if (idNumber !== &#039;&#039; &amp;&amp; !validateIdCard(idNumber)) {
+
                 wffpSdk.showMessage(
+
                     &#039;身份证号码格式错误，请输入有效的15位或18位身份证号码&#039;,
+
                     1,
+
                     3
+
                 )
+
                 failFn() // 中断保存
+
                 return
+
             }
+
         }
+
         successFn() // 校验通过，继续保存
+
     }
+
 )
+
 //拦截保存
+
 wffpSdk.registerInterceptEvent(&#039;SUBMIT&#039;, function (successFn, failFn) {
+
     const idTypeFieldId = formSdk.convertFieldNameToId(&#039;zjlx&#039;)
+
     const idTypeValue = formSdk.getFieldValue(idTypeFieldId)
 
+
+
     if (idTypeValue === &#039;0&#039;) {
+
         // 身份证类型
+
         const idNumberFieldId = formSdk.convertFieldNameToId(&#039;zjhm&#039;)
+
         const idNumber = formSdk.getFieldValue(idNumberFieldId)
 
+
+
         if (idNumber !== &#039;&#039; &amp;&amp; !validateIdCard(idNumber)) {
+
             wffpSdk.showMessage(
+
                 &#039;身份证号码格式错误，请输入有效的15位或18位身份证号码&#039;,
+
                 1,
+
                 3
+
             )
+
             failFn() // 中断提交
+
             return
+
         }
+
     }
+
     successFn() // 校验通过，继续提交
-})</code></pre>
 
-#### 提醒
+})
 
-<pre><code class="language-js">const wffpSdk = window.weappWorkflow.getFlowPageSDK()
-wffpSdk.showMessage(&#039;身份证号码格式错误，请输入15位或18位有效号码&#039;, 1, 3)</code></pre>
+</code></pre>
+<h4>提醒</h4>
+<pre><code class="language-js">
+const wffpSdk = window.weappWorkflow.getFlowPageSDK()
 
-### 自定义组件
+wffpSdk.showMessage(&#039;身份证号码格式错误，请输入15位或18位有效号码&#039;, 1, 3)
 
-<pre><code class="language-js">//view.js
+</code></pre>
+<h3>自定义组件</h3>
+<pre><code class="language-js">
+//view.js
+
 import React from &#039;react&#039;
+
 import Index from &#039;./index&#039;
+
 const View = (props) =&gt; {
-    const { config } = props
-    return &lt;Index /&gt;
-}
-export default View</code></pre>
 
-<pre><code class="language-js">//Design.js
+    const { config } = props
+
+    return &lt;Index /&gt;
+
+}
+
+export default View
+
+</code></pre>
+<pre><code class="language-js">
+//Design.js
+
 import React from &#039;react&#039;
+
 import { getLabel } from &#039;@weapp/utils&#039;
+
 import Index from &#039;./index&#039;
+
+
 
 const Design = (props) =&gt; {
+
     const { config } = props
+
     return &lt;Index /&gt;
+
 }
+
+
 
 // 自定义组件props不要使用type字段，type字段会被赋值当前组件的类型
 
+
+
 // 设置默认值设计器才会有默认配置
 
+
+
 Design.defaultProps = {
+
     config: {
+
         content: getLabel(&#039;187481&#039;, &#039;示例组件&#039;),
+
     },
+
 }
+
+
 
 // 定制化配置流式布局的默认属性
+
 Design.flow = {
+
     defaultProps: {
+
         config: {
+
             content: getLabel(&#039;187481&#039;, &#039;示例组件&#039;),
+
         },
+
     },
+
 }
+
+
 
 // 看代码逻辑grid布局的组件必须设置属性defaultOpts.layoutSizes
-Design.defaultOpts = {
-    operationBtns: true,
-    mask: false,
-    layoutSizes: {
-        gl: {
-            w: 4,
-            h: 15,
-        },
-        mgl: { adaptive: true, h: 150 },
-    },
-}
-export default Design</code></pre>
 
-<pre><code class="language-js">//index.js
+Design.defaultOpts = {
+
+    operationBtns: true,
+
+    mask: false,
+
+    layoutSizes: {
+
+        gl: {
+
+            w: 4,
+
+            h: 15,
+
+        },
+
+        mgl: { adaptive: true, h: 150 },
+
+    },
+
+}
+
+export default Design
+
+</code></pre>
+<pre><code class="language-js">
+//index.js
+
 import React, { PureComponent } from &#039;react&#039;;
+
 import { withRouter } from &#039;react-router-dom&#039;;
+
 import { observer } from &#039;mobx-react&#039;;
+
 import { dayjs, request, classnames } from &#039;@weapp/utils&#039;;
+
 import &#039;./index.css&#039;;
 
+
+
 function getTotalCount() {
+
   return new Promise((resolve) =&gt; {
+
     const ebSdk = window.ebuilderSDK;
+
     // SQL 数据源 ID: 1040519435904892928，预期返回形如 [{ total_count: number }]
+
     ebSdk.SQL(&quot;1040519435904892928&quot;, function (result) {
+
       resolve(result?.[0] || { total_count: 0 });
+
     });
+
   });
+
 }
+
 // 调用接口获取合同即将到期的员工数量（按不同到期天数分类）
+
 function getEx() {
+
   return request({
+
     url: &#039;/api/hr/contract/calc/expire&#039;,
+
     method: &#039;post&#039;
+
   });
+
 }
+
+
 
 @observer
+
 export class JzwLunBo extends PureComponent&lt;any, any&gt; {
+
   constructor(props: any) {
+
     super(props);
+
     this.state = {
+
     };
+
   }
+
   // 组件挂载后发起数据请求
+
   componentDidMount() {}
+
   // 渲染主视图
+
   render() {
+
     return (
+
       &lt;div&gt;6666666666666&lt;/div&gt;
+
     );
+
   }
+
 }
+
 // 使用 withRouter 注入路由相关 props（如 history, location 等）
-export default withRouter(JzwLunBo);</code></pre>
 
-## 后端
+export default withRouter(JzwLunBo);
 
-### 获取用户信息
+</code></pre>
+<h2>后端</h2>
+<h3>获取用户信息</h3>
+<pre><code class="language-java">
+final SimpleEmployee currentUser = UserContext.getCurrentUser();
 
-<pre><code class="language-java">final SimpleEmployee currentUser = UserContext.getCurrentUser();
-userId = currentUser.getUid();</code></pre>
+userId = currentUser.getUid();
 
-### 自定义接口
+</code></pre>
+<h3>自定义接口</h3>
+<pre><code class="language-java">
+package com.weaver.seconddev.load_modification_of_unreadItems;
 
-<pre><code class="language-java">package com.weaver.seconddev.load_modification_of_unreadItems;
+
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RestController;
 
+
+
 import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 
+
+
 @Slf4j
+
 @RestController
+
 @RequestMapping(&quot;/api/secondev/load_modification_of_unreadItems&quot;)
+
 public class LoadModificationOfUnreadItems {
+
     @GetMapping(&quot;/get_department_name&quot;)
+
     public void GetSignatureServletMain(HttpServletRequest request, HttpServletResponse response) {
+
         log.error(&quot;【LoadModificationOfUnreadItems】开始获取 xxx 逻辑&quot;);
+
         String xxx = request.getParameter(&quot;xxx&quot;);
+
         log.error(&quot;【LoadModificationOfUnreadItems】获取到的 xxx 参数: &#039;{}&#039;&quot;, xxx);
+
     }
-}</code></pre>
 
-### 请求接口
+}
 
-#### GET
+</code></pre>
+<h3>请求接口</h3>
+<h4>GET</h4>
+<pre><code class="language-java">
+String url = &quot;http://124.129.136.6:20600/papi/openapi/api/file/v2/common/download/&quot;+fileId;
 
-<pre><code class="language-java">String url = &quot;http://124.129.136.6:20600/papi/openapi/api/file/v2/common/download/&quot;+fileId;
+
 
 HttpResponse response = HttpRequest.get(url)
+
         .form(&quot;access_token&quot;, accessToken)
+
         .form(&quot;userid&quot;, userId).execute();
 
-log.error(&quot;【GetSignatureServlet】获取响应体: {}&quot;, response.body());</code></pre>
 
-#### POST
 
-<pre><code class="language-java"> JSONObject requestBody = JSONUtil.createObj()
+log.error(&quot;【GetSignatureServlet】获取响应体: {}&quot;, response.body());
+
+</code></pre>
+<h4>POST</h4>
+<pre><code class="language-java">
+ JSONObject requestBody = JSONUtil.createObj()
+
                 .set(&quot;app_key&quot;, &quot;e71073dc1872ecffc70d5d02a4faab8a&quot;)
+
                 .set(&quot;app_secret&quot;, &quot;4a73729149560b48ce6800cc789369a6&quot;)
+
                 .set(&quot;grant_type&quot;, &quot;authorization_code&quot;)
+
                 .set(&quot;code&quot;, code);
+
         String accessTokenURL = &quot;http://124.129.136.6:20600/papi/openapi/oauth2/access_token&quot;;
+
         HttpResponse response = HttpRequest.post(accessTokenURL)
+
                 .body(requestBody.toString())
+
                 .header(&quot;Content-Type&quot;, &quot;application/json&quot;)
+
                 .execute();
-        log.error(&quot;【GetSignatureServlet】获取到的 accessToken 完整响应体: {}&quot;, response.body());</code></pre>
 
-### 使用开放平台接口
+        log.error(&quot;【GetSignatureServlet】获取到的 accessToken 完整响应体: {}&quot;, response.body());
 
-<pre><code class="language-java">public String GetAccessToken() {
+</code></pre>
+<h3>使用开放平台接口</h3>
+<pre><code class="language-java">
+public String GetAccessToken() {
+
         log.error(&quot;【GetSignatureServlet】执行 获取 code 方法&quot;);
+
         String url = &quot;http://124.129.136.6:20600/papi/openapi/oauth2/authorize&quot;;
+
         Map&lt;String, Object&gt; paramMap = new HashMap&lt;&gt;();
+
         paramMap.put(&quot;corpid&quot;, &quot;fabf265f7b0dd7d298ad5f12a0638f40&quot;);
+
         paramMap.put(&quot;response_type&quot;, &quot;code&quot;);
+
         paramMap.put(&quot;state&quot;, &quot;xxx&quot;);
+
         String responseBody = HttpUtil.get(url, paramMap);
+
         JSONObject jsonResponse = JSONUtil.parseObj(responseBody);
+
         String code = jsonResponse.getStr(&quot;code&quot;);
+
         log.error(&quot;【GetSignatureServlet】获取到的 code: {}&quot;, code);
 
+
+
         JSONObject requestBody = JSONUtil.createObj()
+
                 .set(&quot;app_key&quot;, &quot;e71073dc1872ecffc70d5d02a4faab8a&quot;)
+
                 .set(&quot;app_secret&quot;, &quot;4a73729149560b48ce6800cc789369a6&quot;)
+
                 .set(&quot;grant_type&quot;, &quot;authorization_code&quot;)
+
                 .set(&quot;code&quot;, code);
+
         String accessTokenURL = &quot;http://124.129.136.6:20600/papi/openapi/oauth2/access_token&quot;;
+
         HttpResponse response = HttpRequest.post(accessTokenURL)
+
                 .body(requestBody.toString())
+
                 .header(&quot;Content-Type&quot;, &quot;application/json&quot;)
+
                 .execute();
+
 //        log.error(&quot;【GetSignatureServlet】获取到的 accessToken 完整响应体: {}&quot;, response.body());
+
         JSONObject accessTokenJsonResponse = JSONUtil.parseObj(response.body());
+
         String accessToken = accessTokenJsonResponse.getStr(&quot;accessToken&quot;);
+
         log.error(&quot;【GetSignatureServlet】获取到的 accessToken: {}&quot;, accessToken);
+
         return accessToken;
-    }</code></pre>
 
-### 数据库操作
+    }
 
-<pre><code class="language-java">@Autowired
+</code></pre>
+<h3>数据库操作</h3>
+<pre><code class="language-java">
+@Autowired
+
 private DataSetService dataSetService;
+
 //查询
+
  public Boolean SelectInConfigurationTable(FileObj fileObj){
+
         log.error(&quot;开始查询附件是否在建模配置表中&quot;);
+
             //根据文档id查询所在文件夹id
+
             String sql = &quot;SELECT folder_id FROM document_folder_link&quot;;
+
             ExecuteSqlEntity executeSqlEntity = new ExecuteSqlEntity();
+
             executeSqlEntity.setSql(cn.hutool.core.codec.Base64.encode(sql));
+
             executeSqlEntity.setGroupId(&quot;weaver-doc-service&quot;);
+
             executeSqlEntity.setSourceType(SourceType.LOGIC);
 
+
+
             Map&lt;String, Object&gt; datas ==dataSetService.executeSql(executeSqlEntity);
+
 			List&lt;LinkedHashMap&lt;String, Object&gt;&gt; recordsList = (List&lt;LinkedHashMap&lt;String, Object&gt;&gt;) datas.get(&quot;records&quot;);
+
 if (recordsList != null &amp;&amp; !recordsList.isEmpty()) {
+
 	log.error(&quot;数据库查询的结果集：{}&quot;, recordsList);
+
 }
-    }</code></pre>
 
-### 打印日志
+    }
 
-引入并使用Slf4j注解，打印参数使用占位符<code>{}</code>
+</code></pre>
+<h3>打印日志</h3>
+<p>引入并使用Slf4j注解，打印参数使用占位符<code>{}</code></p>
+<pre><code class="language-java">
+import lombok.extern.slf4j.Slf4j;
 
-<pre><code class="language-java">import lombok.extern.slf4j.Slf4j;
+
 
 @Slf4j
+
 public class FileWatermarkHookDemo {
+
    log.error(&quot;打印的日志,参数：{}&quot;,params);
-}</code></pre>
 
-默认输出级别是error，其他的不打印
+}
 
-### 判断数据库字段类型
+</code></pre>
+<p>默认输出级别是error，其他的不打印</p>
+<h3>判断数据库字段类型</h3>
+<pre><code class="language-sql">
+SELECT data_type, data_length FROM all_tab_columns WHERE table_name = &#039;tableName&#039; AND column_name = &#039;columnName&#039;;
 
-<pre><code class="language-sql">SELECT data_type, data_length FROM all_tab_columns WHERE table_name = &#039;tableName&#039; AND column_name = &#039;columnName&#039;;</code></pre>
+</code></pre>
+<h3>获取GroupId</h3>
+<pre><code class="language-text">
+http://产品ip:端口/api/datasource/ds/group?sourceType=LOGIC
 
-### 获取GroupId
+</code></pre>
+<pre><code class="language-json">
+{
 
-<pre><code class="language-text">http://产品ip:端口/api/datasource/ds/group?sourceType=LOGIC</code></pre>
-
-<pre><code class="language-json">{
     &quot;code&quot;: 200,
+
     &quot;msg&quot;: &quot;接口返回成功&quot;,
+
     &quot;data&quot;: [
+
         {
+
             &quot;name&quot;: &quot;业务表单&quot;,
+
             &quot;serviceMark&quot;: &quot;form&quot;,
+
             &quot;id&quot;: &quot;weaver-formreport-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;流程&quot;,
+
             &quot;serviceMark&quot;: &quot;workflow&quot;,
+
             &quot;id&quot;: &quot;weaver-workflow-report-serviceworkflowreport&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;任务&quot;,
+
             &quot;serviceMark&quot;: &quot;task&quot;,
+
             &quot;id&quot;: &quot;weaver-project-servicetask&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;日志&quot;,
+
             &quot;serviceMark&quot;: &quot;elog&quot;,
+
             &quot;id&quot;: &quot;weaver-elog-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;会议&quot;,
+
             &quot;serviceMark&quot;: &quot;meeting&quot;,
+
             &quot;id&quot;: &quot;weaver-meetings-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;日程&quot;,
+
             &quot;serviceMark&quot;: &quot;blog&quot;,
+
             &quot;id&quot;: &quot;weaver-blog-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;OKR&quot;,
+
             &quot;serviceMark&quot;: &quot;goal&quot;,
+
             &quot;id&quot;: &quot;weaver-hrm-goal-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;流程列表&quot;,
+
             &quot;serviceMark&quot;: &quot;list&quot;,
+
             &quot;id&quot;: &quot;weaver-workflow-list-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;考勤&quot;,
+
             &quot;serviceMark&quot;: &quot;attend&quot;,
+
             &quot;id&quot;: &quot;weaver-attend-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;组织画像&quot;,
+
             &quot;serviceMark&quot;: &quot;portrait&quot;,
+
             &quot;id&quot;: &quot;weaver-portrait-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;工作流&quot;,
+
             &quot;serviceMark&quot;: &quot;workflow&quot;,
+
             &quot;id&quot;: &quot;weaver-workflow-report-serviceworkflow_report&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;绩效&quot;,
+
             &quot;serviceMark&quot;: &quot;kpi&quot;,
+
             &quot;id&quot;: &quot;weaver-wr-performance-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;基础定时模块&quot;,
+
             &quot;serviceMark&quot;: &quot;scheduler&quot;,
+
             &quot;id&quot;: &quot;weaver-basic-schedule-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;知识画像&quot;,
+
             &quot;serviceMark&quot;: &quot;document&quot;,
+
             &quot;id&quot;: &quot;weaver-doc-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;HRM&quot;,
+
             &quot;serviceMark&quot;: &quot;hrm&quot;,
+
             &quot;id&quot;: &quot;weaver-hrm-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;e-builder报表&quot;,
+
             &quot;serviceMark&quot;: &quot;esb&quot;,
+
             &quot;id&quot;: &quot;weaver-esb-report-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;e-builder应用&quot;,
+
             &quot;serviceMark&quot;: &quot;builder&quot;,
+
             &quot;id&quot;: &quot;weaver-ebuilder-app-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;e-builder表单&quot;,
+
             &quot;serviceMark&quot;: &quot;builder&quot;,
+
             &quot;id&quot;: &quot;weaver-ebuilder-form-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;客户管理&quot;,
+
             &quot;serviceMark&quot;: &quot;customer&quot;,
+
             &quot;id&quot;: &quot;weaver-customer-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;日程&quot;,
+
             &quot;serviceMark&quot;: &quot;calendar&quot;,
+
             &quot;id&quot;: &quot;weaver-calendar-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;文档&quot;,
+
             &quot;serviceMark&quot;: &quot;document&quot;,
+
             &quot;id&quot;: &quot;weaver-doc-servicedocument&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;文件&quot;,
+
             &quot;serviceMark&quot;: &quot;file&quot;,
+
             &quot;id&quot;: &quot;weaver-file-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;数据源&quot;,
+
             &quot;serviceMark&quot;: &quot;datasource&quot;,
+
             &quot;id&quot;: &quot;weaver-datasource-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;电子签章&quot;,
+
             &quot;serviceMark&quot;: &quot;esigncontract&quot;,
+
             &quot;id&quot;: &quot;weaver-signcenter-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;行为流&quot;,
+
             &quot;serviceMark&quot;: &quot;ilsh&quot;,
+
             &quot;id&quot;: &quot;weaver-ilshn-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;动作流&quot;,
+
             &quot;serviceMark&quot;: &quot;esb&quot;,
+
             &quot;id&quot;: &quot;weaver-esb-settings-services&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;表单加密&quot;,
+
             &quot;serviceMark&quot;: &quot;datasecurity&quot;,
+
             &quot;id&quot;: &quot;weaver-datasecurity&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;薪酬&quot;,
+
             &quot;serviceMark&quot;: &quot;salary-report&quot;,
+
             &quot;id&quot;: &quot;weaver-salary-report&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;人事&quot;,
+
             &quot;serviceMark&quot;: &quot;hr&quot;,
+
             &quot;id&quot;: &quot;weaver-hr-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;发票云&quot;,
+
             &quot;serviceMark&quot;: &quot;inc&quot;,
+
             &quot;id&quot;: &quot;weaver-inc-biz-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;租户&quot;,
+
             &quot;serviceMark&quot;: &quot;tenant&quot;,
+
             &quot;id&quot;: &quot;weaver-tenant-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;绩效核算&quot;,
+
             &quot;serviceMark&quot;: &quot;builder&quot;,
+
             &quot;id&quot;: &quot;weaver-builder-contract-servicecustom&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;待办事项&quot;,
+
             &quot;serviceMark&quot;: &quot;todo&quot;,
+
             &quot;id&quot;: &quot;weaver-todo-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;签名&quot;,
+
             &quot;serviceMark&quot;: &quot;signature&quot;,
+
             &quot;id&quot;: &quot;weaver-signature-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;邮件&quot;,
+
             &quot;serviceMark&quot;: &quot;email&quot;,
+
             &quot;id&quot;: &quot;weaver-mail-base-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;薪酬&quot;,
+
             &quot;serviceMark&quot;: &quot;hrm-salary&quot;,
+
             &quot;id&quot;: &quot;weaver-hrm-salary&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;系统安全&quot;,
+
             &quot;serviceMark&quot;: &quot;security&quot;,
+
             &quot;id&quot;: &quot;weaver-security-framework-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;档案管理&quot;,
+
             &quot;serviceMark&quot;: &quot;archive&quot;,
+
             &quot;id&quot;: &quot;weaver-archive-core-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;招聘管理&quot;,
+
             &quot;serviceMark&quot;: &quot;recruit&quot;,
+
             &quot;id&quot;: &quot;weaver-recruit-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;基础在线服务&quot;,
+
             &quot;serviceMark&quot;: &quot;weaver-basic-online-web-service&quot;,
+
             &quot;id&quot;: &quot;weaver-basic-online-web-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;微搜&quot;,
+
             &quot;serviceMark&quot;: &quot;search&quot;,
+
             &quot;id&quot;: &quot;weaver-search-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;统一审批中心&quot;,
+
             &quot;serviceMark&quot;: &quot;intunifytodo&quot;,
+
             &quot;id&quot;: &quot;weaver-intunifytodo-server-config-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;统一待办服务&quot;,
+
             &quot;serviceMark&quot;: &quot;intunifytodo&quot;,
+
             &quot;id&quot;: &quot;weaver-intunifytodo-client-config-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;公共数据源&quot;,
+
             &quot;serviceMark&quot;: &quot;common&quot;,
+
             &quot;id&quot;: &quot;weaver-component-web-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;ESB连接&quot;,
+
             &quot;serviceMark&quot;: &quot;esb&quot;,
+
             &quot;id&quot;: &quot;weaver-esb-setting-serviceesbConnect&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;AI连接&quot;,
+
             &quot;serviceMark&quot;: &quot;ai&quot;,
+
             &quot;id&quot;: &quot;weaver-ai-application-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;外部流程&quot;,
+
             &quot;serviceMark&quot;: &quot;workflow&quot;,
+
             &quot;id&quot;: &quot;weaver-workflow-core-serviceExternalCoreOutflow&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;绩效考核&quot;,
+
             &quot;serviceMark&quot;: &quot;builder&quot;,
+
             &quot;id&quot;: &quot;weaver-wr-performance-eb-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;登录服务&quot;,
+
             &quot;serviceMark&quot;: &quot;passport&quot;,
+
             &quot;id&quot;: &quot;weaver-passport-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;工作流表单&quot;,
+
             &quot;serviceMark&quot;: &quot;workflow&quot;,
+
             &quot;id&quot;: &quot;weaver-workflow-report-serviceworkflowReport&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;统一认证中心&quot;,
+
             &quot;id&quot;: &quot;weaver-intunifyauth-server-base-service&quot;
+
         },
+
         {
+
             &quot;name&quot;: &quot;sap数据源&quot;,
+
             &quot;serviceMark&quot;: &quot;int sap&quot;,
+
             &quot;id&quot;: &quot;weaver-int sap-web-service&quot;
+
         }
+
     ],
+
     &quot;fail&quot;: false
-}</code></pre>
-</div>
+
+}
+
+</code></pre></div>
             </div>
         </div>
     </div>

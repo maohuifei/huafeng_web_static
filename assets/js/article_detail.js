@@ -3,63 +3,9 @@
  */
 import { logError } from './utils.js';
 
-/**
- * 获取 URL 参数
- */
-function getUrlParam(name) {
-    return new URLSearchParams(window.location.search).get(name);
-}
 
-const fileName = getUrlParam('fileName');
 
-// 验证参数
-if (!fileName) {
-    document.getElementById('toc').innerHTML = '<div class="error">无效的文章链接！</div>';
-    document.getElementById('contentLoading').style.display = 'none';
-    document.getElementById('articleDetail').innerHTML = '<div class="error">未找到指定文章！</div>';
-}
 
-/**
- * 配置 marked 渲染器以支持 Prism.js
- */
-function configureMarkedForPrism() {
-    if (typeof marked !== 'undefined') {
-        // 配置 marked 选项
-        marked.setOptions({
-            gfm: true,
-            breaks: true
-        });
-        
-        // 配置 code 渲染器以支持 Prism.js
-        const codeRenderer = {
-            code(token) {
-                let language = token.lang || 'plaintext';
-
-                // 处理语言别名
-                const langAlias = {
-                    'js': 'javascript',
-                    'ts': 'typescript',
-                    'py': 'python',
-                    'sh': 'bash',
-                    'shell': 'bash'
-                };
-                if (langAlias[language]) {
-                    language = langAlias[language];
-                }
-
-                // 转义 HTML 特殊字符
-                const codeText = String(token.text)
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;');
-
-                return `<pre class="language-${language}"><code class="language-${language}">${codeText}</code></pre>`;
-            }
-        };
-
-        marked.use({ renderer: codeRenderer });
-    }
-}
 
 /**
  * 初始化代码块高亮和复制功能
@@ -80,7 +26,57 @@ function initCodeBlocks() {
 }
 
 /**
- * 生成目录（支持层级折叠）
+ * 从标题数据生成目录
+ */
+function generateTocFromHeadings(headingsData) {
+    if (headingsData.length === 0) {
+        return '<div class="toc-empty">本文暂无目录</div>';
+    }
+
+    // 构建层级结构
+    const hierarchy = [];
+    const stack = [];
+
+    headingsData.forEach(heading => {
+        const node = { ...heading, children: [] };
+
+        while (stack.length > 0 && stack[stack.length - 1].level >= heading.level) {
+            stack.pop();
+        }
+
+        if (stack.length === 0) {
+            hierarchy.push(node);
+        } else {
+            stack[stack.length - 1].children.push(node);
+        }
+        stack.push(node);
+    });
+
+    // 递归生成目录 HTML
+    function buildTocHtml(nodes, level = 1) {
+        let html = '<ul class="toc-list">';
+        nodes.forEach(node => {
+            const hasChildren = node.children.length > 0;
+            const isExpanded = level <= 4;
+            html += `
+                <li class="toc-item toc-h${node.level}">
+                    <div class="toc-item-inner">
+                        ${hasChildren ? `<button class="toggle-btn${isExpanded ? ' expanded' : ''}" title="展开/收起"></button>` : '<span style="display:inline-block;width:18px;"></span>'}
+                        <a href="#${node.id}" class="toc-link">${node.text}</a>
+                    </div>
+                    ${hasChildren ? `<div class="toc-children"${isExpanded ? '' : ' style="display:none;"'}>${buildTocHtml(node.children, level + 1)}</div>` : ''}
+                </li>
+            `;
+        });
+        html += '</ul>';
+        return html;
+    }
+
+    return buildTocHtml(hierarchy);
+}
+
+/**
+ * 生成目录（支持层级折叠）- 旧版本，用于HTML字符串
  */
 function generateToc(htmlContent) {
     const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
@@ -160,19 +156,26 @@ function initTocToggle() {
         link.onclick = function(e) {
             const targetId = this.getAttribute('href').slice(1);
             const targetElement = document.getElementById(targetId);
-            const contentContainer = document.querySelector('.article-content');
 
-            if (targetElement && contentContainer) {
+            if (targetElement) {
                 e.preventDefault();
-                const headerOffset = 100;
-                const offsetPosition = targetElement.offsetTop - headerOffset;
-
-                contentContainer.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-
-                targetElement.style.scrollMarginTop = headerOffset + 'px';
+                
+                // 方法1：使用原生的scrollIntoView（最简单可靠）
+                targetElement.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                
+                // 添加视觉反馈
                 targetElement.style.backgroundColor = 'rgba(99, 102, 241, 0.1)';
                 targetElement.style.borderRadius = '4px';
-                setTimeout(() => { targetElement.style.backgroundColor = ''; }, 1500);
+                targetElement.style.transition = 'background-color 0.3s ease';
+                setTimeout(() => { 
+                    targetElement.style.backgroundColor = '';
+                }, 1500);
+                
+                // 更新URL哈希（可选，但会添加历史记录）
+                // history.pushState(null, null, `#${targetId}`);
             }
         };
     });
@@ -232,92 +235,85 @@ function initBackToTop() {
  */
 async function renderArticleDetail() {
     try {
-        const response = await fetch(`./articles/${fileName}`);
-        if (!response.ok) throw new Error('文章加载失败');
-
-        let mdContent = await response.text();
-
-        // 处理 HTML 格式
-        if (mdContent.includes('<body>')) {
-            const doc = new DOMParser().parseFromString(mdContent, 'text/html');
-            const markdownBody = doc.querySelector('.markdown-body');
-            if (markdownBody) {
-                const firstH2 = markdownBody.querySelector('h2');
-                if (firstH2 && firstH2.textContent.includes('title:')) {
-                    mdContent = firstH2.textContent + '\n\n' + markdownBody.innerHTML.replace(firstH2.outerHTML, '');
-                } else {
-                    mdContent = markdownBody.innerText;
-                }
+        // 等待一小段时间确保DOM完全加载
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // 现在文章已经是完整的HTML页面，不需要再获取markdown文件
+        // 直接从页面中获取内容生成目录
+        const articleBody = document.querySelector('.article-body');
+        
+        if (!articleBody) {
+            console.warn('找不到 .article-body 元素');
+            // 尝试通过其他方式查找内容
+            const articleDetail = document.querySelector('.article-detail');
+            if (articleDetail) {
+                return generateToc(articleDetail.innerHTML);
             }
+            throw new Error('找不到文章内容');
         }
-
-        // 解析元信息
-        const metaRegex = /---\r?\n([\s\S]*?)---\r?\n/g;
-        const matches = [...mdContent.matchAll(metaRegex)];
-        let meta = { title: '未知标题', categories: '未分类', createTime: '未知时间', updateTime: '未知时间' };
-
-        matches.forEach(match => {
-            match[1].trim().split('\n').forEach(line => {
-                const cleanLine = line.trim();
-                if (!cleanLine) return;
-                const colonIndex = cleanLine.indexOf(':');
-                if (colonIndex === -1) return;
-
-                const key = cleanLine.substring(0, colonIndex).trim();
-                const value = cleanLine.substring(colonIndex + 1).trim();
-                if (key && value) {
-                    meta[key.trim()] = value;
-                }
+        
+        console.log('找到文章内容，长度:', articleBody.innerHTML.length);
+        
+        // 获取页面中的所有标题元素并设置id
+        const pageHeadings = document.querySelectorAll('.article-body h1, .article-body h2, .article-body h3, .article-body h4, .article-body h5, .article-body h6');
+        const headingsData = [];
+        
+        pageHeadings.forEach((heading, index) => {
+            const level = parseInt(heading.tagName.slice(1));
+            const text = heading.textContent.trim();
+            const safeId = `heading-${index}-${text.replace(/\s+/g, '-').replace(/[^\w\u4e00-\u9fa5-]/g, '').toLowerCase()}`;
+            heading.id = safeId;
+            console.log(`设置标题id: ${safeId} for "${text}" (h${level})`);
+            
+            headingsData.push({
+                level,
+                text,
+                id: safeId
             });
         });
-
-        // 配置 marked 渲染器以支持 Prism.js
-        configureMarkedForPrism();
-
-        // 提取正文
-        let content = mdContent.replace(metaRegex, '').trim();
-        const htmlContent = marked.parse(content);
-
-        // 修复 HTML 中的图片路径：将 markdown 图片语法转换为正确的 img 标签
-        // 匹配 ![alt](./path/to/image.png) 并转换为 <img src="./articles/path/to/image.png" alt="alt">
-        const fixedHtmlContent = htmlContent.replace(
-            /!\[([^\]]*)\]\(\.\/([^)]+)\)/g,
-            `<img src="./articles/$2" alt="$1">`
-        );
-
-        // 生成目录（使用修复后的 HTML）
-        const { tocHtml, updatedHtml } = generateToc(fixedHtmlContent);
-
-        // 渲染页面
-        document.title = `${meta.title} - 我的个人网页`;
-        document.getElementById('toc').innerHTML = tocHtml;
-        document.getElementById('contentLoading').style.display = 'none';
-        document.getElementById('articleDetail').innerHTML = `
-            <div class="article-meta-detail">
-                <span class="article-category-detail">${meta.categories}</span>
-                <h1 class="article-title-detail">${meta.title}</h1>
-                <div class="article-time-detail">
-                    <span>创建时间：${meta.createTime}</span>
-                    <span>更新时间：${meta.updateTime}</span>
-                </div>
-            </div>
-            <div class="article-body">${updatedHtml}</div>
-        `;
-
+        
+        // 基于页面DOM中的标题生成目录
+        const tocHtml = generateTocFromHeadings(headingsData);
+        
+        // 更新目录
+        const tocElement = document.getElementById('toc');
+        if (tocElement) {
+            console.log('更新目录元素');
+            tocElement.innerHTML = tocHtml;
+        } else {
+            console.warn('找不到 #toc 元素');
+        }
+        
+        // 移除"目录生成中..."的提示
+        const tocEmpty = document.querySelector('.toc-empty');
+        if (tocEmpty) {
+            console.log('移除目录生成中提示');
+            tocEmpty.style.display = 'none';
+        }
+        
         // 初始化交互
         initTocToggle();
         initScrollSpy();
         initCodeBlocks();
+        
     } catch (error) {
-        logError('加载文章失败', error);
-        document.getElementById('toc').innerHTML = '<div class="error">目录加载失败</div>';
-        document.getElementById('contentLoading').style.display = 'none';
-        document.getElementById('articleDetail').innerHTML = '<div class="error">文章加载失败</div>';
+        logError('生成目录失败', error);
+        const tocElement = document.getElementById('toc');
+        if (tocElement) {
+            tocElement.innerHTML = '<div class="error">目录加载失败</div>';
+        }
+        
+        // 移除"目录生成中..."的提示
+        const tocEmpty = document.querySelector('.toc-empty');
+        if (tocEmpty) {
+            tocEmpty.style.display = 'none';
+        }
     }
 }
 
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
-    if (fileName) renderArticleDetail();
+    console.log('DOMContentLoaded - 开始渲染文章详情');
+    renderArticleDetail();
     initBackToTop();
 });

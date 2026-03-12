@@ -41,96 +41,188 @@
                         <span>更新时间：2026-02-28</span>
                     </div>
                 </div>
-                <div class="article-body"># 基础文本格式化
+                <div class="article-body"><h1>基础文本格式化</h1>
+<ul>
+<li><strong>标题（1-6级）</strong>：# 加空格，#数量对应级别，最多6级</li>
+</ul>
+<pre><code class="language-text">
+# 一级标题
 
-- **标题（1-6级）**：# 加空格，#数量对应级别，最多6级
-<code><pre><code class="language-text"># 一级标题
 ## 二级标题
+
 ### 三级标题
+
 #### 四级标题
+
 ##### 五级标题
-###### 六级标题</code></pre></code>
 
-- **加粗**：**包裹文本
-<code><pre><code class="language-text">**加粗文本**</code></pre></code>
+###### 六级标题
 
-- **斜体**：*包裹文本
-<code><pre><code class="language-text">*斜体文本*</code></pre></code>
+</code></pre>
+<ul>
+<li><strong>加粗</strong>：<em></em>包裹文本</li>
+</ul>
+<pre><code class="language-text">
+**加粗文本**
 
-- **删除线**：~~包裹文本
-<code><pre><code class="language-text">~~删除线文本~~</code></pre></code>
+</code></pre>
+<ul>
+<li><strong>斜体</strong>：*包裹文本</li>
+</ul>
+<pre><code class="language-text">
+*斜体文本*
 
-- **引用**：> 加空格
-<code><pre><code class="language-text">&gt; 引用内容</code></pre></code>
+</code></pre>
+<ul>
+<li><strong>删除线</strong>：~~包裹文本</li>
+</ul>
+<pre><code class="language-text">
+~~删除线文本~~
 
-# 列表排版
+</code></pre>
+<ul>
+<li><strong>引用</strong>：> 加空格</li>
+</ul>
+<pre><code class="language-text">
+&gt; 引用内容
 
-- **无序列表**：- 加空格，支持嵌套
-<code><pre><code class="language-text">- 列表项1
-  - 嵌套项</code></pre></code>
+</code></pre>
+<h1>列表排版</h1>
+<ul>
+<li><strong>无序列表</strong>：- 加空格，支持嵌套</li>
+</ul>
+<pre><code class="language-text">
+- 列表项1
 
-- **有序列表**：数字+. 加空格
-<code><pre><code class="language-text">1. 列表项1
-2. 列表项2</code></pre></code>
+  - 嵌套项
 
-# 链接与图片
+</code></pre>
+<ul>
+<li><strong>有序列表</strong>：数字+. 加空格</li>
+</ul>
+<pre><code class="language-text">
+1. 列表项1
 
-- **链接**：\[显示文本\](链接地址)
-<code><pre><code class="language-text">[百度](https://www.baidu.com)</code></pre></code>
+2. 列表项2
 
-- **图片**：!\[\]包裹alt文本，加链接
-<code><pre><code class="language-text"><img src="https://example.com/fengjing.jpg" alt="风景图" loading="lazy"></code></pre></code>
+</code></pre>
+<h1>链接与图片</h1>
+<ul>
+<li><strong>链接</strong>：\<a href="https://链接地址" target="_blank" rel="noopener noreferrer">显示文本\</a></li>
+</ul>
+<pre><code class="language-text">
+[百度](https://www.baidu.com)
 
-# 代码块与行内代码
+</code></pre>
+<ul>
+<li><strong>图片</strong>：!\[\]包裹alt文本，加链接</li>
+</ul>
+<pre><code class="language-text">
+![风景图](https://example.com/fengjing.jpg)
 
-- **行内代码**：\<code>\</code>包裹代码片段
-<code><pre><code class="language-text">这里有</code>print(&quot;Hello&quot;)<code>行内代码</code></pre></code>
+</code></pre>
+<h1>代码块与行内代码</h1>
+<ul>
+<li><strong>行内代码</strong>：\<code>\</code>包裹代码片段</li>
+</ul>
+<pre><code class="language-text">
+这里有`print(&quot;Hello&quot;)`行内代码
 
-- **代码块**：\<code>\</code>\<code>包裹，可加语言
-<pre><code class="language-js">console.log(&quot;Hello Markdown&quot;)</code></pre>
+</code></pre>
+<ul>
+<li><strong>代码块</strong>：\<code>\</code>\`包裹，可加语言</li>
+</ul>
+<pre><code class="language-js">
+console.log(&quot;Hello Markdown&quot;)
 
-# 表格
+</code></pre>
+<h1>表格</h1>
+<ul>
+<li><strong>表格</strong>：|分隔列，-分隔表头，:控制对齐</li>
+</ul>
+<pre><code class="language-text">
+| 表头1 | 表头2 |
 
-- **表格**：|分隔列，-分隔表头，:控制对齐
-</code><pre><code class="language-text">| 表头1 | 表头2 |
 | :--- | :---: |
-| 内容1 | 内容2 |</code></pre><code>
 
-# 其他基础语法
+| 内容1 | 内容2 |
 
-- **分割线**：三个减号/星号/下划线
-</code><pre><code class="language-text">---</code></pre><code>
+</code></pre>
+<h1>其他基础语法</h1>
+<ul>
+<li><strong>分割线</strong>：三个减号/星号/下划线</li>
+</ul>
+<pre><code class="language-text">
+---
 
-- **转义字符**：\加语法符号
-</code><pre><code class="language-text">\# 这不是标题</code></pre><code>
+</code></pre>
+<ul>
+<li><strong>转义字符</strong>：\加语法符号</li>
+</ul>
+<pre><code class="language-text">
+\# 这不是标题
 
-- **脚注**：文本[^标识]，文末添加脚注
-</code><pre><code class="language-text">文本[^1]
-[^1]: 脚注内容</code></pre><code>
+</code></pre>
+<ul>
+<li><strong>脚注</strong>：文本[^标识]，文末添加脚注</li>
+</ul>
+<pre><code class="language-text">
+文本[^1]
 
-# 进阶语法
+[^1]: 脚注内容
 
-- **表格合并**：rowspan/colspan属性
-</code><pre><code class="language-text">| rowspan=&quot;2&quot; | 单元格1 |
-|  | 单元格2 |</code></pre><code>
+</code></pre>
+<h1>进阶语法</h1>
+<ul>
+<li><strong>表格合并</strong>：rowspan/colspan属性</li>
+</ul>
+<pre><code class="language-text">
+| rowspan=&quot;2&quot; | 单元格1 |
 
-- **目录生成**：\[TOC\]自动生成
-</code><pre><code class="language-text">[TOC]</code></pre><code>
+|  | 单元格2 |
 
-- **文本高亮**：==包裹文本
-</code><pre><code class="language-text">==高亮文本==</code></pre><code>
+</code></pre>
+<ul>
+<li><strong>目录生成</strong>：\[TOC\]自动生成</li>
+</ul>
+<pre><code class="language-text">
+[TOC]
 
-- **任务列表**：- [ ] 待办，- [x] 已办
-</code><pre><code class="language-text">- [ ] 待办事项
-- [x] 已办事项</code></pre><code>
+</code></pre>
+<ul>
+<li><strong>文本高亮</strong>：==包裹文本</li>
+</ul>
+<pre><code class="language-text">
+==高亮文本==
 
-- **数学公式**：$行内公式，$$公式块
-</code><pre><code class="language-text">$a^2 + b^2 = c^2$
-$$f(x) = x^2$$</code></pre><code>
+</code></pre>
+<ul>
+<li><strong>任务列表</strong>：- [ ] 待办，- [x] 已办</li>
+</ul>
+<pre><code class="language-text">
+- [ ] 待办事项
 
-- **图片调整**：调整大小+居中
-</code><pre><code class="language-text"><img src="https://example.com/fengjing.jpg =300x200" alt="风景图" loading="lazy">
-&lt;center&gt;<img src="https://example.com/fengjing.jpg" alt="风景图" loading="lazy">&lt;/center&gt;</code></pre>`</div>
+- [x] 已办事项
+
+</code></pre>
+<ul>
+<li><strong>数学公式</strong>：$行内公式，$$公式块</li>
+</ul>
+<pre><code class="language-text">
+$a^2 + b^2 = c^2$
+
+$$f(x) = x^2$$
+
+</code></pre>
+<ul>
+<li><strong>图片调整</strong>：调整大小+居中</li>
+</ul>
+<pre><code class="language-text">
+![风景图](https://example.com/fengjing.jpg =300x200)
+
+&lt;center&gt;![风景图](https://example.com/fengjing.jpg)&lt;/center&gt;
+
+</code></pre></div>
             </div>
         </div>
     </div>

@@ -41,165 +41,201 @@
                         <span>更新时间：2026-02-21</span>
                     </div>
                 </div>
-                <div class="article-body">## Git的下载与安装
+                <div class="article-body"><h2>Git的下载与安装</h2>
+<p>官网：<a href="https://git-scm.com/" target="_blank" rel="noopener noreferrer">https://git-scm.com/</a></p>
+<p>根据需要安装即可，如遇英文界面，可使用jieping翻译辅助理解。</p>
+<p>安装完成后，会有以下三个环境：</p>
+<ul>
+<li><strong>Git bash</strong>：Unix与Linux风格的命令行，推荐使用。</li>
+<li><strong>Git CMD</strong>：Windows风格命令行。</li>
+<li><strong>Git GUI</strong>：图形界面的Git，不推荐新手使用，建议先熟悉命令行操作。</li>
+</ul>
+<h2>常用的Linux命令</h2>
+<p><img src="http://1.94.0.101/wp-content/uploads/2024/03/%E5%9F%BA%E6%9C%ACLinux%E5%91%BD%E4%BB%A4-528x295.jpg" alt="基本Linux命令" loading="lazy"></p>
+<h2>Git工作区域（运行原理）</h2>
+<p>工作区——暂存区——本地库——远程库</p>
+<p><img src="http://1.94.0.101/wp-content/uploads/2024/03/Git%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%9F%9F.jpg" alt="Git工作区域" loading="lazy"></p>
+<h2>Git文件的四种状态</h2>
+<p>版本控制的核心是对文件的版本进行管理。在进行文件的修改和提交等操作前，首先需要了解文件当前的状态。</p>
+<ul>
+<li><strong>Untracked</strong>：未跟踪状态，文件存在于文件夹中，但尚未提交到Git库，不参与版本控制。通过<code>git add</code>命令可将其转变为staged状态。</li>
+<li><strong>Unmodify</strong>：已入库且未修改状态，即库中的文件与文件夹中的内容完全一致。若被修改，则变为Modified状态。使用<code>git rm</code>移除版本库，变为Untracked状态。</li>
+<li><strong>Modified</strong>：已修改状态，文件已被修改，但尚未进行其他操作。有两种处理方式：通过<code>git add</code>进入暂存区staged状态；通过<code>git checkout</code>丢弃修改，变回Unmodify状态。</li>
+<li><strong>staged</strong>：暂存状态，使用<code>git commit</code>将修改同步到库中，此时库文件和本地文件一致，文件变为Unmodify状态。使用<code>git reset HEAD filename</code>可取消暂存，文件变为Modified状态。</li>
+</ul>
+<h2>Git的使用</h2>
+<h3>创建及提交</h3>
+<pre><code class="language-sh">
+$ git init                 # 初始化，会新建一个名为.git的隐藏文件
 
-官网：[https://git-scm.com/](https://git-scm.com/)
-
-根据需要安装即可，如遇英文界面，可使用jieping翻译辅助理解。
-
-安装完成后，会有以下三个环境：
-
-- **Git bash**：Unix与Linux风格的命令行，推荐使用。
-- **Git CMD**：Windows风格命令行。
-- **Git GUI**：图形界面的Git，不推荐新手使用，建议先熟悉命令行操作。
-
-## 常用的Linux命令
-
-<img src="http://1.94.0.101/wp-content/uploads/2024/03/%E5%9F%BA%E6%9C%ACLinux%E5%91%BD%E4%BB%A4-528x295.jpg" alt="基本Linux命令" loading="lazy">
-
-## Git工作区域（运行原理）
-
-工作区——暂存区——本地库——远程库
-
-<img src="http://1.94.0.101/wp-content/uploads/2024/03/Git%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%9F%9F.jpg" alt="Git工作区域" loading="lazy">
-
-## Git文件的四种状态
-
-版本控制的核心是对文件的版本进行管理。在进行文件的修改和提交等操作前，首先需要了解文件当前的状态。
-
-- **Untracked**：未跟踪状态，文件存在于文件夹中，但尚未提交到Git库，不参与版本控制。通过<code>git add</code>命令可将其转变为staged状态。
-- **Unmodify**：已入库且未修改状态，即库中的文件与文件夹中的内容完全一致。若被修改，则变为Modified状态。使用<code>git rm</code>移除版本库，变为Untracked状态。
-- **Modified**：已修改状态，文件已被修改，但尚未进行其他操作。有两种处理方式：通过<code>git add</code>进入暂存区staged状态；通过<code>git checkout</code>丢弃修改，变回Unmodify状态。
-- **staged**：暂存状态，使用<code>git commit</code>将修改同步到库中，此时库文件和本地文件一致，文件变为Unmodify状态。使用<code>git reset HEAD filename</code>可取消暂存，文件变为Modified状态。
-
-## Git的使用
-
-### 创建及提交
-
-<pre><code class="language-sh">$ git init                 # 初始化，会新建一个名为.git的隐藏文件
 git remote add origin [url] # 指定提交的远程存储库的链接
+
 git clone [url]            # 克隆远端仓库到本地
+
 git status                 # 查看所有文件状态
+
 git add .                  # 添加所有文件到暂存区
+
 git commit -m &quot;消息内容&quot;   # 提交暂存区内容到本地仓库，-m后接提交信息/备注信息
-git push                   # 提交到远程仓库</code></pre>
 
-### 常用命令
+git push                   # 提交到远程仓库
 
-<pre><code class="language-shell">git pull origin master     # 下载代码及快速合并
+</code></pre>
+<h3>常用命令</h3>
+<pre><code class="language-shell">
+git pull origin master     # 下载代码及快速合并
+
 git push origin master     # 上传代码及快速合并
+
 git fetch origin           # 从远程库获取代码
+
 git branch                 # 显示所有分支
+
 git checkout master        # 切换到master分支
+
 git checkout -b dev        # 创建并切换到dev分支
+
 git status                 # 查看状态
+
 git log                    # 查看提交历史
+
 git init                   # 初始化本地代码仓
+
 git add .                  # 添加本地代码
+
 git commit -m &quot;add local source&quot; # 提交本地代码
+
 git pull origin master     # 下载远程代码
+
 git merge master           # 合并master分支
-git push -u origin master  # 上传代码</code></pre>
 
-### 忽略文件（指定某些文件不提交）
+git push -u origin master  # 上传代码
 
-有时我们不想将某些文件纳入版本控制中，如数据库文件、临时文件、设计文件等。
-在主目录下新建<code>.gitignore</code>文件，此文件遵循以下规则：
+</code></pre>
+<h3>忽略文件（指定某些文件不提交）</h3>
+<p>有时我们不想将某些文件纳入版本控制中，如数据库文件、临时文件、设计文件等。<br>在主目录下新建<code>.gitignore</code>文件，此文件遵循以下规则：</p>
+<pre><code class="language-text">
+# 为注释
 
-<pre><code class="language-text"># 为注释
 *.txt                      # 忽略所有后缀为.txt的文件
+
 !lib.txt                   # 除了lib.txt以外的文件
+
 /tempbulid/                # 忽略bulid项目下的所有文件
-doc/*.txt                  # 忽略doc根目录下的.txt文件，不包括doc/ect/001.txt</code></pre>
 
-## 报错及解决方法
+doc/*.txt                  # 忽略doc根目录下的.txt文件，不包括doc/ect/001.txt
 
-### 本地远程冲突
-
-- **报错**：<pre><code class="language-text"></code></pre>
-! [rejected] main -> main (non-fast-forward) error: failed to push some refs to '<https://gitee.com/maohuifei/WebSiteTest.git'>
+</code></pre>
+<h2>报错及解决方法</h2>
+<h3>本地远程冲突</h3>
+<ul>
+<li><strong>报错</strong>：```</li>
+</ul>
 <pre><code class="language-text">
-- **原因**：他人上传至远程仓库后，未及时同步（拉取）至本地，同时你又添加了一些内容（提交），导致提交时检测到本地仓库状态与远程仓库不一致，出于安全考虑拒绝提交。
-- **解决方法**：
-- 先拉取：<code>git pull --rebase origin master</code>，
-- 再上传：<code>git push -u origin master</code>。
+! [rejected] main -&gt; main (non-fast-forward) error: failed to push some refs to &#039;&lt;https://gitee.com/maohuifei/WebSiteTest.git&#039;&gt;
 
-## 其他
-
-### Gitee/Github的免密码登录
-
-- Gitee：[https://gitee.com/](https://gitee.com/)
-- Github：[https://github.com/](https://github.com/)
-
-进入<code>C:\Users\用户名\.ssh</code>目录，使用Git Bash输入命令<code>ssh-keygen -t rsa</code>生成公钥。
-
-生成两个文件：<code>id_rsa.pub</code>（公钥）和<code>id_rsa</code>（私钥）。
-
-登录Gitee/Github，进入“设置”——“SSH公钥”——填写<code>id_rsa.pub</code>文件内容——保存。
-
-### Git使用代理网络问题
-
-配置Git代理：
-</code></pre>shell
+</code></pre>
+<ul>
+<li><strong>原因</strong>：他人上传至远程仓库后，未及时同步（拉取）至本地，同时你又添加了一些内容（提交），导致提交时检测到本地仓库状态与远程仓库不一致，出于安全考虑拒绝提交。</li>
+<li><strong>解决方法</strong>：</li>
+<li>先拉取：<code>git pull --rebase origin master</code>，</li>
+<li>再上传：<code>git push -u origin master</code>。</li>
+</ul>
+<h2>其他</h2>
+<h3>Gitee/Github的免密码登录</h3>
+<ul>
+<li>Gitee：<a href="https://gitee.com/" target="_blank" rel="noopener noreferrer">https://gitee.com/</a></li>
+<li>Github：<a href="https://github.com/" target="_blank" rel="noopener noreferrer">https://github.com/</a></li>
+</ul>
+<p>进入<code>C:\Users\用户名\.ssh</code>目录，使用Git Bash输入命令<code>ssh-keygen -t rsa</code>生成公钥。</p>
+<p>生成两个文件：<code>id<em>rsa.pub</code>（公钥）和<code>id</em>rsa</code>（私钥）。</p>
+<p>登录Gitee/Github，进入“设置”——“SSH公钥”——填写<code>id_rsa.pub</code>文件内容——保存。</p>
+<h3>Git使用代理网络问题</h3>
+<p>配置Git代理：</p>
+<pre><code class="language-shell">
 $ git config --global https.proxy http://127.0.0.1:1080
+
 git config --global https.proxy https://127.0.0.1:1080
-git config --global http.proxy 'socks5://127.0.0.1:1080'
-git config --global https.proxy 'socks5://127.0.0.1:1080' # ip和端口根据代理软件不同可能有所不同
-<pre><code class="language-text">
-### Git配置文件路径
 
-#### Git配置文件
+git config --global http.proxy &#039;socks5://127.0.0.1:1080&#039;
 
-GIt安装目录下的<code>etc</code>文件夹里的<code>gitconfig</code>文件。路径示例：<code>F:\Git\etc\gitconfig</code>。
+git config --global https.proxy &#039;socks5://127.0.0.1:1080&#039; # ip和端口根据代理软件不同可能有所不同
 
-内容示例：
 </code></pre>
-[diff "astextplain"]
+<h3>Git配置文件路径</h3>
+<h4>Git配置文件</h4>
+<p>GIt安装目录下的<code>etc</code>文件夹里的<code>gitconfig</code>文件。路径示例：<code>F:\Git\etc\gitconfig</code>。</p>
+<p>内容示例：</p>
+<pre><code class="language-text">
+[diff &quot;astextplain&quot;]
+
     textconv = astextplain
-[filter "lfs"]
+
+[filter &quot;lfs&quot;]
+
     clean = git-lfs clean -- %f
+
     smudge = git-lfs smudge -- %f
+
     process = git-lfs filter-process
+
     required = true
+
 [http]
+
     sslBackend = openssl
+
     sslCAInfo = F:/Git/mingw64/ssl/certs/ca-bundle.crt
+
 [core]
+
     autocrlf = true
+
     fscache = true
+
     symlinks = true
+
 [pull]
+
     rebase = false
+
 [credential]
+
     helper = manager-core
-[credential "<https://dev.azure.com>"]
+
+[credential &quot;&lt;https://dev.azure.com&gt;&quot;]
+
     useHttpPath = true
+
 [init]
+
     defaultBranch = master
-<pre><code class="language-text">
-#### 全局配置文件
 
-C盘用户目录下的<code>.gitconfig</code>文件。路径示例：<code>C:\Users\用户名\.gitconfig</code>。
-
-内容示例：
 </code></pre>
+<h4>全局配置文件</h4>
+<p>C盘用户目录下的<code>.gitconfig</code>文件。路径示例：<code>C:\Users\用户名\.gitconfig</code>。</p>
+<p>内容示例：</p>
+<pre><code class="language-text">
 [user]
+
     email = 991270685@qq.com
+
     name = maohuifei
+
 [init]
+
     defaultBranch = main
+
 [https]
+
     proxy = http://192.168.43.1:10809
 
-``<code>
 
-#### 新建的.git配置文件
 
-执行</code>git init`后，
-
-## 提交前执行的脚本
-
-</div>
+</code></pre>
+<h4>新建的.git配置文件</h4>
+<p>执行<code>git init</code>后，</p>
+<h2>提交前执行的脚本</h2></div>
             </div>
         </div>
     </div>
